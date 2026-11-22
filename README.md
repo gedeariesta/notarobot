@@ -2,7 +2,7 @@
 
 A daily CAPTCHA you can't quite pass. CCT431 final project. The rules are in [DESIGN.md](DESIGN.md); the look follows the "v2 | Specimen" page of the design pack.
 
-Play it at **https://gedeariesta.github.io/notarobot/**.
+Play it at **https://gedeariesta.github.io/notarobot/**. The QR code for the class is in [qr/](qr/), as a PNG and an SVG.
 
 ## Run it
 
