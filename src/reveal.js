@@ -1,0 +1,605 @@
+// The Screening (DESIGN.md, The reveal; design pack v2 frames 04 to 07).
+// Blue floods up over the white prompt, and the answer falls through the gates as a white blob
+// that loses its geometry with every gate it passes. One GSAP timeline, so it can be skipped.
+import { GATES, LADDER, stampTitle, resultLine, formatShare } from './scoring.js';
+import { SHAPES, LAYER_SHAPE } from './shapes.js';
+import { sound, vibrate } from './sound.js';
+import { ICONS, esc, pad2, wordLines, fitText } from './ui.js';
+
+const gsap = window.gsap;
+if (window.MorphSVGPlugin) gsap.registerPlugin(window.MorphSVGPlugin);
+
+const LAYER_NAMES = ['Prompt Zombie', 'Slopper', 'Decision Delegator', 'First-Hand Thinker'];
+const GATE_PCT = ['25%', '10%', '4%', '1%'];
+const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=<>/';
+const DOT_D = 'M50 34 C58.8 34 66 41.2 66 50 C66 58.8 58.8 66 50 66 C41.2 66 34 58.8 34 50 C34 41.2 41.2 34 50 34 Z';
+const HUMAN_TIERS = new Set(['firsthand', 'reserved']);
+
+function scramble(final, progress) {
+  const keep = Math.floor(final.length * progress);
+  let out = final.slice(0, keep);
+  for (let i = keep; i < final.length; i++) out += final[i] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+  return out;
+}
+
+/** Deterministic randomness, so skipping lands on exactly the same frame. */
+function seeded(str) {
+  let h = 2166136261;
+  for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return () => {
+    h += 0x6d2b79f5;
+    let t = h;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Clips a layer to a liquid surface. p = 0 is empty, 1 is full; amp is in % of height. */
+function setWave(node, p, phase, amp) {
+  const n = 16;
+  const level = (1 - p) * (100 + 2 * amp) - amp;
+  let pts = '';
+  for (let i = 0; i <= n; i++) {
+    const y = level + amp * Math.sin(phase + (i / n) * Math.PI * 2.4);
+    pts += `${((i / n) * 100).toFixed(2)}% ${y.toFixed(2)}%,`;
+  }
+  const v = `polygon(${pts}100% 100%, 0% 100%)`;
+  node.style.clipPath = v;
+  node.style.webkitClipPath = v;
+}
+function clearWave(node) {
+  node.style.clipPath = '';
+  node.style.webkitClipPath = '';
+}
+
+/**
+ * Plays the Screening as a full-screen layer over the prompt.
+ * opts: { result, aiAnswer, index, prevTotal, reduced, isLast, headerHTML, onLand, onNext }
+ * Returns { el, timeline, skip(), drain(), landed }.
+ */
+export function playScreening(opts) {
+  const { result, aiAnswer, index, prevTotal, reduced, isLast, headerHTML } = opts;
+  const special = result.special;
+  const isNone = special === 'none';
+  const isSmash = special === 'smash';
+  const isObjector = special === 'objector';
+  const isMeat = result.tier === 'meat';
+  const stopsAtTop = isNone || isSmash || isMeat || isObjector;
+  const target = stopsAtTop ? 0 : LADDER.indexOf(result.tier); // 1 Prompt Zombie ... 5 Human Reserved
+  const nn = pad2(index + 1);
+  const total = prevTotal + result.points;
+  const finalShare = stopsAtTop ? null : result.share;
+  const nextLabel = `${isLast ? 'See results' : 'Next verification'} ${ICONS.arrow}`;
+  const stampName = isMeat ? 'Meat Proxy' : isSmash ? 'Keyboard Smash' : 'No response';
+  const stampRot = isMeat ? -7 : isSmash ? -5 : -6;
+  const verdictTitle = stampTitle(result);
+  const human = HUMAN_TIERS.has(result.tier);
+  const line = resultLine(result);
+  const calloutText = isNone ? '' : `( ${esc(result.input)} )`;
+
+  // ---------------------------------------------------------------- DOM
+  const root = document.createElement('div');
+  root.className = 'scr';
+  root.tabIndex = -1;
+  root.setAttribute('role', 'region');
+  root.setAttribute('aria-label', `Screening ${index + 1} of 7`);
+  root.innerHTML = `
+    ${isObjector ? `
+    <div class="scr-paper">
+      <div class="scr-inner">
+        ${headerHTML(`+${result.points} → ${total} / 700`, { num: true })}
+        <div class="scr-col" aria-hidden="true">
+          <div class="figcap"><span class="plus">+</span><span class="cap">FIG. ${nn} | Answer, declined</span><span class="plus">+</span></div>
+          <div class="paper-spec">
+            <svg class="specimen" width="64" height="64" viewBox="0 0 100 100"><path class="sp-body" d="${SHAPES.subject.d}"/></svg>
+            <div class="callout static"><svg width="58" height="16"><path d="M0 12 L44 12 L56 2"/><circle cx="0" cy="12" r="3.5"/></svg><span class="callout-text">${calloutText}</span></div>
+          </div>
+        </div>
+        <div class="scr-bottom">
+          <div class="scr-stage">
+            <div class="verdict shown">
+              <div class="mono">[ Verdict ]</div>
+              <div class="verdict-name ink-strong">${wordLines(verdictTitle)}</div>
+              <div class="mono verdict-line">${esc(line)}</div>
+            </div>
+          </div>
+          <div class="scr-slot"><button class="pill scr-next paper-next" type="button">${nextLabel}</button></div>
+        </div>
+      </div>
+    </div>` : ''}
+    <div class="scr-blue on-blue">
+      <div class="scr-inner">
+        ${headerHTML(`Screening ${nn}/07`)}
+        <div class="scr-col" data-cap="descending" aria-hidden="true">
+          <div class="figcap"><span class="plus">+</span><span class="cap">FIG. ${nn} | Answer,<span class="cap-s" data-c="descending">descending</span><span class="cap-s" data-c="landed">landed</span><span class="cap-s" data-c="normalised">normalised</span><span class="cap-s" data-c="unreadable">unreadable</span><span class="cap-s" data-c="none">not received</span><span class="cap-s" data-c="declined">declined</span></span><span class="plus">+</span></div>
+          <div class="ai-row" data-state="sealed">
+            <div class="ai-box">${ICONS.lock}<svg class="xmark" viewBox="0 0 40 40" aria-hidden="true"><path d="M10 10 L30 30"/><path d="M30 10 L10 30"/></svg></div>
+            <div class="ai-lines">
+              <div><span data-s="sealed">( AI | [SEALED] )</span><span data-s="nomatch">( AI | <s>${esc(aiAnswer)}</s> )</span><span data-s="match">( AI | ${esc(aiAnswer)} )</span><span data-s="smash none">( MODEL CHECK )</span></div>
+              <div><span data-s="sealed" class="scan-text">COMPARING WITH MODEL</span><span data-s="nomatch">≠ NOT A MATCH</span><span data-s="match">= MATCH</span><span data-s="smash">? NO WORDS FOUND</span><span data-s="none">– NOTHING TO COMPARE</span></div>
+            </div>
+          </div>
+          ${[0, 1, 2, 3].map((i) => `
+          <div class="gate" data-g="${i}"${result.hinted && i === 1 ? ' data-locked="1"' : ''}>
+            <i class="g-half l"></i><i class="g-half r"></i><i class="g-dot"></i>
+            <span class="g-pct">${GATE_PCT[i]}<span data-s="ok"> ✓</span><span data-s="broken"> | BROKEN</span><span data-s="locked"> | AI-ASSISTED</span></span>
+            <span class="g-name">${LAYER_NAMES[i]}</span>
+            ${i === 3 ? '<span class="g-debris"><i></i><i></i><i></i></span>' : ''}
+          </div>`).join('')}
+          <span class="not-reached">GATES NOT REACHED</span>
+          <div class="floor">
+            <svg class="floor-liquid" viewBox="0 0 354 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12 C40 6 70 16 110 10 C150 4 190 16 230 8 C270 2 310 14 354 8 L354 60 L0 60 Z"/></svg>
+            <span class="floor-label">Human Reserved | Floor</span>
+          </div>
+          <div class="scanner"></div>
+          <div class="trails">
+            ${[1, 2, 3, 4].map((k) => `<svg class="trail" data-k="${k}" viewBox="0 0 100 100"><path vector-effect="non-scaling-stroke" d="${SHAPES[LAYER_SHAPE[k]].d}"/></svg>`).join('')}
+            ${isMeat ? `<svg class="trail dashed" data-k="was" viewBox="0 0 100 100"><path vector-effect="non-scaling-stroke" d="${SHAPES.subject.d}"/></svg>` : ''}
+          </div>
+          <div class="debris"></div>
+          <svg class="dims" aria-hidden="true"></svg>
+          <div class="sq-text"></div>
+          <div class="blob-wrap">
+            <svg class="blob" viewBox="0 0 100 100">
+              <path class="sp-body" d="${isNone ? DOT_D : SHAPES.subject.d}"/>
+              <ellipse class="sp-hole" data-h="1" cx="40" cy="40" rx="6" ry="4"/>
+              <ellipse class="sp-hole" data-h="2" cx="44" cy="44" rx="7" ry="4"/>
+              <ellipse class="sp-hole" data-h="3" cx="62" cy="64" rx="3" ry="2"/>
+              ${SHAPES.splatter.drops.map((d, i) => `<circle class="sp-body" data-d="${i}" cx="50" cy="50" r="${d.r}"/>`).join('')}
+            </svg>
+            ${isNone ? '' : `<div class="callout"><svg width="58" height="16"><path d="M0 12 L44 12 L56 2"/><circle cx="0" cy="12" r="3.5"/></svg><span class="callout-text">${result.hinted ? ICONS.lock : ''}${calloutText}</span></div>`}
+          </div>
+        </div>
+        <div class="scr-bottom">
+          <div class="scr-stage">
+            <div class="gauge"${isNone ? ' style="opacity:0"' : ''}>
+              <div class="scalebar mono keep-case"><span>1 gate</span><i class="bar"></i></div>
+              <div class="mono">Humans who said this</div>
+              <div class="gauge-num ink-strong">100%</div>
+            </div>
+            ${stopsAtTop && !isObjector ? `
+            <div class="stamp">
+              <div class="stamp-top">[ Verdict ${nn}/07 ]</div>
+              <div class="stamp-name">${wordLines(stampName)}</div>
+              <div class="stamp-line">${esc(line)}</div>
+            </div>` : `
+            <div class="verdict">
+              <div class="mono">[ Verdict ]</div>
+              <div class="verdict-name${human ? ' ink-strong' : ''}">${wordLines(verdictTitle)}</div>
+              <div class="mono verdict-line">${esc(line)}</div>
+            </div>`}
+          </div>
+          <div class="scr-slot">
+            <div class="scr-foot mono">¹ Each gate opens slower than the last | Tap to skip</div>
+            <button class="pill scr-next blue-next" type="button">${nextLabel}</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(root);
+
+  const blue = root.querySelector('.scr-blue');
+  const $ = (s) => blue.querySelector(s);
+  const $$ = (s) => [...blue.querySelectorAll(s)];
+  const col = $('.scr-col');
+  const aiRow = $('.ai-row');
+  const aiBox = $('.ai-box');
+  const xPaths = $$('.xmark path');
+  const scanText = $('.scan-text');
+  const gates = $$('.gate');
+  const gNames = $$('.g-name');
+  const notReached = $('.not-reached');
+  const floor = $('.floor');
+  const floorLabel = $('.floor-label');
+  const liquid = $('.floor-liquid');
+  const scanner = $('.scanner');
+  const ghosts = Object.fromEntries($$('.trail').map((n) => [n.dataset.k, n]));
+  const wrap = $('.blob-wrap');
+  const blobSvg = $('.blob');
+  const body = blobSvg.querySelector('.sp-body');
+  const holes = $$('.sp-hole');
+  const drops = $$('[data-d]');
+  const callout = $('.callout');
+  const dims = $('.dims');
+  const sqText = $('.sq-text');
+  const debris = $('.debris');
+  const gaugeEl = $('.gauge');
+  const gaugeNum = $('.gauge-num');
+  const verdictEl = $('.verdict');
+  const stampEl = $('.stamp');
+  const foot = $('.scr-foot');
+  const hdrRight = $('.hdr-right');
+  const nextBtn = root.querySelector(isObjector ? '.paper-next' : '.blue-next');
+
+  // ---------------------------------------------------------------- geometry
+  const W = col.clientWidth;
+  const H = col.clientHeight;
+  const AI_BOTTOM = 74;
+  const floorH = Math.round(Math.max(56, Math.min(90, H * 0.19)));
+  const floorTop = H - floorH;
+  const S = (floorTop - 94) / 3.575; // gate spacing: 80 px at full height
+  const g = [0, 1, 2, 3].map((i) => Math.round(AI_BOTTOM + 0.575 * S + i * S));
+  const size = Math.round(Math.max(36, Math.min(56, S * 0.62)));
+  const cx = Math.round(W * 0.42);
+  const restCenter = (layer) => (layer <= 4 ? g[layer - 1] - size / 2 - 1 : floorTop + floorH * 0.42);
+  const restTop = (layer) => Math.round(restCenter(layer) - size / 2);
+  const left = cx - size / 2;
+  const startTop = restTop(1);
+
+  gates.forEach((el, i) => (el.style.top = `${g[i]}px`));
+  notReached.style.top = `${g[0] - 14}px`;
+  floor.style.height = `${floorH}px`;
+  blobSvg.setAttribute('width', size);
+  blobSvg.setAttribute('height', size);
+  if (callout) {
+    callout.style.left = `${size - 3}px`;
+    callout.style.top = `${size / 2 - 12}px`;
+    callout.querySelector('.callout-text').style.maxWidth = `${Math.max(80, W - (cx + size / 2 - 3) - 60)}px`;
+  }
+  Object.entries(ghosts).forEach(([k, el]) => {
+    el.setAttribute('width', size);
+    el.setAttribute('height', size);
+    gsap.set(el, { x: left, y: k === 'was' ? startTop : restTop(Number(k)) });
+  });
+  gsap.set(wrap, { x: left, y: startTop });
+  gsap.set(holes, { opacity: 0 });
+  gsap.set(drops, { opacity: 0 });
+  gsap.set(liquid, { yPercent: 100 });
+
+  // Gauge: "humans who said this", counting down like a depth meter.
+  const gauge = { v: 100 };
+  const gaugeSize = (txt) => {
+    const em = [...txt].reduce((s, c) => s + (c === '%' ? 0.86 : c === '.' ? 0.28 : 0.6), 0) - 0.054 * txt.length;
+    return Math.min(148, Math.floor((W - 4) / em));
+  };
+  const renderGauge = () => {
+    const txt = gauge.v < 1 ? '<1%' : `${formatShare(gauge.v)}%`;
+    if (gaugeNum.textContent !== txt) {
+      gaugeNum.textContent = txt;
+      gaugeNum.style.fontSize = `${gaugeSize(txt)}px`;
+    }
+  };
+  gaugeNum.style.fontSize = `${gaugeSize('100%')}px`;
+
+  // Fit the big words to the column.
+  if (verdictEl) fitText(verdictEl.querySelector('.verdict-name'), result.tier === 'reserved' ? 76 : 56, 28);
+  const paperVerdict = root.querySelector('.scr-paper .verdict-name');
+  if (paperVerdict) fitText(paperVerdict, 76, 28);
+  if (stampEl) {
+    const nameEl = stampEl.querySelector('.stamp-name');
+    let fs = 56;
+    nameEl.style.fontSize = `${fs}px`;
+    while (stampEl.offsetWidth > W - 24 && fs > 28) nameEl.style.fontSize = `${(fs -= 2)}px`;
+  }
+
+  // Meat Proxy: the answer snaps into a measured square in the middle of the column.
+  const Q = Math.round(Math.min(108, H * 0.28));
+  const sqX = Math.round(W / 2 - Q / 2);
+  const sqY = Math.round((g[0] + g[2]) / 2 - Q / 2);
+  if (isMeat) {
+    sqText.textContent = result.input;
+    Object.assign(sqText.style, { left: `${sqX}px`, top: `${sqY}px`, width: `${Q}px`, height: `${Q}px` });
+    const wasX = cx + size * 0.35;
+    const wasY = startTop + size * 0.15;
+    dims.setAttribute('width', W);
+    dims.setAttribute('height', H);
+    dims.innerHTML = `
+      <g class="f-line">
+        <line x1="${sqX}" y1="${sqY - 12}" x2="${sqX + Q}" y2="${sqY - 12}"/><line x1="${sqX}" y1="${sqY - 16}" x2="${sqX}" y2="${sqY - 8}"/><line x1="${sqX + Q}" y1="${sqY - 16}" x2="${sqX + Q}" y2="${sqY - 8}"/>
+        <line x1="${sqX + Q + 12}" y1="${sqY}" x2="${sqX + Q + 12}" y2="${sqY + Q}"/><line x1="${sqX + Q + 8}" y1="${sqY}" x2="${sqX + Q + 16}" y2="${sqY}"/><line x1="${sqX + Q + 8}" y1="${sqY + Q}" x2="${sqX + Q + 16}" y2="${sqY + Q}"/>
+        <path d="M${sqX} ${sqY + Q} L${sqX - 36} ${sqY + Q + 30} L${sqX - 56} ${sqY + Q + 30}"/>
+        <path d="M${wasX} ${wasY} L${wasX + 18} ${wasY - 8}"/>
+      </g>
+      <g class="f-text" font-size="9">
+        <text x="${sqX + Q / 2}" y="${sqY - 18}" text-anchor="middle">${Q} px</text>
+        <text x="${sqX + Q + 20}" y="${sqY + Q / 2 + 3}">${Q} px</text>
+        <text x="${Math.max(0, sqX - 96)}" y="${sqY + Q + 33}" font-size="10">( IS )</text>
+        <text x="${wasX + 22}" y="${wasY - 6}">( WAS )</text>
+      </g>`;
+  }
+
+  // Keyboard Smash: loose letters, placed the same way every time.
+  const rand = seeded(`${result.input}|${index}`);
+  const bits = [];
+  if (isSmash) {
+    const chars = [...(result.input || '?')].filter((c) => c.trim()).slice(0, 10);
+    const yMin = startTop + size + 20;
+    const yMax = Math.max(yMin + 20, Math.min(g[2] + S * 0.4, floorTop - 30));
+    chars.forEach((ch, i) => {
+      const s = document.createElement('span');
+      s.textContent = ch;
+      debris.appendChild(s);
+      bits.push({ el: s, x: 14 + (W - 46) * ((i + 0.5) / chars.length) + (rand() - 0.5) * 30, y: yMin + rand() * (yMax - yMin), r: rand() * 80 - 40 });
+    });
+    for (let i = 0; i < 5; i++) {
+      const sq = document.createElement('i');
+      debris.appendChild(sq);
+      bits.push({ el: sq, x: 10 + rand() * (W - 20), y: yMin + rand() * (yMax - yMin + 30), r: 0 });
+    }
+  }
+
+  // ---------------------------------------------------------------- timeline
+  let skipping = false;
+  let landed = false;
+  const sfx = (fn) => () => { if (!skipping) fn(); };
+  // Nothing renders before its moment, so a skip lands on the same frame as a full play.
+  const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+  gsap.set(wrap, { opacity: 0 });
+  if (callout) gsap.set(callout, { opacity: 0 });
+  const morph = (d, at, dur, ease = 'power2.inOut') => {
+    if (window.MorphSVGPlugin) tl.to(body, { morphSVG: d, duration: dur, ease }, at);
+    else tl.set(body, { attr: { d } }, at + dur / 2);
+  };
+  const dimGates = (at) => {
+    tl.to($$('.g-half, .g-dot'), { opacity: 0.25, duration: 0.2 }, at);
+    tl.to(gNames, { opacity: 0, duration: 0.2 }, at);
+    tl.to(notReached, { opacity: 1, duration: 0.2 }, at + 0.1);
+    tl.to(floor, { opacity: 0.4, duration: 0.2 }, at);
+  };
+
+  // 0. Blue floods up from the bottom in a liquid wave.
+  const T1 = reduced ? 0 : 0.15;
+  if (!reduced) {
+    const flood = { p: 0, ph: 0 };
+    setWave(blue, 0, 0, 0);
+    tl.call(sfx(sound.flood), null, 0);
+    tl.to(flood, {
+      p: 1, ph: 5, duration: 0.42, ease: 'power2.inOut',
+      onUpdate: () => setWave(blue, flood.p, flood.ph, 2.6 * Math.sin(Math.PI * flood.p)),
+      onComplete: () => clearWave(blue),
+    }, 0);
+  }
+
+  // 1. Lift-off (300 ms): the answer drops in as a white blob with its callout.
+  if (isNone) {
+    tl.fromTo(wrap, { y: startTop - 70, opacity: 0 }, { y: startTop, opacity: 1, duration: 0.3, ease: 'bounce.out' }, T1);
+  } else {
+    tl.fromTo(wrap, { y: startTop - 34, opacity: 0 }, { y: startTop, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, T1);
+    tl.fromTo(blobSvg, { scale: 0.6, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.3, ease: 'back.out(2.5)' }, T1);
+    tl.fromTo(callout, { opacity: 0, x: -6 }, { opacity: 1, x: 0, duration: 0.2 }, T1 + 0.12);
+  }
+
+  // 2. Model check (600 ms): a scanner sweeps while the mono text scrambles and resolves.
+  const T2 = T1 + 0.3;
+  if (!isNone) {
+    tl.set(scanner, { y: 30, opacity: 1 }, T2);
+    tl.to(scanner, { y: startTop + size + 6, duration: 0.27, ease: 'none', yoyo: true, repeat: 1 }, T2);
+    tl.set(scanner, { opacity: 0 }, T2 + 0.54);
+    const sc = { p: 0 };
+    tl.to(sc, { p: 1, duration: 0.55, ease: 'none', onUpdate: () => (scanText.textContent = scramble('COMPARING WITH MODEL', sc.p)) }, T2);
+    tl.call(sfx(sound.tick), null, T2);
+    tl.call(sfx(sound.tick), null, T2 + 0.27);
+  }
+  const T3 = isNone ? T1 + 0.3 : T2 + 0.6;
+  let LAND;
+
+  if (isNone) {
+    // An empty answer: a single dot, straight onto the stamp.
+    tl.set(aiRow, { attr: { 'data-state': 'none' } }, T1);
+    tl.set(col, { attr: { 'data-cap': 'none' } }, T1);
+    dimGates(T1 + 0.15);
+    LAND = T3;
+  } else if (isMeat) {
+    // Match: the blob snaps into a perfect square. Deliberately abrupt.
+    tl.set(aiRow, { attr: { 'data-state': 'match' } }, T3);
+    tl.set(col, { attr: { 'data-cap': 'normalised' } }, T3);
+    tl.call(sfx(sound.buzz), null, T3);
+    tl.fromTo(aiBox, { scale: 1 }, { scale: 1.12, duration: 0.06, yoyo: true, repeat: 1 }, T3);
+    tl.to(callout, { opacity: 0, duration: 0.08 }, T3);
+    morph(SHAPES.square.d, T3, 0.12, 'power4.out');
+    tl.to(wrap, { x: sqX, y: sqY, scale: Q / size, transformOrigin: '0 0', duration: 0.22, ease: 'expo.out' }, T3 + 0.05);
+    tl.to(ghosts.was, { opacity: 0.6, duration: 0.15 }, T3 + 0.08);
+    tl.to(sqText, { opacity: 1, duration: 0.1 }, T3 + 0.22);
+    tl.to(dims, { opacity: 1, duration: 0.2 }, T3 + 0.22);
+    dimGates(T3 + 0.05);
+    LAND = T3 + 0.16;
+  } else if (isSmash) {
+    // Unreadable: the blob glitches and comes apart into loose letters.
+    tl.set(aiRow, { attr: { 'data-state': 'smash' } }, T3);
+    tl.set(col, { attr: { 'data-cap': 'unreadable' } }, T3);
+    tl.call(sfx(sound.glitch), null, T3);
+    for (let i = 0; i < 6; i++) tl.set(blobSvg, { x: (rand() - 0.5) * 14, skewX: (rand() - 0.5) * 24 }, T3 + i * 0.04);
+    tl.set(blobSvg, { x: 0, skewX: 0, opacity: 0.6 }, T3 + 0.24);
+    tl.set(body, { attr: { class: 'sp-line', 'stroke-dasharray': '4 7' } }, T3 + 0.24);
+    bits.forEach((b, i) => {
+      tl.fromTo(b.el,
+        { x: cx - 6, y: startTop + size / 2 - 10, rotation: 0, opacity: 1 },
+        { x: b.x, y: b.y, rotation: b.r, duration: 0.45, ease: 'power3.out' },
+        T3 + 0.24 + i * 0.012);
+    });
+    dimGates(T3 + 0.3);
+    LAND = T3 + 0.72;
+  } else {
+    // 3. Seal opens (300 ms): the AI's answer, struck through. Not a match.
+    tl.set(aiRow, { attr: { 'data-state': 'nomatch' } }, T3);
+    tl.fromTo(aiBox, { rotationY: 90 }, { rotationY: 0, transformPerspective: 400, duration: 0.18, ease: 'power2.out' }, T3);
+    tl.set($('.xmark'), { opacity: 1 }, T3);
+    tl.to(xPaths, { strokeDashoffset: 0, duration: 0.12, stagger: 0.05 }, T3 + 0.06);
+    tl.call(sfx(sound.tick), null, T3);
+    morph(SHAPES.circle.d, T3 + 0.05, 0.22);
+
+    if (isObjector) {
+      // The chip refuses to drop. Then the blue drains back to white.
+      tl.set(col, { attr: { 'data-cap': 'declined' } }, T3);
+      const halves0 = gates[0].querySelectorAll('.g-half');
+      tl.to(halves0, { opacity: 0.15, duration: 0.05, yoyo: true, repeat: 5 }, T3 + 0.3);
+      tl.to(wrap, { y: startTop - 10, duration: 0.13, ease: 'power2.out', yoyo: true, repeat: 3 }, T3 + 0.3);
+      const drain = { p: 1, ph: 0 };
+      tl.call(sfx(sound.flood), null, T3 + 0.9);
+      tl.to(drain, {
+        p: 0, ph: -5, duration: 0.5, ease: 'power2.inOut',
+        onUpdate: () => setWave(blue, drain.p, drain.ph, 2.6 * Math.sin(Math.PI * drain.p)),
+      }, T3 + 0.9);
+      LAND = T3 + 1.4;
+    } else {
+      // 4. Descent: the first gate takes 250 ms, each next one 1.4 times longer.
+      let t = T3 + 0.3;
+      let d = 0.25;
+      for (let i = 0; i < target - 1; i++) {
+        const last = target === 5 && i === 3;
+        const halves = gates[i].querySelectorAll('.g-half');
+        if (last) {
+          // 5. The hang, Human Reserved: the last gate strains twice, then breaks.
+          tl.to(wrap, { y: restTop(4) + 6, duration: 0.09, yoyo: true, repeat: 3, ease: 'power1.inOut' }, t);
+          tl.to(halves, { y: 3, duration: 0.09, yoyo: true, repeat: 3, ease: 'power1.inOut' }, t);
+          tl.call(sfx(sound.tick), null, t + 0.1);
+          tl.call(sfx(sound.tick), null, t + 0.28);
+          t += 0.5;
+          tl.set(gates[i], { attr: { 'data-broken': '1' } }, t);
+          tl.to(halves[0], { rotation: 9, duration: 0.15, ease: 'power2.out' }, t);
+          tl.to(halves[1], { rotation: -9, duration: 0.15, ease: 'power2.out' }, t);
+          gates[i].querySelectorAll('.g-debris i').forEach((bit, k) => {
+            tl.fromTo(bit, { opacity: 1, x: 0, y: 0, rotation: 0 }, { x: (k - 1) * 16, y: -6 - (k % 2) * 4, rotation: 35 - k * 20, duration: 0.3, ease: 'power2.out' }, t);
+          });
+        } else {
+          tl.to(halves, { scaleX: 0.36, duration: Math.min(0.1, d * 0.4), ease: 'power2.out' }, t);
+          tl.to(halves, { scaleX: 1, duration: 0.12, ease: 'power2.in' }, t + d * 0.8);
+        }
+        tl.to(wrap, { y: restTop(i + 2), duration: d, ease: 'power1.in' }, t);
+        tl.fromTo(blobSvg, { scaleX: 1, scaleY: 1 }, { scaleX: 0.9, scaleY: 1.12, duration: d / 2, yoyo: true, repeat: 1, ease: 'sine.inOut', transformOrigin: '50% 50%' }, t);
+        morph(SHAPES[LAYER_SHAPE[i + 2]].d, t + d * 0.2, d * 0.6);
+        if (i + 2 === 4) tl.to(holes[0], { opacity: 1, duration: d * 0.4 }, t + d * 0.5);
+        if (i + 2 === 5) {
+          tl.to(holes[0], { opacity: 0, duration: d * 0.3 }, t + d * 0.3);
+          tl.to([holes[1], holes[2]], { opacity: 1, duration: d * 0.4 }, t + d * 0.5);
+        }
+        tl.to(ghosts[i + 1], { opacity: 0.25 + i * 0.07, duration: 0.2 }, t + d * 0.3);
+        tl.to(gauge, { v: GATES[i] - 0.0001, duration: d, ease: 'none', onUpdate: renderGauge }, t);
+        // Each gate it passes flashes, ticks a check and plays a soft tick.
+        tl.set(gates[i], { attr: { 'data-passed': '1' } }, t + d * 0.2);
+        tl.call(sfx(sound.tick), null, t + d * 0.2);
+        tl.fromTo(gates[i].querySelector('.g-pct'), { opacity: 0.3 }, { opacity: 1, duration: 0.2 }, t + d * 0.2);
+        t += d;
+        d *= 1.4;
+      }
+      if (target < 5) {
+        // 5. The hang: the chip pauses above the gate it can't pass while the scanner flickers.
+        const hg = target - 1;
+        const hd = target === 1 ? 0.4 : 0.5;
+        tl.set(scanner, { y: g[hg] - 1 }, t);
+        tl.to(scanner, { opacity: 1, duration: 0.05, repeat: Math.round(hd / 0.1) - 1, yoyo: true, ease: 'steps(1)' }, t);
+        tl.set(scanner, { opacity: 0 }, t + hd);
+        tl.to(wrap, { y: restTop(target) + 5, duration: 0.1, yoyo: true, repeat: 1, ease: 'power1.out' }, t + 0.05);
+        tl.to(gauge, { v: finalShare, duration: 0.2, ease: 'power1.out', onUpdate: renderGauge }, t + hd - 0.2);
+        t += hd;
+      } else {
+        tl.to(gauge, { v: finalShare, duration: 0.2, ease: 'power1.out', onUpdate: renderGauge }, t - 0.2);
+      }
+      LAND = t;
+    }
+  }
+
+  // 6. Landing (300 ms): the gate closes with a clunk, then the stamp or the verdict.
+  tl.addLabel('land', LAND);
+  const L = LAND + 0.005;
+  tl.call(() => land(), null, LAND + 0.01);
+  if (!isObjector) {
+    tl.to(col, { x: 2, duration: 0.03, yoyo: true, repeat: 3, ease: 'none' }, LAND);
+    tl.set(col, { attr: { 'data-cap': isMeat ? 'normalised' : isSmash ? 'unreadable' : isNone ? 'none' : 'landed' } }, L);
+    if (target >= 1) {
+      tl.fromTo(blobSvg, { scaleX: 1.14, scaleY: 0.84 }, { scaleX: 1, scaleY: 1, duration: 0.32, ease: 'elastic.out(1, 0.45)', transformOrigin: '50% 100%' }, LAND);
+    }
+    if (target >= 1 && target <= 4) tl.set(gNames[target - 1], { attr: { 'data-here': '1' } }, L);
+    if (target === 5) {
+      tl.set(floorLabel, { attr: { 'data-here': '1' } }, L);
+      tl.to(liquid, { yPercent: 0, duration: 0.45, ease: 'power2.out' }, LAND - 0.15);
+      drops.forEach((dot, i) => {
+        const to = SHAPES.splatter.drops[i];
+        tl.fromTo(dot, { opacity: 1, attr: { cx: 50, cy: 50 } }, { attr: { cx: to.cx, cy: to.cy }, duration: 0.3, ease: 'power3.out' }, LAND);
+      });
+    }
+    tl.to(gaugeEl, { opacity: 0, y: 8, duration: 0.15 }, LAND);
+    if (stampEl) {
+      tl.set(stampEl, { visibility: 'visible' }, L);
+      tl.fromTo(stampEl, { opacity: 0, scale: 2.1, rotation: stampRot - 9 }, { opacity: 1, scale: 1, rotation: stampRot, duration: 0.16, ease: 'power4.in' }, LAND + 0.04);
+      tl.to(stampEl, { scale: 1.03, duration: 0.05, yoyo: true, repeat: 1 }, LAND + 0.2);
+    } else {
+      tl.set(verdictEl, { visibility: 'visible' }, L);
+      tl.fromTo(verdictEl, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' }, LAND + 0.04);
+    }
+    tl.to(foot, { opacity: 0, duration: 0.15 }, LAND);
+  }
+  tl.set(nextBtn, { visibility: 'visible' }, LAND + 0.25);
+  tl.fromTo(nextBtn, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' }, LAND + 0.25);
+  // 7. Score (400 ms): the points count into the round total.
+  tl.call(() => scoreBeat(), null, LAND + 0.3);
+  tl.to({}, { duration: 0.45 }, LAND + 0.3);
+
+  function land() {
+    landed = true;
+    ctrl.landed = true;
+    if (!skipping) {
+      sound.clunk();
+      if (stampEl) setTimeout(() => sound.thud(), 40);
+      if (result.tier === 'reserved' || isObjector) setTimeout(() => sound.chime(), 160);
+      vibrate(30);
+    }
+    opts.onLand?.();
+    setTimeout(() => nextBtn.focus({ preventScroll: true }), 260);
+  }
+
+  function scoreBeat() {
+    if (isObjector || !hdrRight) return;
+    hdrRight.classList.add('num');
+    const c = { n: prevTotal };
+    const paint = () => (hdrRight.textContent = `+${result.points} → ${Math.round(c.n)} / 700`);
+    if (reduced) { c.n = total; paint(); return; }
+    gsap.to(c, { n: total, duration: 0.4, ease: 'power1.out', onUpdate: paint });
+  }
+
+  nextBtn.addEventListener('click', () => opts.onNext?.());
+
+  const landAt = tl.labels.land;
+  const ctrl = {
+    el: root,
+    timeline: tl,
+    landed: false,
+    draining: false,
+    /** After the first 600 ms, a tap or Enter skips to the landing. Never changes the result. */
+    skip() {
+      if (reduced || landed) return false;
+      const t = tl.time();
+      if (t < 0.6 || t >= landAt) return false;
+      skipping = true;
+      tl.seek(landAt, false);
+      skipping = false;
+      scanText.textContent = 'COMPARING WITH MODEL';
+      if (finalShare != null) { gauge.v = finalShare; renderGauge(); }
+      if (isObjector) setWave(blue, 0, 0, 0);
+      else clearWave(blue);
+      return true;
+    },
+    /** Blue drains away, revealing whatever is now underneath. */
+    drain(onDone) {
+      if (ctrl.draining) return;
+      ctrl.draining = true;
+      const finish = () => { root.remove(); onDone?.(); };
+      if (reduced || isObjector) {
+        gsap.to(root, { opacity: 0, duration: reduced ? 0.15 : 0.3, onComplete: finish });
+        return;
+      }
+      const s = { p: 1, ph: 0 };
+      sound.flood();
+      gsap.to(s, {
+        p: 0, ph: -5, duration: 0.45, ease: 'power2.inOut',
+        onUpdate: () => setWave(blue, s.p, s.ph, 2.6 * Math.sin(Math.PI * s.p)),
+        onComplete: finish,
+      });
+    },
+  };
+
+  root.focus({ preventScroll: true });
+  if (reduced) {
+    // Reduced motion: no movement. Jump to the final frame and fade the screen in.
+    skipping = true;
+    tl.progress(1, false);
+    skipping = false;
+    sound.clunk();
+    if (stampEl) sound.thud();
+    gsap.fromTo(root, { opacity: 0 }, { opacity: 1, duration: 0.15 });
+  } else {
+    tl.play(0);
+  }
+  return ctrl;
+}

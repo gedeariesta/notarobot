@@ -1,0 +1,14 @@
+{
+  "name": "notarobot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A daily CAPTCHA you can't quite pass. CCT431 final project.",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.js"
+  },
+  "devDependencies": {
+    "gsap": "3.13.0"
+  }
+}

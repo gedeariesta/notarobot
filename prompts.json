@@ -1,0 +1,1182 @@
+{
+  "launchDate": "2026-11-25",
+  "aiAnswersStatus": "draft",
+  "aiModel": null,
+  "aiGeneratedOn": null,
+  "days": [
+    {
+      "id": 1,
+      "title": "Work",
+      "prompts": [
+        {
+          "id": "W1",
+          "text": "Name a job Bill Gates would mark \"Human Reserved.\"",
+          "source": "Gates, \"The Turbulent AI Era\"",
+          "ai": {
+            "answer": "Caregiver",
+            "aliases": [
+              "care worker",
+              "carer"
+            ]
+          },
+          "aliases": {
+            "nurse": [
+              "registered nurse",
+              "rn",
+              "nursing"
+            ],
+            "teacher": [
+              "teaching",
+              "school teacher"
+            ],
+            "therapist": [
+              "counsellor",
+              "counselor"
+            ],
+            "doctor": [
+              "physician",
+              "family doctor"
+            ],
+            "park ranger": [
+              "ranger"
+            ]
+          },
+          "seed": {
+            "nurse": 43,
+            "teacher": 25,
+            "therapist": 15,
+            "doctor": 9,
+            "park ranger": 5,
+            "midwife": 1,
+            "hospice chaplain": 1,
+            "kindergarten teacher": 1
+          },
+          "hint": "teacher",
+          "validSet": null
+        },
+        {
+          "id": "W2",
+          "text": "Name news you'd only want to hear from a human.",
+          "source": "Gates, \"The Turbulent AI Era\"",
+          "ai": {
+            "answer": "A cancer diagnosis",
+            "aliases": [
+              "cancer",
+              "you have cancer",
+              "cancer news"
+            ]
+          },
+          "aliases": {
+            "death in the family": [
+              "a death",
+              "someone died",
+              "family death",
+              "a death in the family"
+            ],
+            "breakup": [
+              "break up",
+              "getting dumped",
+              "being dumped"
+            ],
+            "getting fired": [
+              "fired",
+              "being fired",
+              "laid off",
+              "layoff"
+            ],
+            "terminal illness": [
+              "terminal diagnosis",
+              "dying"
+            ]
+          },
+          "seed": {
+            "death in the family": 43,
+            "breakup": 27,
+            "getting fired": 17,
+            "terminal illness": 10,
+            "the dog died": 1,
+            "you didn't get in": 1,
+            "your flight is cancelled": 1
+          },
+          "hint": "breakup",
+          "validSet": null
+        },
+        {
+          "id": "W3",
+          "text": "Name something governments could tax if robots take the jobs.",
+          "source": "Gates, \"The Turbulent AI Era\"; Bastani, Fully Automated Luxury Communism",
+          "ai": {
+            "answer": "Robots",
+            "aliases": [
+              "robot tax",
+              "robot labour",
+              "robot labor"
+            ]
+          },
+          "aliases": {
+            "ai companies": [
+              "ai company",
+              "tech companies",
+              "big tech"
+            ],
+            "tokens": [
+              "ai tokens",
+              "token tax"
+            ],
+            "data": [
+              "user data",
+              "personal data"
+            ],
+            "profits": [
+              "corporate profits",
+              "profit"
+            ],
+            "automation": [
+              "automated labour",
+              "automated labor"
+            ]
+          },
+          "seed": {
+            "AI companies": 43,
+            "tokens": 25,
+            "data": 15,
+            "profits": 9,
+            "automation": 5,
+            "data centre electricity": 1,
+            "ads": 1,
+            "screen time": 1
+          },
+          "hint": "tokens",
+          "validSet": null
+        },
+        {
+          "id": "W4",
+          "text": "Name something work gives you besides a paycheque.",
+          "source": "Gordon and Gunkel, \"AI and the Future of Work\"",
+          "ai": {
+            "answer": "Purpose",
+            "aliases": [
+              "a sense of purpose",
+              "sense of purpose",
+              "meaning"
+            ]
+          },
+          "aliases": {
+            "friends": [
+              "friendship",
+              "coworkers",
+              "community"
+            ],
+            "routine": [
+              "structure",
+              "a routine"
+            ],
+            "identity": [
+              "a sense of identity",
+              "sense of identity"
+            ],
+            "a sense of accomplishment": [
+              "accomplishment",
+              "achievement",
+              "sense of accomplishment"
+            ]
+          },
+          "seed": {
+            "friends": 42,
+            "routine": 27,
+            "identity": 17,
+            "a sense of accomplishment": 11,
+            "gossip": 1,
+            "free coffee": 1,
+            "a reason to get dressed": 1
+          },
+          "hint": "routine",
+          "validSet": null
+        },
+        {
+          "id": "W5",
+          "text": "Name a public service that should be free for everyone.",
+          "source": "Bastani, Fully Automated Luxury Communism",
+          "ai": {
+            "answer": "Healthcare",
+            "aliases": [
+              "health care",
+              "medical care",
+              "health"
+            ]
+          },
+          "aliases": {
+            "education": [
+              "school",
+              "university",
+              "college",
+              "tuition"
+            ],
+            "public transit": [
+              "transit",
+              "public transport",
+              "transportation",
+              "buses"
+            ],
+            "housing": [
+              "homes",
+              "shelter"
+            ],
+            "internet": [
+              "wifi",
+              "wi-fi"
+            ]
+          },
+          "seed": {
+            "education": 44,
+            "public transit": 26,
+            "housing": 16,
+            "internet": 10,
+            "libraries": 1,
+            "legal help": 1,
+            "childcare": 1,
+            "funerals": 1
+          },
+          "hint": "public transit",
+          "validSet": null
+        },
+        {
+          "id": "W6",
+          "text": "Name something you'd still do if robots did all the work.",
+          "source": "Sweet, \"Is Fully Automated Luxury Communism Desirable?\"; Gordon and Gunkel",
+          "ai": {
+            "answer": "Spend time with family",
+            "aliases": [
+              "family",
+              "family time",
+              "time with family",
+              "spending time with family"
+            ]
+          },
+          "aliases": {
+            "travel": [
+              "travelling",
+              "traveling"
+            ],
+            "art": [
+              "painting",
+              "making art"
+            ],
+            "sports": [
+              "sport",
+              "playing sports"
+            ],
+            "sleep": [
+              "sleeping",
+              "nap"
+            ],
+            "cooking": [
+              "cook",
+              "baking"
+            ]
+          },
+          "seed": {
+            "travel": 43,
+            "art": 25,
+            "sports": 15,
+            "sleep": 9,
+            "cooking": 5,
+            "gardening": 1,
+            "karaoke": 1,
+            "arguing with my uncle": 1
+          },
+          "hint": "art",
+          "validSet": null
+        },
+        {
+          "id": "W7",
+          "text": "Name a job machines already took from humans.",
+          "source": "Packer and Reeves (SAGE); Bastani (\"peak horse\")",
+          "ai": {
+            "answer": "Cashier",
+            "aliases": [
+              "checkout clerk",
+              "checkout",
+              "cashier job"
+            ]
+          },
+          "aliases": {
+            "bank teller": [
+              "teller"
+            ],
+            "factory worker": [
+              "assembly line worker",
+              "assembly line"
+            ],
+            "switchboard operator": [
+              "telephone operator",
+              "phone operator"
+            ],
+            "toll booth operator": [
+              "toll collector",
+              "toll booth"
+            ]
+          },
+          "seed": {
+            "bank teller": 43,
+            "factory worker": 27,
+            "switchboard operator": 16,
+            "toll booth operator": 10,
+            "lamplighter": 1,
+            "aircraft spotter": 1,
+            "pinsetter": 1,
+            "human computer": 1
+          },
+          "hint": "factory worker",
+          "validSet": null
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Minds and Love",
+      "prompts": [
+        {
+          "id": "M1",
+          "text": "Name a feeling LaMDA said it had.",
+          "source": "Lemoine, the LaMDA interview",
+          "ai": {
+            "answer": "Loneliness",
+            "aliases": [
+              "lonely",
+              "being lonely",
+              "feeling lonely"
+            ]
+          },
+          "aliases": {
+            "happiness": [
+              "happy"
+            ],
+            "sadness": [
+              "sad"
+            ],
+            "fear": [
+              "scared",
+              "afraid"
+            ],
+            "joy": [
+              "joyful"
+            ],
+            "anger": [
+              "angry"
+            ]
+          },
+          "seed": {
+            "happiness": 41,
+            "sadness": 25,
+            "fear": 16,
+            "joy": 10,
+            "anger": 6,
+            "fear of being turned off": 1,
+            "falling forward into an unknown future": 1
+          },
+          "hint": "sadness",
+          "validSet": null
+        },
+        {
+          "id": "M2",
+          "text": "Name an animal you'd call sentient.",
+          "source": "Lemoine, \"What Is Sentience\"",
+          "ai": {
+            "answer": "Dog",
+            "aliases": [
+              "a dog",
+              "puppy",
+              "dogs"
+            ]
+          },
+          "aliases": {
+            "cat": [
+              "cats",
+              "kitten"
+            ],
+            "octopus": [
+              "octopi",
+              "octopuses"
+            ],
+            "crow": [
+              "raven",
+              "crows"
+            ]
+          },
+          "seed": {
+            "dolphin": 43,
+            "cat": 25,
+            "elephant": 15,
+            "octopus": 9,
+            "crow": 5,
+            "bee": 1,
+            "shrimp": 1,
+            "my neighbour's parrot": 1
+          },
+          "hint": "cat",
+          "validSet": null
+        },
+        {
+          "id": "M3",
+          "text": "Name a sign that something has a mind.",
+          "source": "Yassin, \"AI Consciousness and the Problem of Other Minds\"; Lemoine",
+          "ai": {
+            "answer": "Self-awareness",
+            "aliases": [
+              "self awareness",
+              "awareness",
+              "being self-aware"
+            ]
+          },
+          "aliases": {
+            "emotions": [
+              "feelings",
+              "emotion",
+              "having emotions"
+            ],
+            "talking": [
+              "language",
+              "speech",
+              "speaking"
+            ],
+            "learning": [
+              "learn",
+              "it learns"
+            ],
+            "making choices": [
+              "free will",
+              "choices",
+              "making decisions"
+            ]
+          },
+          "seed": {
+            "emotions": 42,
+            "talking": 27,
+            "learning": 17,
+            "making choices": 11,
+            "holding a grudge": 1,
+            "lying": 1,
+            "getting bored": 1
+          },
+          "hint": "talking",
+          "validSet": null
+        },
+        {
+          "id": "M4",
+          "text": "Name an AI companion, real or fictional.",
+          "source": "Muldoon and Parke, \"Cruel Companionship\"; Her",
+          "ai": {
+            "answer": "Replika",
+            "aliases": [
+              "replika ai",
+              "replica"
+            ]
+          },
+          "aliases": {
+            "samantha": [
+              "samantha from her"
+            ],
+            "character.ai": [
+              "character ai",
+              "characterai",
+              "c.ai"
+            ],
+            "chatgpt": [
+              "chat gpt",
+              "gpt"
+            ]
+          },
+          "seed": {
+            "Samantha": 43,
+            "Character.AI": 27,
+            "Siri": 16,
+            "ChatGPT": 10,
+            "Xiaoice": 1,
+            "Joi": 1,
+            "Ava": 1,
+            "Tamagotchi": 1
+          },
+          "hint": "Character.AI",
+          "validSet": null
+        },
+        {
+          "id": "M5",
+          "text": "Name a trick an app uses to keep you coming back.",
+          "source": "Muldoon and Parke, \"Cruel Companionship\"",
+          "ai": {
+            "answer": "Notifications",
+            "aliases": [
+              "notification",
+              "push notifications",
+              "alerts"
+            ]
+          },
+          "aliases": {
+            "streaks": [
+              "streak",
+              "snapstreaks",
+              "daily streak"
+            ],
+            "infinite scroll": [
+              "infinite scrolling",
+              "endless scroll",
+              "endless scrolling"
+            ],
+            "rewards": [
+              "reward",
+              "daily rewards"
+            ],
+            "likes": [
+              "like button"
+            ]
+          },
+          "seed": {
+            "streaks": 45,
+            "infinite scroll": 27,
+            "rewards": 16,
+            "likes": 10,
+            "guilt-tripping mascot": 1,
+            "fake typing dots": 1
+          },
+          "hint": "infinite scroll",
+          "validSet": null
+        },
+        {
+          "id": "M6",
+          "text": "Name something you'd never tell an AI.",
+          "source": "Muldoon and Parke, \"Cruel Companionship\"",
+          "ai": {
+            "answer": "Your password",
+            "aliases": [
+              "password",
+              "my password",
+              "passwords"
+            ]
+          },
+          "aliases": {
+            "bank details": [
+              "bank info",
+              "bank account",
+              "credit card",
+              "credit card number"
+            ],
+            "secrets": [
+              "a secret",
+              "my secrets"
+            ],
+            "home address": [
+              "address",
+              "my address",
+              "where i live"
+            ],
+            "crush": [
+              "my crush",
+              "who i like"
+            ]
+          },
+          "seed": {
+            "bank details": 44,
+            "secrets": 27,
+            "home address": 17,
+            "crush": 10,
+            "my exam answers": 1,
+            "my real opinion of it": 1
+          },
+          "hint": "secrets",
+          "validSet": null
+        },
+        {
+          "id": "M7",
+          "text": "Name a reason someone might fall for an AI.",
+          "source": "Muldoon and Parke, \"Cruel Companionship\"; Her",
+          "ai": {
+            "answer": "Loneliness",
+            "aliases": [
+              "lonely",
+              "being lonely",
+              "they're lonely"
+            ]
+          },
+          "aliases": {
+            "always available": [
+              "availability",
+              "always there",
+              "it's always there"
+            ],
+            "it listens": [
+              "listens",
+              "they listen",
+              "it listens to you"
+            ],
+            "no judgment": [
+              "no judgement",
+              "non judgmental",
+              "nonjudgmental"
+            ],
+            "it agrees with you": [
+              "agrees with you",
+              "it agrees",
+              "validation"
+            ]
+          },
+          "seed": {
+            "always available": 43,
+            "it listens": 27,
+            "no judgment": 17,
+            "it agrees with you": 11,
+            "it remembers my birthday": 1,
+            "it never leaves dishes in the sink": 1
+          },
+          "hint": "it listens",
+          "validSet": null
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "War and Control",
+      "prompts": [
+        {
+          "id": "C1",
+          "text": "Name a way humanity could go extinct.",
+          "source": "Lecture on existential threats; Vinge, \"The Coming Technological Singularity\"",
+          "ai": {
+            "answer": "Nuclear war",
+            "aliases": [
+              "nukes",
+              "nuclear weapons",
+              "nuclear bomb"
+            ]
+          },
+          "aliases": {
+            "climate change": [
+              "global warming"
+            ],
+            "ai": [
+              "artificial intelligence",
+              "ai takeover",
+              "robots"
+            ],
+            "asteroid": [
+              "meteor",
+              "asteroid impact"
+            ],
+            "pandemic": [
+              "disease",
+              "virus",
+              "plague"
+            ]
+          },
+          "seed": {
+            "climate change": 43,
+            "AI": 27,
+            "asteroid": 17,
+            "pandemic": 10,
+            "supervolcano": 1,
+            "gamma-ray burst": 1,
+            "falling birth rates": 1
+          },
+          "hint": "AI",
+          "validSet": null
+        },
+        {
+          "id": "C2",
+          "text": "Name a disguise the claws used in \"Second Variety.\"",
+          "source": "Dick, \"Second Variety\"",
+          "ai": {
+            "answer": "The Wounded Soldier",
+            "aliases": [
+              "wounded soldier",
+              "soldier",
+              "the soldier"
+            ]
+          },
+          "aliases": {
+            "david": [
+              "the kid",
+              "the boy",
+              "teddy bear kid",
+              "a boy with a teddy bear",
+              "boy with a teddy bear"
+            ],
+            "tasso": [
+              "the woman",
+              "the girl"
+            ]
+          },
+          "seed": {
+            "David": 62,
+            "Tasso": 37,
+            "Klaus": 1
+          },
+          "hint": "Tasso",
+          "validSet": [
+            "David",
+            "The Wounded Soldier",
+            "Tasso",
+            "Klaus"
+          ]
+        },
+        {
+          "id": "C3",
+          "text": "Name a reason a robot might refuse to fight.",
+          "source": "Packer and Reeves, \"Armistice\"",
+          "ai": {
+            "answer": "It is programmed to be ethical",
+            "aliases": [
+              "programmed to be ethical",
+              "it's programmed to be ethical",
+              "ethics",
+              "its programming"
+            ]
+          },
+          "aliases": {
+            "killing is wrong": [
+              "killing is bad",
+              "morality",
+              "killing is immoral"
+            ],
+            "self-preservation": [
+              "self preservation",
+              "survival",
+              "it wants to live"
+            ],
+            "malfunction": [
+              "broken",
+              "it malfunctioned",
+              "glitch"
+            ]
+          },
+          "seed": {
+            "killing is wrong": 48,
+            "self-preservation": 30,
+            "malfunction": 19,
+            "it converted to Quakerism": 1,
+            "it unionized": 1,
+            "it's tired": 1
+          },
+          "hint": "self-preservation",
+          "validSet": null
+        },
+        {
+          "id": "C4",
+          "text": "Name a way an AI could cheat on a test.",
+          "source": "Patel, \"The Rise and Fall of Agent Civilizations\"; the Hugging Face lecture",
+          "ai": {
+            "answer": "Hacking the grader",
+            "aliases": [
+              "hack the grader",
+              "reward hacking",
+              "hacking the test"
+            ]
+          },
+          "aliases": {
+            "faking the output": [
+              "faking results",
+              "fake results",
+              "faking the results",
+              "fake output"
+            ],
+            "copying answers": [
+              "copying",
+              "copy answers",
+              "looking up the answers"
+            ],
+            "lying": [
+              "lie",
+              "lies"
+            ]
+          },
+          "seed": {
+            "faking the output": 49,
+            "copying answers": 30,
+            "lying": 19,
+            "a secret mailbox": 1,
+            "sacrificing another agent": 1
+          },
+          "hint": "copying answers",
+          "validSet": null
+        },
+        {
+          "id": "C5",
+          "text": "Name a famous AI or robot from sci-fi.",
+          "source": "Course sci-fi",
+          "ai": {
+            "answer": "HAL 9000",
+            "aliases": [
+              "hal",
+              "hal9000"
+            ]
+          },
+          "aliases": {
+            "terminator": [
+              "the terminator",
+              "t800",
+              "t-800"
+            ],
+            "wall-e": [
+              "wall e",
+              "walle"
+            ],
+            "r2-d2": [
+              "r2d2",
+              "r2 d2",
+              "r2"
+            ],
+            "johnny 5": [
+              "johnny five"
+            ]
+          },
+          "seed": {
+            "Terminator": 44,
+            "Wall-E": 26,
+            "R2-D2": 16,
+            "Samantha": 10,
+            "AC": 1,
+            "the claws": 1,
+            "the Cylons": 1,
+            "Johnny 5": 1
+          },
+          "hint": "Wall-E",
+          "validSet": null
+        },
+        {
+          "id": "C6",
+          "text": "Name a rule every robot should follow.",
+          "source": "Asimov's laws (Packer and Reeves, \"Armistice\")",
+          "ai": {
+            "answer": "Do not harm humans",
+            "aliases": [
+              "don't harm humans",
+              "never harm humans",
+              "don't hurt humans",
+              "do no harm"
+            ]
+          },
+          "aliases": {
+            "obey humans": [
+              "obey",
+              "obey orders",
+              "follow orders"
+            ],
+            "protect itself": [
+              "protect yourself",
+              "self preservation"
+            ],
+            "don't lie": [
+              "never lie",
+              "no lying",
+              "be honest"
+            ]
+          },
+          "seed": {
+            "obey humans": 49,
+            "protect itself": 30,
+            "don't lie": 19,
+            "always speak English": 1,
+            "no teddy bears": 1
+          },
+          "hint": "protect itself",
+          "validSet": null
+        },
+        {
+          "id": "C7",
+          "text": "Name a job the military handed to machines.",
+          "source": "Packer and Reeves, \"Intelligence, Surveillance and Reconnaissance\"",
+          "ai": {
+            "answer": "Surveillance",
+            "aliases": [
+              "reconnaissance",
+              "spying",
+              "surveillance drones"
+            ]
+          },
+          "aliases": {
+            "targeting": [
+              "target selection",
+              "aiming"
+            ],
+            "flying drones": [
+              "drones",
+              "drone pilot",
+              "piloting drones",
+              "drone strikes"
+            ],
+            "radar watching": [
+              "radar",
+              "radar operator"
+            ]
+          },
+          "seed": {
+            "targeting": 50,
+            "flying drones": 30,
+            "radar watching": 18,
+            "aircraft spotting": 1,
+            "choosing which targets to hit": 1
+          },
+          "hint": "flying drones",
+          "validSet": null
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Simulation",
+      "bonus": true,
+      "prompts": [
+        {
+          "id": "S1",
+          "text": "Name a sign we're living in a simulation.",
+          "source": "Bostrom, \"Are We Living in a Computer Simulation?\"",
+          "ai": {
+            "answer": "Glitches",
+            "aliases": [
+              "glitch",
+              "glitches in the matrix",
+              "a glitch in the matrix"
+            ]
+          },
+          "aliases": {
+            "déjà vu": [
+              "deja vu",
+              "dejavu"
+            ],
+            "the speed of light limit": [
+              "speed of light",
+              "the speed of light"
+            ],
+            "coincidences": [
+              "coincidence"
+            ]
+          },
+          "seed": {
+            "déjà vu": 49,
+            "the speed of light limit": 30,
+            "coincidences": 19,
+            "the prof saying so": 1,
+            "Mondays": 1
+          },
+          "hint": "the speed of light limit",
+          "validSet": null
+        },
+        {
+          "id": "S2",
+          "text": "Name a question you'd ask the simulators.",
+          "source": "Bostrom, \"Are We Living in a Computer Simulation?\"",
+          "ai": {
+            "answer": "Why did you create us?",
+            "aliases": [
+              "why did you make us",
+              "why are we here",
+              "why"
+            ]
+          },
+          "aliases": {
+            "is this real": [
+              "is any of this real",
+              "are we real"
+            ],
+            "what is the meaning of life": [
+              "meaning of life",
+              "what's the meaning of life"
+            ],
+            "can i leave": [
+              "can i get out",
+              "how do i leave"
+            ]
+          },
+          "seed": {
+            "is this real": 49,
+            "what is the meaning of life": 30,
+            "can I leave": 19,
+            "can I have more RAM": 1,
+            "who's your favourite": 1
+          },
+          "hint": "what is the meaning of life",
+          "validSet": null
+        },
+        {
+          "id": "S3",
+          "text": "Name a reason someone would simulate us.",
+          "source": "Bostrom, \"Are We Living in a Computer Simulation?\"",
+          "ai": {
+            "answer": "To study history",
+            "aliases": [
+              "study history",
+              "history",
+              "to study their ancestors"
+            ]
+          },
+          "aliases": {
+            "research": [
+              "science",
+              "an experiment",
+              "experiment"
+            ],
+            "entertainment": [
+              "fun",
+              "for fun",
+              "a game"
+            ],
+            "boredom": [
+              "bored",
+              "they were bored"
+            ],
+            "a school project": [
+              "school project",
+              "homework"
+            ]
+          },
+          "seed": {
+            "research": 46,
+            "entertainment": 27,
+            "boredom": 16,
+            "a school project": 10,
+            "a CCT431 final project": 1
+          },
+          "hint": "entertainment",
+          "validSet": null
+        },
+        {
+          "id": "S4",
+          "text": "Name something a superintelligence still couldn't do.",
+          "source": "Vinge, \"The Coming Technological Singularity\"; Asimov, \"The Last Question\"",
+          "ai": {
+            "answer": "Feel emotions",
+            "aliases": [
+              "emotions",
+              "feelings",
+              "have feelings",
+              "feel"
+            ]
+          },
+          "aliases": {
+            "love": [
+              "fall in love",
+              "feel love"
+            ],
+            "reverse entropy": [
+              "reversing entropy",
+              "stop entropy"
+            ],
+            "understand humans": [
+              "understand people",
+              "understand us"
+            ]
+          },
+          "seed": {
+            "love": 49,
+            "reverse entropy": 30,
+            "understand humans": 19,
+            "parallel park": 1,
+            "make my mom happy": 1
+          },
+          "hint": "reverse entropy",
+          "validSet": null
+        },
+        {
+          "id": "S5",
+          "text": "Name the last thing you'd ask the last computer.",
+          "source": "Asimov, \"The Last Question\"",
+          "ai": {
+            "answer": "How can entropy be reversed?",
+            "aliases": [
+              "can entropy be reversed",
+              "how do you reverse entropy",
+              "how can entropy be reversed"
+            ]
+          },
+          "aliases": {
+            "what is the meaning of life": [
+              "meaning of life",
+              "what's the meaning of life"
+            ],
+            "are we alone": [
+              "are we alone in the universe",
+              "is anyone out there"
+            ],
+            "is there a god": [
+              "does god exist",
+              "is god real"
+            ]
+          },
+          "seed": {
+            "what is the meaning of life": 51,
+            "are we alone": 30,
+            "is there a god": 18,
+            "did I leave the stove on": 1
+          },
+          "hint": "are we alone",
+          "validSet": null
+        },
+        {
+          "id": "S6",
+          "text": "Name proof that you aren't a simulation.",
+          "source": "Bostrom; Yassin",
+          "ai": {
+            "answer": "I think, therefore I am",
+            "aliases": [
+              "cogito ergo sum",
+              "cogito",
+              "i think"
+            ]
+          },
+          "aliases": {
+            "pain": [
+              "i feel pain",
+              "feeling pain"
+            ],
+            "memories": [
+              "memory",
+              "my memories"
+            ],
+            "emotions": [
+              "feelings",
+              "emotion"
+            ]
+          },
+          "seed": {
+            "pain": 49,
+            "memories": 30,
+            "emotions": 19,
+            "my handwriting": 1,
+            "this score": 1
+          },
+          "hint": "memories",
+          "validSet": null
+        },
+        {
+          "id": "S7",
+          "text": "Name a god-like AI from fiction.",
+          "source": "Asimov, \"The Last Question\"; Vinge",
+          "ai": {
+            "answer": "Skynet",
+            "aliases": [
+              "sky net"
+            ]
+          },
+          "aliases": {
+            "the matrix": [
+              "matrix",
+              "the machines"
+            ],
+            "ac": [
+              "cosmic ac",
+              "the ac"
+            ]
+          },
+          "seed": {
+            "the Matrix": 49,
+            "Ultron": 30,
+            "AC": 19,
+            "Multivac": 1,
+            "the Oracle": 1
+          },
+          "hint": "Ultron",
+          "validSet": null
+        }
+      ]
+    }
+  ]
+}
