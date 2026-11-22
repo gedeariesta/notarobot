@@ -101,6 +101,10 @@ a { color: inherit; }
 .pill .k { font: 400 11px var(--mono); }
 .pill.sm { min-height: 48px; font-size: 16px; }
 .pill.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); font-weight: 600; }
+/* Red means failure or urgency: a failed verification, a bounced answer, a failed copy, the Screening's
+   failure stamps and the timer's last five seconds. Red text only goes on white; on blue it fills. */
+.fail { color: var(--red); }
+.pill.fail { background: var(--red); color: var(--white); }
 .pill .icon { width: 16px; height: 16px; }
 .bracket {
   display: inline-flex; align-items: center; justify-content: center;
@@ -276,10 +280,14 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 .snow { position: fixed; left: 0; right: 0; top: 0; height: 300%; pointer-events: none; }
 .snow i { position: absolute; border-radius: 50%; background: var(--white); }
 .flash { position: fixed; inset: 0; pointer-events: none; opacity: 0; background: var(--white); z-index: 2; }
-.organic {
-  position: absolute; right: 0; top: 46%; z-index: 3; visibility: hidden;
-  padding: 3px 7px; background: var(--ink); color: var(--paper); font-size: 9.5px; letter-spacing: 0.6px;
+/* Human Reserved: a faint trace of what the machine couldn't read, left in the layer the answer fell through. */
+.trace {
+  position: absolute; left: 0; right: 0; visibility: hidden; opacity: 0; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 3px);
 }
+.trace::before { content: ''; position: absolute; left: 0; right: 7px; top: 38%; height: 1px; background: rgba(255, 255, 255, 0.12); }
+.trace-k { position: relative; font-size: 9.5px; letter-spacing: 1px; color: var(--white); opacity: 0.55; white-space: nowrap; }
 .scr-col { position: relative; margin-top: 14px; flex: 1 1 auto; min-height: 320px; max-height: 470px; }
 .scr-bottom { flex: none; position: relative; }
 .scr-stage { position: relative; height: 182px; }
@@ -321,17 +329,27 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 .gate[data-passed] .g-dot, .gate[data-locked] .g-dot { background: var(--ink); }
 .g-pct { position: absolute; left: 12px; top: -15px; font: 400 10px/1 var(--mono); letter-spacing: 0.3px; white-space: nowrap; text-transform: uppercase; }
 .g-pct [data-s] { display: none; }
-.gate[data-passed] [data-s="ok"], .gate[data-broken] [data-s="broken"], .gate[data-locked] [data-s="locked"] { display: inline; }
-.gate[data-broken] [data-s="ok"] { display: none; }
+.gate[data-passed] [data-s="ok"], .gate[data-locked] [data-s="locked"] { display: inline; }
 .g-name { position: absolute; right: 0; top: -14px; font: 400 9px/1 var(--mono); letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
 .g-name[data-here] { color: var(--ink); font-weight: 700; }
 .g-debris { position: absolute; left: 50%; top: -14px; width: 0; height: 0; }
 .g-debris i { position: absolute; width: 1.5px; height: 8px; background: var(--ink); opacity: 0; }
 .floor { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
-.floor-liquid { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 70%; }
+.floor-liquid { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; }
 .floor-liquid path { fill: var(--ink); }
-.floor-label { position: absolute; right: 0; bottom: 6px; font: 400 9px/1 var(--mono); letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink-soft); }
-.floor-label[data-here] { color: var(--paper); font-weight: 700; }
+.floor-label { position: absolute; right: 0; bottom: 6px; font: 400 9px/1 var(--mono); letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
+.floor-label[data-here] { color: var(--paper); }
+/* Human Reserved: the answer, written on the floor's white in the water's own navy. */
+.floor-row {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: 0 11px 10px; color: var(--paper);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "k ." "v l";
+  align-items: baseline; column-gap: 14px; row-gap: 4px;
+}
+.floor-row.stack { grid-template-areas: "k l" "v v"; }
+.floor-row .floor-label { grid-area: l; position: static; }
+.fa-k { grid-area: k; font-size: 9px; line-height: 1; letter-spacing: 0.6px; }
+.fa-v { grid-area: v; font: 800 19px/1.05 var(--sans); letter-spacing: -0.4px; white-space: nowrap; overflow: clip; }
+.floor-row.wrap .fa-v { white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .not-reached { position: absolute; right: 0; font: 400 9px/1 var(--mono); letter-spacing: 0.4px; color: var(--ink-soft); opacity: 0; }
 .scanner { position: absolute; left: 0; right: 0; top: 0; height: 1.5px; background: var(--ink); box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.55); opacity: 0; }
 
@@ -358,12 +376,13 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 .verdict { position: absolute; left: 0; right: 0; bottom: 0; opacity: 0; visibility: hidden; }
 .verdict-name { margin-top: 6px; font: 900 76px/0.84 var(--sans); letter-spacing: -0.055em; }
 .verdict-name > span { display: block; white-space: nowrap; }
-.verdict-line { margin-top: 12px; }
+.verdict-line { margin-top: 12px; text-wrap: balance; }
 .verdict.shown { opacity: 1; visibility: visible; }
 .stamp {
   position: absolute; left: 12px; bottom: 8px; opacity: 0; visibility: hidden;
   padding: 10px 18px 12px; display: flex; flex-direction: column; gap: 6px;
   border: 4px solid var(--ink); outline: 1.5px solid var(--ink); outline-offset: 4px;
+  background: var(--red); color: var(--white);
   filter: url(#stamp-wear);
 }
 .stamp-top, .stamp-line { font: 700 11px/1.2 var(--mono); letter-spacing: 1px; text-transform: uppercase; }
@@ -376,6 +395,7 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 /* ------------------------------------------------------------ 4. results */
 .res-label { margin-top: 26px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .res-label .icon { width: 11px; height: 11px; }
+.res-status { display: inline-flex; align-items: center; gap: 6px; }
 .verdict-big { margin: 8px 0 0; font: 900 64px/0.86 var(--sans); letter-spacing: -0.05em; overflow-wrap: normal; position: relative; z-index: 2; }
 .verdict-big > span { display: block; white-space: nowrap; }
 .verdict-big.scrambling { font-family: var(--mono); font-weight: 700; letter-spacing: 0; }
@@ -386,12 +406,17 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 .verdict-line-res { margin: 10px 0 0; font-size: 11px; letter-spacing: 0.4px; }
 .spec-fig { margin: 26px 0 0; }
 .spec-fig svg { display: block; width: 100%; height: auto; }
-.badges { margin-top: 14px; }
-.badge { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--ink); }
-.badge:first-child { border-top: 1px solid var(--ink); }
-.badge .e { font-size: 22px; line-height: 1; }
-.badge .n { font-size: 15px; font-weight: 700; }
-.badge .d { margin-left: auto; text-align: right; }
+.badges { margin-top: 26px; }
+.badges-head { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 11px; line-height: 1; }
+.badges-head .sq { width: 6px; height: 6px; background: var(--ink); flex: none; }
+.badge { display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--ink-25); }
+.badges-head + .badge { border-top: 1px solid var(--ink); }
+.badge:last-child { border-bottom-color: var(--ink); }
+.badge .e { font-size: 24px; line-height: 1; text-align: center; }
+.badge .bt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.badge .n { font: 700 17px/1.1 var(--sans); letter-spacing: -0.3px; }
+.badge .why { font: 500 13px/1.3 var(--sans); color: var(--ink-soft); }
+.badge .d { text-align: right; white-space: nowrap; }
 .guilt {
   margin-top: 16px; padding: 16px 20px 18px; min-height: 84px; display: flex; flex-direction: column; gap: 6px;
   border-radius: 30px 22px 34px 16px / 26px 34px 20px 30px; background: var(--blue); color: var(--white);

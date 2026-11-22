@@ -45,4 +45,4 @@ Every prompt has a list of correct answers. Anything not on the list bounces, an
 - `dev/specimens.html`: the specimen sheet, every figure as drawn and as scanned. Not linked from the game.
 - `vendor/`: GSAP 3.13 and its MorphSVG plugin, free under GSAP's standard no-charge license.
 
-Fonts are Inter Tight and JetBrains Mono from Google Fonts. Two colours, #1F3CFF and white, with two exceptions: red #FF3B30 for the last five seconds of the timer, and the Screening's water, which darkens from #1F3CFF toward #030A3B as answers sink.
+Fonts are Inter Tight and JetBrains Mono from Google Fonts. Two colours, #1F3CFF and white, with two exceptions: red #FF3B30 for failure and urgency (a failed verification, a bounced answer, the Screening's failure stamps and the timer's last five seconds), and the Screening's water, which darkens from #1F3CFF toward #030A3B as answers sink.

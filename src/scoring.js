@@ -23,17 +23,17 @@ export const GATES = [
   { below: 'zombie', label: '30/300', runs: 30 },
   { below: 'slopper', label: '6/300', runs: 6 },
   { below: 'delegator', label: '1/300', runs: 1 },
-  { below: 'firsthand', label: 'Hand-picked', runs: 0 },
+  { below: 'firsthand', label: 'Humans only', runs: 0 },
 ];
 
 export const BADGES = {
-  botBaby:     { key: 'botBaby',     name: 'Bot Baby',                emoji: '🍼', line: 'You asked the AI.' },
-  rng:         { key: 'rng',         name: 'Random Number Generator', emoji: '🎲', line: 'Three answers bounced. Randomness is not a personality.' },
-  meatSupreme: { key: 'meatSupreme', name: 'Meat Proxy Supreme',      emoji: '🍖', line: 'You matched the model three times.' },
-  turing:      { key: 'turing',      name: 'Turing Complete',         emoji: '🏅', line: 'No matches. Every answer First-Hand or better.' },
-  reading:     { key: 'reading',     name: 'Did the Reading',         emoji: '📚', line: 'You answered from the reading. So did the AI.' },
-  objector:    { key: 'objector',    name: 'Conscientious Objector',  emoji: '🕊️', line: 'You refused.' },
-  fast:        { key: 'fast',        name: 'Suspiciously Fast',       emoji: '⚡', line: 'Three answers in under two seconds each.' },
+  botBaby:     { key: 'botBaby',     name: 'Bot Baby',                emoji: '🍼', line: 'You asked the AI for a hint.' },
+  rng:         { key: 'rng',         name: 'Random Number Generator', emoji: '🎲', line: 'Three or more answers bounced off the list.' },
+  meatSupreme: { key: 'meatSupreme', name: 'Meat Proxy Supreme',      emoji: '🍖', line: "You gave the AI's answer three or more times." },
+  turing:      { key: 'turing',      name: 'Turing Complete',         emoji: '🏅', line: 'Every answer was one the AI never gave.' },
+  reading:     { key: 'reading',     name: 'Did the Reading',         emoji: '📚', line: 'You gave an answer straight from the reading.' },
+  objector:    { key: 'objector',    name: 'Conscientious Objector',  emoji: '🕊️', line: 'You refused to fight.' },
+  fast:        { key: 'fast',        name: 'Suspiciously Fast',       emoji: '⚡', line: 'Three or more answers in under two seconds each.' },
 };
 const BADGE_ORDER = ['botBaby', 'rng', 'meatSupreme', 'turing', 'reading', 'objector', 'fast'];
 
@@ -414,6 +414,27 @@ export function specialResult(kind, input = '', extra = {}) {
   };
 }
 
+/** Human Reserved: the model, caught off guard. One per landing; a round uses all five before any repeats. */
+export const RESERVED_LINES = [
+  'The model would like to know where you got that.',
+  'The model is googling that right now.',
+  'Okay, the model did not see that coming.',
+  'The model is writing that down for next time.',
+  'Nobody told the model about that one.',
+];
+
+/**
+ * The next Human Reserved line, given the lines already shown this round (in order). Random, but
+ * nothing repeats until all five are used, and a fresh cycle never opens on the line shown last.
+ */
+export function pickReservedLine(used = [], rand = Math.random) {
+  const shown = used.filter((l) => RESERVED_LINES.includes(l));
+  const cycle = shown.slice(shown.length - (shown.length % RESERVED_LINES.length));
+  let left = RESERVED_LINES.filter((l) => !cycle.includes(l));
+  if (!cycle.length && shown.length) left = left.filter((l) => l !== shown[shown.length - 1]);
+  return left[Math.floor(rand() * left.length)];
+}
+
 /** "The AI said this 4 times in 300." and friends: the line under each verdict. */
 export function landingLine(r) {
   if (r.special === 'none') return 'Bot-like behaviour suspected.';
@@ -423,7 +444,7 @@ export function landingLine(r) {
   if (r.trueTier === 'meat') line = 'Redundant. The model said it first.';
   else if (r.runs === 1) line = 'The AI said this once in 300.';
   else if (r.runs > 1) line = `The AI said this ${r.runs} times in 300.`;
-  else if (r.trueTier === 'reserved') line = 'The AI never said this. Hand-picked.';
+  else if (r.trueTier === 'reserved') line = r.capped ? 'The AI never said this.' : r.line || RESERVED_LINES[0];
   else line = 'The AI never said this.';
   return r.capped ? `${line} AI-assisted.` : line;
 }

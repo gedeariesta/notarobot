@@ -112,9 +112,13 @@ export function playScreening(opts) {
   const verdictTitle = stampTitle(result);
   const human = HUMAN_TIERS.has(result.tier);
   const line = resultLine(result);
+  // If the line has to wrap, "| +100" stays with the word before it.
+  const lineHTML = esc(line).replace(' | ', '&nbsp;|&nbsp;');
   // Non-breaking spaces keep the brackets on the same line as the words they hold.
   const calloutText = isNone ? '' : `(&nbsp;${esc(result.input)}&nbsp;)`;
   const human75 = target >= 4; // First-Hand Thinker or deeper: too organic for the machine
+  const reserved = target === 5; // Human Reserved: breaks the last gate and lands on the floor
+  const TRACE_TEXT = '( Organic matter | Unclassifiable )';
   const origin = opts.origin || { x: window.innerWidth / 2, y: window.innerHeight * 0.6 };
 
   // ---------------------------------------------------------------- DOM
@@ -140,7 +144,7 @@ export function playScreening(opts) {
             <div class="verdict shown">
               <div class="mono">[ Verdict ]</div>
               <div class="verdict-name ink-strong">${wordLines(verdictTitle)}</div>
-              <div class="mono verdict-line">${esc(line)}</div>
+              <div class="mono verdict-line">${lineHTML}</div>
             </div>
           </div>
           <div class="scr-slot"><button class="pill scr-next paper-next" type="button">${nextLabel}</button></div>
@@ -162,17 +166,23 @@ export function playScreening(opts) {
               <div><span data-s="sealed" class="scan-text">COMPARING WITH MODEL</span><span data-s="nomatch">≠ NOT A MATCH</span><span data-s="match">= MATCH</span><span data-s="smash">? NO WORDS FOUND</span><span data-s="none">– NOTHING TO COMPARE</span></div>
             </div>
           </div>
+          ${reserved ? `<div class="trace"><span class="trace-k mono">${TRACE_TEXT}</span></div>` : ''}
           ${GATES.map((gate, i) => `
           <div class="gate" data-g="${i}"${result.hinted && i === 1 ? ' data-locked="1"' : ''}>
             <i class="g-half l"></i><i class="g-half r"></i><i class="g-dot"></i>
-            <span class="g-pct">${gate.label}<span data-s="ok"> ✓</span><span data-s="broken"> | BROKEN</span><span data-s="locked"> | AI-ASSISTED</span></span>
+            <span class="g-pct">${gate.label}<span data-s="ok"> ✓</span><span data-s="locked"> | AI-ASSISTED</span></span>
             <span class="g-name">${LAYER_NAMES[i]}</span>
             ${i === 3 ? '<span class="g-debris"><i></i><i></i><i></i></span>' : ''}
           </div>`).join('')}
           <span class="not-reached">GATES NOT REACHED</span>
           <div class="floor">
             <svg class="floor-liquid" viewBox="0 0 354 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12 C40 6 70 16 110 10 C150 4 190 16 230 8 C270 2 310 14 354 8 L354 60 L0 60 Z"/></svg>
-            <span class="floor-label">Human Reserved | Floor</span>
+            ${reserved ? `
+            <div class="floor-row">
+              <span class="fa-k mono">( Your answer )</span>
+              <span class="fa-v">${esc(result.input)}</span>
+              <span class="floor-label">Human Reserved | Floor</span>
+            </div>` : '<span class="floor-label">Human Reserved | Floor</span>'}
           </div>
           <div class="scanner"></div>
           <div class="trails">
@@ -183,7 +193,6 @@ export function playScreening(opts) {
           <div class="debris"></div>
           <svg class="dims" aria-hidden="true"></svg>
           <div class="sq-text"></div>
-          ${human75 ? '<div class="organic mono">( Organic matter | Unclassifiable )</div>' : ''}
           ${isNone ? '' : `<div class="callout"><svg width="58" height="16"><path d="M0 12 L44 12 L56 2"/><circle cx="0" cy="12" r="3.5"/></svg><span class="callout-text">${result.hinted ? ICONS.lock : ''}${calloutText}</span></div>`}
         </div>
         <div class="scr-bottom">
@@ -197,12 +206,12 @@ export function playScreening(opts) {
             <div class="stamp">
               <div class="stamp-top">[ Verdict ${nn}/07 ]</div>
               <div class="stamp-name">${wordLines(stampName)}</div>
-              <div class="stamp-line">${esc(line)}</div>
+              <div class="stamp-line">${lineHTML}</div>
             </div>` : `
             <div class="verdict">
               <div class="mono">[ Verdict ]</div>
               <div class="verdict-name${human ? ' ink-strong' : ''}">${wordLines(verdictTitle)}</div>
-              <div class="mono verdict-line">${esc(line)}</div>
+              <div class="mono verdict-line">${lineHTML}</div>
             </div>`}
           </div>
           <div class="scr-slot">
@@ -246,7 +255,10 @@ export function playScreening(opts) {
   const abyss = $('.abyss');
   const snow = $('.snow');
   const flash = $('.flash');
-  const organic = $('.organic');
+  const trace = $('.trace');
+  const traceK = $('.trace-k');
+  const floorRow = $('.floor-row');
+  const floorAns = $$('.fa-k, .fa-v');
   const tearShift = document.getElementById('tear-shift');
   const tearNoise = document.getElementById('tear-noise');
   gsap.set(blue, { '--depth': DEPTH[0] });
@@ -256,18 +268,24 @@ export function playScreening(opts) {
   const W = col.clientWidth;
   const H = col.clientHeight;
   const AI_BOTTOM = 74;
-  const floorH = Math.round(Math.max(56, Math.min(90, H * 0.19)));
+  // Human Reserved writes the answer on the floor. The floor's white dips to 23% of its height at
+  // the wave's lowest point, so the floor grows if a long answer needs more room below that.
+  if (floorRow) fitFloorAnswer(floorRow);
+  const floorH = Math.round(Math.max(64, Math.min(90, H * 0.19), floorRow ? (floorRow.offsetHeight + 6) / 0.77 : 0));
   const floorTop = H - floorH;
   const S = (floorTop - 94) / 3.575; // gate spacing: 80 px at full height
   const g = [0, 1, 2, 3].map((i) => Math.round(AI_BOTTOM + 0.575 * S + i * S));
   const size = Math.round(Math.max(40, Math.min(60, S * 0.66)));
   const cx = Math.round(W * 0.42);
-  const restCenter = (layer) => (layer <= 4 ? g[layer - 1] - size / 2 - 1 : floorTop + floorH * 0.42);
+  // Layers 1 to 4 rest on their gate. Human Reserved settles on the surface of the floor's white.
+  const restCenter = (layer) => (layer <= 4 ? g[layer - 1] - size / 2 - 1 : floorTop + floorH * 0.14 - size * 0.3);
   const startY = restCenter(1);
 
   gates.forEach((node, i) => (node.style.top = `${g[i]}px`));
   notReached.style.top = `${g[0] + 7}px`;
   floor.style.height = `${floorH}px`;
+  // The trace fills the layer the answer falls through on its way to the floor: 1/300 to Humans only.
+  if (trace) Object.assign(trace.style, { top: `${g[2] + 5}px`, height: `${g[3] - g[2] - 5}px` });
   if (callout) callout.querySelector('.callout-text').style.maxWidth = `${Math.max(80, W - (cx + size / 2 - 3) - 60)}px`;
   Object.entries(ghosts).forEach(([k, node]) => {
     node.setAttribute('width', size);
@@ -308,6 +326,7 @@ export function playScreening(opts) {
 
   // Fit the big words to the column.
   if (verdictEl) fitText(verdictEl.querySelector('.verdict-name'), result.tier === 'reserved' ? 76 : 56, 28);
+  root.querySelectorAll('.verdict-line').forEach(fitLine);
   const paperVerdict = root.querySelector('.scr-paper .verdict-name');
   if (paperVerdict) fitText(paperVerdict, 76, 28);
   if (stampEl) {
@@ -373,6 +392,7 @@ export function playScreening(opts) {
   // Nothing renders before its moment, so a skip lands on the same frame as a full play.
   const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false }, onUpdate: syncCallout });
   if (callout) gsap.set(callout, { opacity: 0 });
+  if (floorAns.length) gsap.set(floorAns, { opacity: 0 });
   /** Morphs the scan from one shape to the next, particle by particle. */
   const morph = (from, to, at, dur, scatter = 0.16) => {
     tl.set(st, { from, to, t: 0, scatter }, at);
@@ -423,11 +443,23 @@ export function playScreening(opts) {
     tl.set(inner, { x: 0, filter: 'none' }, end);
     tl.set(st, { lattice: 0 }, end);
     tl.fromTo(flash, { opacity: 0 }, { opacity: 0.32 * strength, duration: 0.05, yoyo: true, repeat: 3, ease: 'steps(1)' }, at);
-    if (organic) {
-      tl.set(organic, { visibility: 'visible' }, at);
-      tl.fromTo(organic, { opacity: 0 }, { opacity: 1, duration: 0.05, yoyo: true, repeat: 5, ease: 'steps(1)' }, at);
-      tl.to(organic, { opacity: 0.7, duration: 0.1 }, end);
+  };
+  /**
+   * Human Reserved only: the machine's failed reading stays behind in the layer the answer fell
+   * through, as faint scanlines and a label it can barely make out.
+   */
+  const leaveTrace = (at) => {
+    if (!trace) return;
+    tl.set(trace, { visibility: 'visible' }, at);
+    if (reduced) {
+      tl.set(trace, { opacity: 1 }, at);
+      return;
     }
+    tl.fromTo(trace, { opacity: 0 }, { opacity: 1, duration: 0.05, yoyo: true, repeat: 5, ease: 'steps(1)' }, at);
+    for (let i = 0; i < 6; i++) {
+      tl.call(() => { traceK.textContent = i === 5 ? TRACE_TEXT : scramble(TRACE_TEXT, 0.2 + i * 0.12); }, null, at + i * 0.07);
+    }
+    tl.to(trace, { opacity: 1, duration: 0.3, ease: 'power1.out' }, at + 0.32);
   };
 
   // 0. The camera flies into the answer until the screen is blue.
@@ -545,8 +577,8 @@ export function playScreening(opts) {
           t += 0.5;
           // The floor gate breaks, and the machine glitches harder on what falls through.
           glitch(t, 1.6);
+          leaveTrace(t);
           shake(t, 6, 5);
-          tl.set(gates[i], { attr: { 'data-broken': '1' } }, t);
           tl.to(halves[0], { rotation: 9, duration: 0.15, ease: 'power2.out' }, t);
           tl.to(halves[1], { rotation: -9, duration: 0.15, ease: 'power2.out' }, t);
           gates[i].querySelectorAll('.g-debris i').forEach((bit, k) => {
@@ -605,7 +637,12 @@ export function playScreening(opts) {
     if (target === 5) {
       tl.set(floorLabel, { attr: { 'data-here': '1' } }, L);
       tl.to(liquid, { yPercent: 0, duration: 0.45, ease: 'power2.out' }, LAND - 0.15);
+      // Only the white and the water from here: the floor's faint tint would show above the wave.
+      tl.to(floor, { backgroundColor: 'rgba(255, 255, 255, 0)', duration: 0.3 }, LAND - 0.15);
       tl.to(st, { scatter: 0.5, duration: 0.3 }, LAND);
+      // The callout would be white on white now, so the answer is written on the floor instead.
+      tl.to(callout, { opacity: 0, duration: 0.12 }, LAND - 0.15);
+      tl.fromTo(floorAns, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.06, ease: 'power3.out' }, LAND + 0.05);
     }
     if (!isMeat) tl.to(gaugeEl, { opacity: 0, y: 8, duration: 0.15 }, LAND);
     else tl.to(gaugeEl, { opacity: 0, y: 8, duration: 0.15 }, LAND + 0.02);
@@ -705,6 +742,35 @@ export function playScreening(opts) {
     tl.play(0);
   }
   return ctrl;
+}
+
+/**
+ * Fits the answer written on the Human Reserved floor: one line beside the floor label, from 19 px
+ * down to 17. Longer than that, the label moves up beside "( Your answer )" so the answer gets the
+ * full width (19 px down to 14), and only then does it wrap to a second line.
+ */
+function fitFloorAnswer(row) {
+  const v = row.querySelector('.fa-v');
+  const fit = (min) => {
+    let fs = 19;
+    v.style.fontSize = `${fs}px`;
+    while (v.scrollWidth > v.clientWidth + 0.5 && fs > min) v.style.fontSize = `${(fs -= 1)}px`;
+    return v.scrollWidth <= v.clientWidth + 0.5;
+  };
+  if (fit(17)) return;
+  row.classList.add('stack');
+  if (!fit(14)) row.classList.add('wrap');
+}
+
+/** The mono line under a verdict stays on one line where it can (10 px down to 9); past that it wraps, balanced. */
+function fitLine(el) {
+  el.style.whiteSpace = 'nowrap';
+  const fits = [[10, 0.5], [9.5, 0.4], [9, 0.3]].find(([fs, ls]) => {
+    Object.assign(el.style, { fontSize: `${fs}px`, letterSpacing: `${ls}px` });
+    return el.scrollWidth <= el.clientWidth + 0.5;
+  });
+  if (!fits) Object.assign(el.style, { fontSize: '', letterSpacing: '' });
+  el.style.whiteSpace = '';
 }
 
 /** Loose particles in the water, rising past as the answer sinks (seeded, so a skip matches). */

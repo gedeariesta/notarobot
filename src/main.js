@@ -2,7 +2,7 @@
 // people are porous particle scans, machines are grids, and labels hang off both.
 import {
   compilePrompt, classify, scoreEntry, specialResult, TIERS, LADDER, BADGES, verdictFor, passed, badgesFor,
-  totalScore, guiltLine, shareText, stampTitle, resultLine,
+  totalScore, guiltLine, shareText, stampTitle, resultLine, pickReservedLine,
 } from './scoring.js';
 import { dateKey, dayForDate, liveStreak, completeStreak, msUntilMidnight, formatHMS, addDays } from './days.js';
 import { createStore, resetAll } from './state.js';
@@ -197,8 +197,10 @@ function showBounceLog() {
   sheet.querySelector('[data-close]').addEventListener('click', close);
   sheet.addEventListener('click', (e) => { if (e.target === sheet) close(); });
   sheet.querySelector('[data-copy]').addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
     const ok = await copyText(text);
-    e.currentTarget.textContent = ok ? 'Copied' : 'Copy failed';
+    btn.textContent = ok ? 'Copied' : 'Copy failed';
+    btn.classList.toggle('fail', !ok);
   });
 }
 
@@ -609,7 +611,7 @@ function renderPrompt(index, { delay = 0 } = {}) {
     sound.buzz();
     shake();
     block.classList.add('bounced');
-    bounceLine.innerHTML = '<span class="bl">( Not on the list | Try again )</span>';
+    bounceLine.innerHTML = '<span class="bl fail">( Not on the list | Try again )</span>';
     if (!reduced()) gsap.from(bounceLine.firstElementChild, { y: -6, opacity: 0, duration: 0.2, ease: 'power2.out' });
     if (DEMO) store.logBounce({ promptId: cp.id, input: val, day: day.id, at: Date.now() });
   }
@@ -709,10 +711,12 @@ function renderPrompt(index, { delay = 0 } = {}) {
     input.blur();
     // Measured from when the prompt finished typing in; answering before that counts as instant.
     const ms = ps.startedAt ? performance.now() - ps.startedAt : 0;
+    // Human Reserved gets one of five lines, none repeated until the round has used all five.
+    if (result.tier === 'reserved') result.line = pickReservedLine(session.round.answers.map((a) => a.line).filter(Boolean));
     session.round.answers.push({
       promptId: cp.id, input: result.input, canonical: result.canonical, tier: result.tier, trueTier: result.trueTier,
       points: result.points, runs: result.runs, reading: result.reading, hinted: result.hinted, capped: result.capped,
-      special: result.special, ms: Math.round(ms), bounces: ps.bounces,
+      special: result.special, ms: Math.round(ms), bounces: ps.bounces, line: result.line,
     });
     saveRound();
     verifyBtn.disabled = true;
@@ -780,14 +784,16 @@ function finishRound({ delay = 0 } = {}) {
   renderResults({ delay });
 }
 
+/** The count beside each badge: how many times it happened this round. */
+const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 const BADGE_DETAIL = {
-  botBaby: (a) => `Asked the AI × ${a.filter((x) => x.hinted).length}`,
+  botBaby: (a) => plural(a.filter((x) => x.hinted).length, 'hint'),
   rng: (a) => `${a.reduce((s, x) => s + (x.bounces || 0), 0)} bounced`,
-  meatSupreme: (a) => `Matched the model × ${a.filter((x) => x.tier === 'meat').length}`,
-  turing: () => 'No model matches',
-  reading: (a) => `From the reading × ${a.filter((x) => x.reading).length}`,
-  objector: () => 'Refusal noted',
-  fast: (a) => `${a.filter((x) => x.special !== 'none' && x.ms < 2000).length} answers under 2 s`,
+  meatSupreme: (a) => plural(a.filter((x) => x.tier === 'meat').length, 'time'),
+  turing: (a) => `${a.length} of ${a.length}`,
+  reading: (a) => plural(a.filter((x) => x.reading).length, 'answer'),
+  objector: (a) => plural(a.filter((x) => x.special === 'objector').length, 'refusal'),
+  fast: (a) => `${a.filter((x) => x.special !== 'none' && x.ms < 2000).length} under 2 s`,
 };
 
 /** FIG. 07: today's specimens on a line, machine-perfect square to human splatter. */
@@ -844,14 +850,21 @@ function renderResults({ delay = 0 } = {}) {
   app.innerHTML = `
     <section class="screen results" data-screen="results">
       ${headerHTML(esc(dayLabel(day)))}
-      <div class="res-label mono">${ok ? ICONS.check : ICONS.x}<span>[ Verification ${ok ? 'passed' : 'failed'} ]</span>${mode === 'practice' ? '<span>[ Practice | Not counted ]</span>' : ''}</div>
+      <div class="res-label mono"><span class="res-status${ok ? '' : ' fail'}">${ok ? ICONS.check : ICONS.x}<span>[ Verification ${ok ? 'passed' : 'failed'} ]</span></span>${mode === 'practice' ? '<span>[ Practice | Not counted ]</span>' : ''}</div>
       <h1 class="verdict-big${ok ? ' ink' : ''}" aria-label="${esc(verdict.name)}">${wordLines(verdict.name)}</h1>
       ${plateHTML({ cap: `FIG. 08 | Subject, re-scanned at ${total}/700`, cls: 'res-plate' })}
       <div class="score-row"><span class="score-big" data-score>${total}</span><span class="score-of">/ ${ROUND_LEN * 100}</span></div>
       <p class="verdict-line-res mono">${esc(verdict.line)}</p>
       <figure class="spec-fig">${specimensFigure(answers)}</figure>
-      ${badges.length ? `<div class="badges">${badges.map((b) => `
-        <div class="badge"><span class="e" aria-hidden="true">${BADGES[b].emoji}</span><span class="n">${BADGES[b].name}</span><span class="d mono">${esc(BADGE_DETAIL[b](answers))}</span></div>`).join('')}</div>` : ''}
+      ${badges.length ? `<section class="badges" aria-label="Badges earned this round">
+        <div class="badges-head mono"><span class="sq" aria-hidden="true"></span><span>Badges | ${pad2(badges.length)} earned</span></div>
+        ${badges.map((b) => `
+        <div class="badge">
+          <span class="e" aria-hidden="true">${BADGES[b].emoji}</span>
+          <span class="bt"><span class="n">${BADGES[b].name}</span><span class="why">${esc(BADGES[b].line)}</span></span>
+          <span class="d mono">${esc(BADGE_DETAIL[b](answers))}</span>
+        </div>`).join('')}
+      </section>` : ''}
       <div class="guilt" aria-live="polite">
         <div class="mono">Streak ${pad2(streak)}</div>
         <div class="dots" aria-label="typing"><i></i><i></i><i></i></div>
@@ -913,8 +926,13 @@ function renderResults({ delay = 0 } = {}) {
     sound.click();
     const done = await copyText(share);
     shareBtn.innerHTML = done ? `Copied ${ICONS.check}` : 'Copy failed';
+    shareBtn.classList.toggle('fail', !done);
     if (!reduced()) gsap.fromTo(shareBtn, { scale: 0.96 }, { scale: 1, duration: 0.3, ease: 'back.out(3)' });
-    setTimeout(() => { if (shareBtn.isConnected) shareBtn.innerHTML = `Share result ${ICONS.arrow}`; }, 1500);
+    setTimeout(() => {
+      if (!shareBtn.isConnected) return;
+      shareBtn.innerHTML = `Share result ${ICONS.arrow}`;
+      shareBtn.classList.remove('fail');
+    }, 1500);
   });
   $('[data-again]')?.addEventListener('click', () => {
     session.round = freshRound(day, mode);
@@ -1021,8 +1039,8 @@ function renderAbout() {
       <div class="vlabel"><span class="plus" aria-hidden="true">+</span><span class="lbl">&lt;about&gt;</span><span class="plus" aria-hidden="true">+</span></div>
       <h1 class="prose-title">About notarobot</h1>
       <p>notarobot is a daily CAPTCHA you can't quite pass. Each day you answer seven prompts, and a machine decides how human each answer is by how unlike an AI it is.</p>
-      <p>Every prompt has a list of correct answers; anything else bounces. Before launch, three AI models were each asked every prompt 100 times. Match the AI's most common answer and you score nothing. The less often the models gave your answer, the more it earns, up to 100 a prompt and 700 a round. The Human Reserved answers were hand-picked by the team, and the AI never gave them. Nothing calls a model while you play.</p>
-      <p>Made for CCT431 at the University of Toronto Mississauga. The prompts draw on the course readings listed below.</p>
+      <p>Every prompt has a list of correct answers; anything else bounces. Three AI models were each asked every prompt 100 times. Your task is to beat the AI. Can you think of answers only a human would give, or are you just another bot?</p>
+      <p>Made for CCT431 at the University of Toronto. The prompts draw on the course readings listed below.</p>
       <p class="note mono">${runsNote}</p>
       <div class="mono" style="margin-top:22px">[ Readings ]</div>
       <ol class="readings">${readings.map((r, i) => `<li><span class="n mono">${pad2(i + 1)}</span><span>${esc(r)}</span></li>`).join('')}</ol>

@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import {
   normalize, core, inflections, compilePrompt, lookup, classify, scoreEntry, specialResult, editDistance, maxEdits,
   suggestDetail, topicSuggest, isKeyboardRow, smashReason, landingLine, resultLine, stamped, verdictFor, passed,
-  badgesFor, guiltLine, shareText, totalScore, TIERS,
+  badgesFor, guiltLine, shareText, totalScore, TIERS, RESERVED_LINES, pickReservedLine,
 } from '../src/scoring.js';
 
 const bank = JSON.parse(readFileSync(new URL('../prompts.json', import.meta.url)));
@@ -145,9 +145,24 @@ test('landing lines name the AI count', () => {
   assert.equal(at('W1', 'nurse'), `The AI said this ${nurse} times in 300 | +10`);
   assert.equal(at('W1', 'paramedic'), 'The AI said this once in 300 | +50');
   assert.equal(at('W1', 'park ranger'), 'The AI never said this | +75');
-  assert.equal(at('W1', 'midwife'), 'The AI never said this. Hand-picked | +100');
+  assert.equal(at('W1', 'midwife'), 'The model would like to know where you got that | +100');
+  assert.equal(resultLine({ ...score('W1', 'midwife'), line: RESERVED_LINES[3] }), 'The model is writing that down for next time | +100');
+  assert.equal(resultLine(score('W1', 'midwife', { hinted: true })), 'The AI never said this. AI-assisted | +25');
   assert.equal(resultLine(specialResult('smash', 'asdf')), "That isn't an answer | 0 pts");
   assert.equal(resultLine(specialResult('none')), 'Bot-like behaviour suspected | 0 pts');
+});
+
+test('Human Reserved lines: all five before any repeat, and never the same one twice in a row', () => {
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let round = 0; round < 200; round++) {
+    const used = [];
+    for (let k = 0; k < 7; k++) used.push(pickReservedLine(used, rand));
+    assert.ok(used.every((l) => RESERVED_LINES.includes(l)));
+    assert.equal(new Set(used.slice(0, 5)).size, 5);
+    for (let k = 1; k < 7; k++) assert.notEqual(used[k], used[k - 1]);
+  }
+  assert.ok(RESERVED_LINES.every((l) => l.endsWith('.')));
 });
 
 test('only Meat Proxy, Keyboard Smash and No response get a stamp', () => {
