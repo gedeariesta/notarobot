@@ -445,7 +445,8 @@ export function landingLine(r) {
   else if (r.runs === 1) line = 'The AI said this once in 300.';
   else if (r.runs > 1) line = `The AI said this ${r.runs} times in 300.`;
   else if (r.trueTier === 'reserved') line = r.capped ? 'The AI never said this.' : r.line || RESERVED_LINES[0];
-  else line = 'The AI never said this.';
+  // A hint caps the answer at Slopper, so it doesn't get called a deep cut.
+  else line = r.capped ? 'The AI never said this.' : 'Deep cut. The AI never said this.';
   return r.capped ? `${line} AI-assisted.` : line;
 }
 

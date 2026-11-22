@@ -159,7 +159,7 @@ Every answer on the list has its tier fixed before launch. The team asks AI mode
 | Prompt Zombie | The AI gave it in 30 or more of 300 runs | 10 | "The AI said this {n} times in 300." |
 | Slopper | 6 to 29 runs | 25 | "The AI said this {n} times in 300." |
 | Decision Delegator | 1 to 5 runs | 50 | "The AI said this {n} times in 300." ("once in 300" for 1) |
-| First-Hand Thinker | On the list, but the AI never gave it | 75 | "The AI never said this." |
+| First-Hand Thinker | On the list, but the AI never gave it | 75 | "Deep cut. The AI never said this." |
 | Human Reserved | Hand-picked by the team, and the AI never gave it | 100 | One of five lines, below |
 
 A Human Reserved landing gets one of five lines at random. A round uses all five before any repeats, and never shows the same one twice in a row:
@@ -170,7 +170,7 @@ A Human Reserved landing gets one of five lines at random. A round uses all five
 - "The model is writing that down for next time."
 - "Nobody told the model about that one."
 
-On screen, every line ends with its points in place of the full stop, such as "THE MODEL IS GOOGLING THAT RIGHT NOW | +100". A hinted answer that was capped adds "AI-assisted." to its line.
+On screen, every line ends with its points in place of the full stop, such as "THE MODEL IS GOOGLING THAT RIGHT NOW | +100". A hinted answer that was capped adds "AI-assisted." to its line, and a capped First-Hand Thinker or Human Reserved answer reads plainly: "The AI never said this. AI-assisted."
 
 Human Reserved is the one-in-a-million answer: correct, rare, and the kind of thing you'd only say from experience or close attention (for W1, hospice chaplain or midwife). Pick 3 to 8 per prompt. An answer the AI gave even once can't be Human Reserved.
 

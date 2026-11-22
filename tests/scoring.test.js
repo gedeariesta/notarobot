@@ -144,7 +144,8 @@ test('landing lines name the AI count', () => {
   const nurse = cps.W1.entries.find((e) => e.a === 'nurse').runs;
   assert.equal(at('W1', 'nurse'), `The AI said this ${nurse} times in 300 | +10`);
   assert.equal(at('W1', 'paramedic'), 'The AI said this once in 300 | +50');
-  assert.equal(at('W1', 'park ranger'), 'The AI never said this | +75');
+  assert.equal(at('W1', 'park ranger'), 'Deep cut. The AI never said this | +75');
+  assert.equal(resultLine(score('W1', 'park ranger', { hinted: true })), 'The AI never said this. AI-assisted | +25');
   assert.equal(at('W1', 'midwife'), 'The model would like to know where you got that | +100');
   assert.equal(resultLine({ ...score('W1', 'midwife'), line: RESERVED_LINES[3] }), 'The model is writing that down for next time | +100');
   assert.equal(resultLine(score('W1', 'midwife', { hinted: true })), 'The AI never said this. AI-assisted | +25');
