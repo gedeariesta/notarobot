@@ -12,6 +12,8 @@ export const ICONS = {
   x: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
   check: svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
   arrow: '<span class="arrow" aria-hidden="true">→</span>',
+  speaker: svg('<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 9.5a3.5 3.5 0 0 1 0 5M19 7a7 7 0 0 1 0 10"/>'),
+  speakerOff: svg('<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>'),
 };
 
 /** Parses one HTML string into its first element. */
@@ -54,25 +56,5 @@ export function fitText(node, max, min = 24) {
   return size;
 }
 
-/**
- * Marks the letters of `to` that are not in `from` (longest common subsequence),
- * so the autocorrect card can highlight what it changed.
- */
-export function markChanges(from, to) {
-  const a = [...from.toLowerCase()];
-  const b = [...to];
-  const bl = b.map((c) => c.toLowerCase());
-  const dp = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
-  for (let i = a.length - 1; i >= 0; i--) {
-    for (let j = b.length - 1; j >= 0; j--) {
-      dp[i][j] = a[i] === bl[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
-    }
-  }
-  const keep = new Set();
-  for (let i = 0, j = 0; i < a.length && j < b.length; ) {
-    if (a[i] === bl[j]) { keep.add(j); i++; j++; }
-    else if (dp[i + 1][j] >= dp[i][j + 1]) i++;
-    else j++;
-  }
-  return b.map((c, j) => (keep.has(j) || c === ' ' ? esc(c) : `<mark>${esc(c)}</mark>`)).join('');
-}
+/** Thousands with commas: 2400 -> "2,400". */
+export const num = (n) => Number(n).toLocaleString('en-CA');

@@ -1,0 +1,50 @@
+# Words the 1934 Webster's list doesn't know. One per line; lines starting with # are ignored.
+# Anything an answer list already uses is added automatically, so this file is for everything else.
+
+# tech and internet
+internet online offline email emails website websites webpage app apps smartphone smartphones laptop laptops tablet
+wifi bluetooth software hardware download upload downloads uploads login logout username password passwords
+google tiktok instagram snapchat facebook youtube netflix spotify twitter reddit discord twitch whatsapp imessage
+chatgpt gpt llm llms ai bot bots chatbot chatbots robot robots robotic robotics drone drones cyborg android androids
+selfie selfies emoji emojis meme memes vlog blog blogs blogger podcast podcasts streaming streamer streamers
+influencer influencers startup startups crypto bitcoin blockchain nft nfts metaverse vr ar gpu gpus cpu ram
+dataset datasets algorithm algorithms hacker hackers hacking malware spam phishing deepfake deepfakes livestream
+binge doomscrolling scroll scrolling swipe swiping ghosting catfish catfishing hashtag hashtags dm dms gif gifs
+spreadsheet cloud server servers database databases coding coder coders programmer programmers debug debugging
+browser browsers cookie cookies cyber cybersecurity firewall encryption gaming gamer gamers esports videogame
+playstation xbox nintendo minecraft fortnite roblox pokemon zelda mario sims tetris pacman doom halo
+iphone ipad macbook pc pcs mac windows linux tesla amazon uber lyft airbnb ebay paypal venmo zoom slack
+smartwatch fitbit airpods headphones earbuds charger usb hdmi touchscreen keyboard autocorrect autocomplete
+captcha captchas recaptcha selfdriving driverless autopilot telehealth ebook ebooks audiobook audiobooks
+
+# Canadian and British spellings
+centre centres colour colours favourite favourites honour behaviour labour neighbour neighbours humour cheque
+licence defence offence theatre metre litre kilometre organise organised realise recognise apologise analyse
+travelling traveller cancelled jewellery grey programme catalogue dialogue mould plough sceptical aluminium
+paediatrician anaesthesiologist oestrogen manoeuvre moustache pyjamas tyre tyres kerb storey
+
+# abbreviations and acronyms people actually type
+tv dj mc ok usa uk eu un nhl nba nfl mlb ceo cfo cto hr ux ui rn psw emt ems gp md phd mba bsc ba ma
+dna rna iq eq diy bbq mma ufc wwe rc ps5 gta dnd ttrpg rpg mmo fps lol omg wtf btw tbh imo irl afk npc npcs
+atm ufo cpr er icu nicu ot pt slp esl ece cyw ptsd adhd ocd asl lgbtq lgbt sin ssn ohip dob pin otp asap fomo
+eod iff sigint recon ied ieds uav uavs agi asi ml nlp api apis sdk saas iot ev evs suv suvs
+
+# contractions without apostrophes, as typed
+dont cant wont isnt im ive youre theyre thats whats lets didnt doesnt wasnt werent couldnt wouldnt shouldnt
+hes shes weve theyve youve ill youll theyll itll aint gonna wanna gotta kinda sorta dunno lemme
+
+# everyday modern words
+okay vape vaping vapes covid pandemic lockdown zoomer boomer millennial millennials genz gen hoodie hoodies
+sneakers smoothie smoothies latte lattes espresso cappuccino matcha boba sushi ramen pho taco tacos burrito
+burritos pizza pizzas poutine nachos hummus kombucha avocado quinoa tofu emoji karaoke anime manga kpop
+pickleball zumba pilates crossfit yoga parkour skateboard skateboarding snowboard snowboarding frisbee
+cosplay larp larping fanfic fandom fandoms playlist playlists binge bingeing mukbang asmr vibe vibes
+lowkey highkey rizz cringe sus bestie besties situationship ghosted bae fam bro bros dude dudes gal gals
+toddler toddlers preteen teen teens tween tweens grandkid grandkids stepdad stepmom stepkids coparent
+nonbinary trans transgender queer cisgender pronouns
+microplastic microplastics nanoplastics biodegradable recyclable compost composting upcycle upcycling
+gig gigs freelance freelancer freelancers telecommute remote hybrid workplace burnout layoff layoffs
+rehire rehired onboarding offboarding resume resumes linkedin networking unionize unionise unionized
+superbug superbugs antivax antivaxxer vaccine vaccines ventilator ventilators telehealth
+ufos uap uaps exoplanet exoplanets spacex nasa
+selfcare mindfulness wellness meditate journaling

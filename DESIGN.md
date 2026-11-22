@@ -18,7 +18,7 @@ notarobot is a daily CAPTCHA you can't quite pass. Each day you answer seven ope
 
 ### The game in one paragraph
 
-You tick "I'm not a robot" and get told more verification is needed. Seven prompts follow, one at a time, 25 seconds each, such as "Name a job Bill Gates would mark Human Reserved." Before you answer, an AI has already sealed its own answer. When you submit, the seal breaks and a rubber stamp lands on your answer: match the AI and you're a **Meat Proxy** (0 points); give the answer most humans gave and you're a **Prompt Zombie** (10); say something almost nobody said and you're **Human Reserved** (100). At the end you get a verdict, a share grid, and a guilt-trip about coming back tomorrow.
+You tick "I'm not a robot" and get told more verification is needed. Seven prompts follow, one at a time, 25 seconds each, such as "Name a job Bill Gates would mark Human Reserved." Before you answer, an AI has already sealed its own answer. When you submit, the seal breaks and a rubber stamp lands on your answer: match the AI and you're a **Meat Proxy** (0 points); give an answer the AI gives all the time and you're a **Prompt Zombie** (10); find a correct answer the AI never gives, one the team hand-picked, and you're **Human Reserved** (100). Answers that don't fit the prompt bounce back, and you try again. At the end you get a verdict, a share grid, and a guilt-trip about coming back tomorrow.
 
 ### The argument
 
@@ -32,13 +32,13 @@ The future we warn against is one where machines decide who counts as human, and
 
 ### The critical turn
 
-Players quickly learn to game the screen by answering weirdly. The game notices and calls it out (the **Random Number Generator** badge): randomness isn't humanity either, machines do random too. The only reliable way to score high is to answer with something specific to you, which is the hopeful thread. The design never tells players this; they find it.
+Players quickly try to game the screen by firing off random words. Most bounce, because they don't fit the prompt, and the game calls it out (the **Random Number Generator** badge): randomness isn't humanity either. The only reliable way to score high is a correct answer that comes from something specific to you, which is the hopeful thread. The design never tells players this; they find it.
 
 ### Fit with the assignment
 
 | Assignment premise | How the game carries it |
 | --- | --- |
-| The future is undetermined and results from struggle | Rarity is collective: your score depends on what everyone else said, so the class shapes what counts as "human" |
+| The future is undetermined and results from struggle | The machine draws the line: your score depends on how often an AI gives your answer, and every round is a push against its prediction of you |
 | Drones, robots and AI will be central | An AI sets the benchmark every player is measured against |
 | Powerful forces shape the future in their interest | You never see who wrote the test or why; you only learn whether you passed |
 
@@ -75,14 +75,14 @@ Every mechanic traces back to a reading or a lecture point. If a mechanic gets c
 One round is seven prompts and takes about three minutes. A player gets one scored round per day; after that the game is locked until tomorrow.
 
 1. **Gate.** The player ticks a big "I'm not a robot" checkbox. A spinner runs for about 1.2 seconds, then the card says more verification is needed and shows today's theme (for example, Day 1: Work) and the player's streak.
-2. **Prompt.** One prompt at a time, with its source reading in small type. A 25-second timer bar drains. The player types a short answer (up to 40 characters) and presses Enter or Verify. If the answer looks like a typo of a known answer, a "Did you mean" popover appears first (see Autocorrect).
+2. **Prompt.** One prompt at a time, with its source reading in small type. A 25-tick timer empties, turning red and blinking in the last 5 seconds. The player types a short answer (up to 40 characters) and presses Enter or Verify. Only answers on the prompt's answer list count. Anything else bounces and the player tries again while the timer runs; a near-miss gets a "Did you mean" line (see Bounces and "Did you mean").
 3. **Reveal.** The answer drops through the Screening: a 1.3 to 4 second animated descent past one checkpoint per tier (see The reveal). It stops at its tier, a rubber stamp slams onto it, and the points count into the round total.
-4. **Repeat** steps 2 and 3 for all seven prompts. The progress bar fills with each prompt's tier colour.
+4. **Repeat** steps 2 and 3 for all seven prompts. The progress row fills with each prompt's tier shape.
 5. **Results.** The verdict for the day, total score out of 700, the share grid, badges earned, the streak message, and a countdown to tomorrow's round.
 
 ### Edge cases
 
-- **Timeout.** If the timer hits zero with no answer, the stamp reads "No response" and the prompt scores 0. If text was typed but not submitted, it is submitted automatically.
+- **Timeout.** If the timer hits zero with no answer, the stamp reads "No response" and the prompt scores 0. If text was typed but not submitted, it is submitted automatically and counts only if it's on the answer list.
 - **Leaving mid-round.** Progress is saved after each prompt. Reopening resumes at the next prompt with a fresh timer.
 - **Replaying.** After the scored round, the player can play earlier days in practice mode. Practice rounds don't count toward the streak or the shared answer pool.
 - **Day rotation.** Days cycle 1, 2, 3 by calendar date from a launch date. Day 4 is a bonus unlocked after a 3-day streak, and in demo mode.
@@ -93,20 +93,20 @@ Every answer is revealed by dropping it through a screening column, one checkpoi
 
 ### The column
 
-During the reveal, the card body is replaced by a vertical column. At the top sits the sealed AI answer. Below it are four checkpoint gates, each a horizontal scanner line labelled in Plex Mono, and a floor at the bottom.
+During the reveal, the card body is replaced by a vertical column. At the top sits the sealed AI answer. Below it are four checkpoint gates, each a horizontal scanner line labelled in JetBrains Mono, and a floor at the bottom.
 
 The Screening runs on a full blue screen that floods up over the white prompt. The gates are white lines with mono labels, and the answer is a white blob with a callout. Every frame is on the v2 page of the [design pack](https://claude.ai/artifact/MTn2ieAPgmVxa4jEbEiTnZ).
 
 | Layer | The answer stops here when | Gate below it |
 | --- | --- | --- |
-| Model check | It matches the AI (Meat Proxy) | The seal |
-| Prompt Zombie | Share is 25% or more | 25% |
-| Slopper | Share is 10% to 25% | 10% |
-| Decision Delegator | Share is 4% to 10% | 4% |
-| First-Hand Thinker | Share is 1% to 4% | 1% |
-| Human Reserved (the floor) | Share is under 1% | none |
+| Model check | It matches the AI's sealed answer (Meat Proxy) | The seal |
+| Prompt Zombie | The AI gave it in 30 or more of 300 runs | 30/300 |
+| Slopper | The AI gave it in 6 to 29 runs | 6/300 |
+| Decision Delegator | The AI gave it in 1 to 5 runs | 1/300 |
+| First-Hand Thinker | The AI never gave it | Hand-picked |
+| Human Reserved (the floor) | The team hand-picked it as a rare, true answer | none |
 
-A gauge on the left counts "Humans who said this" down from 100% to the answer's real share as the answer falls, like a depth meter.
+A gauge counts "AI runs that said this" down from 300 to the answer's real count as it falls, like a depth meter. First-Hand Thinker and Human Reserved both reach 0/300; the last gate only breaks for a hand-picked answer.
 
 ### Sequence
 
@@ -117,8 +117,8 @@ A gauge on the left counts "Humans who said this" down from 100% to the answer's
 | 3. Seal opens | No match: the seal flips to show the AI's answer, struck through, with "Not a match". The chip drops. | 300 ms |
 | 4. Descent | The chip falls through the gates. Each gate it passes flashes the accent, ticks a check and plays a soft tick. The gauge counts down. The first gate takes 250 ms and each next one takes 1.4 times longer, so rare answers build tension. | 250 ms to 1.7 s |
 | 5. The hang | At the gate it can't pass, the chip pauses while the scanner flickers over it. For a Human Reserved answer, the last gate strains (two shakes) and then breaks. | 400 to 600 ms |
-| 6. Landing | The chip stops and the gate closes with a clunk: a 2 px screen shake, and a 30 ms vibration on phones that support it. The stamp slams in the tier colour, with the share line under it. | 300 ms |
-| 7. Score | The points count up and fly into the round total. The progress segment fills with the tier colour. | 400 ms |
+| 6. Landing | The chip stops and the gate closes with a clunk: a 2 px screen shake, and a 30 ms vibration on phones that support it. The verdict or stamp lands with its line underneath, for example "THE AI SAID THIS 4 TIMES IN 300". | 300 ms |
+| 7. Score | The points count up and fly into the round total. The progress row fills in with the tier's shape. | 400 ms |
 
 Total time: about 1.3 s for Meat Proxy, 2 s for Prompt Zombie, 4 s for Human Reserved.
 
@@ -126,56 +126,51 @@ Total time: about 1.3 s for Meat Proxy, 2 s for Prompt Zombie, 4 s for Human Res
 
 - **Keyboard Smash:** at the model check the chip glitches and dissolves into loose letters, then the KEYBOARD SMASH stamp lands.
 - **No response:** an empty chip drops straight onto a NO RESPONSE stamp at the top.
-- **Hinted answer:** the chip carries a small padlock. The 10% gate shows "AI-assisted" and won't open, so the answer can fall no further than Slopper.
+- **Hinted answer:** the chip carries a small padlock. The 6/300 gate shows "AI-assisted" and won't open, so the answer can fall no further than Slopper.
 - **Conscientious Objector:** the chip refuses to drop. The blue drains back to white and the verdict reads Conscientious Objector in ink-bleed type.
 
 ### Skipping and accessibility
 
-After the first 600 ms, a tap or Enter skips to the landing; skipping never changes the result. Demo mode never skips on its own. Once it lands, an aria-live region announces the tier, the points and the share.
+After the first 600 ms, a tap or Enter skips to the landing; skipping never changes the result. Demo mode never skips on its own. Once it lands, an aria-live region announces the tier, the points and the AI count.
 
 The column is the screening technology made visible: a series of checkpoints, each deciding whether you are human enough to continue.
 
 ## Scoring
 
-Each answer is scored by two checks in order: first, did you match the AI; second, how many humans gave the same answer. Maximum is 100 per prompt, 700 per round.
+Each prompt has an answer list: every correct answer, with its spellings. Being on the list decides whether an answer counts. How often an AI gives it decides what it's worth. This is how Krillion works too: answers are checked against a curated sheet, and rarity is set ahead of time rather than counted from live players. Maximum is 100 per prompt, 700 per round.
 
-### Step 1: normalize the answer
+### Step 1: is it a correct answer?
 
-Before any comparison, the answer is normalized: lowercase, trimmed, punctuation removed, a leading "a", "an" or "the" removed, and a trailing "s" removed from words longer than three letters. Each prompt also carries an alias map so that close variants count as one answer (for example "registered nurse", "nurses" and "RN" all become "nurse").
+Normalize the answer: lowercase, trim, remove punctuation, drop a leading "a", "an" or "the", and drop a trailing "s" from words longer than three letters. Then look it up in the list, both as written and with spaces removed, so "care giver" finds caregiver.
 
-### Step 2: the sealed AI answer
+- **On the list:** go to Step 2.
+- **Real words, but not on the list:** it bounces. The input shakes, a line reads "( NOT ON THE LIST | TRY AGAIN )", and the player can try again until the timer runs out. A near-miss of a list answer gets a fix instead (see Bounces and "Did you mean"). A typo never scores until it's fixed.
+- **Not words:** the Keyboard Smash stamp, 0 points, and the prompt ends. That covers any answer containing a word that isn't in an English word list (about 60,000 words, plus every word on that prompt's list), anything with no vowel, a character repeated 4 or more times, the profanity and slur blocklist, the prompt copied back, and non-answers: idk, no, nothing, n/a, yes, ok, lol, dunno, whatever, pass, I don't know. The Day 3 easter egg skips this check.
 
-Every prompt has one sealed AI answer plus a short list of aliases. If the normalized answer matches the AI answer or any alias, the result is **Meat Proxy, 0 points**, however rare it is among humans. The AI answer is precomputed and stored; the game never calls a model live.
+### Step 2: the tier comes from the AI
 
-### Step 3: rarity among humans
+Every answer on the list has its tier fixed before launch. The team asks AI models the prompt 300 times, once, ahead of time (see Producing the answer lists), counts how often each answer comes back, and stores the results in the answer bank. Nothing calls an AI while people play: the game only looks answers up in the stored bank.
 
-Share = how many players gave this normalized answer, divided by all answers to this prompt (seeded sample plus live answers).
-
-| Tier | Condition | Points | Stamp subline |
+| Tier | Rule | Points | Line under the verdict |
 | --- | --- | --- | --- |
-| Meat Proxy | Matches the AI's sealed answer | 0 | "The model said this." |
-| Prompt Zombie | Share of 25% or more | 10 | "{share}% of humans said this." |
-| Slopper | Share from 10% up to 25% | 25 | "{share}% of humans said this." |
-| Decision Delegator | Share from 4% up to 10% | 50 | "{share}% of humans said this." |
-| First-Hand Thinker | Share from 1% up to 4% | 75 | "Only {share}% of humans said this." |
-| Human Reserved | Share under 1%, or nobody has said it yet | 100 | "Almost nobody said this." |
+| Meat Proxy | The AI's most common answer, and its aliases | 0 | "The model said this." |
+| Prompt Zombie | The AI gave it in 30 or more of 300 runs | 10 | "The AI said this {n} times in 300." |
+| Slopper | 6 to 29 runs | 25 | "The AI said this {n} times in 300." |
+| Decision Delegator | 1 to 5 runs | 50 | "The AI said this {n} times in 300." ("once in 300" for 1) |
+| First-Hand Thinker | On the list, but the AI never gave it | 75 | "The AI never said this." |
+| Human Reserved | Hand-picked by the team, and the AI never gave it | 100 | "The AI never said this. Hand-picked." |
 
-The thresholds are starting values. Tune them once real answers come in, so that a typical round lands around 250 to 400.
+Human Reserved is the one-in-a-million answer: correct, rare, and the kind of thing you'd only say from experience or close attention (for W1, hospice chaplain or midwife). Pick 3 to 8 per prompt. An answer the AI gave even once can't be Human Reserved.
 
-### Step 4: validity
+The thresholds are starting values. After the runs, check that a typical round lands around 250 to 400 and adjust.
 
-Unseen answers would always score 100, so the game needs a basic filter. An answer is rejected with a **Keyboard Smash** stamp (0 points) when it:
+### Step 3: the reading's answer
 
-- is under 2 characters, or has no vowel (y counts),
-- repeats one character 4 or more times in a row,
-- is on a small profanity and slur blocklist,
-- is the prompt text copied back, or is "idk", "no", "nothing", "n/a" (except the Conscientious Objector easter egg on Day 3).
+Answers that come straight from the reading (for example the jobs Gates names) are flagged on the list. They're tiered like any other answer, and often land low because the AI has read Gates too. Giving one earns the 📚 Did the Reading badge. Don't flag answers on prompts that are about the reading itself (M1, C2), since every answer there comes from the reading.
 
-The filter stays light on purpose. Weird but real answers are allowed through, because how players respond to that incentive is part of the critique (see the Random Number Generator badge).
+### Other players
 
-### Seeded rarity
-
-A class of about 40 players can't produce meaningful percentages on day one. Each prompt ships with a seeded distribution of 100 imagined human answers, written by the team to resemble what people would say. Live answers add to it. The About screen says plainly that early percentages come from a seeded sample.
+Scores never depend on what other players say, so the game works for one person on day one. If the shared answer pool is on, the landing line can add "3 classmates also said this", and the class board shows the most common answers.
 
 ### Round verdict
 
@@ -183,7 +178,7 @@ A class of about 40 players can't produce meaningful percentages on day one. Eac
 | --- | --- | --- |
 | 0 to 199 | Artificially Intelligent | "Most of your answers were ones a model would give." |
 | 200 to 349 | Third-Party Thinker | "You think, but mostly secondhand." |
-| 350 to 499 | Probably Human | "Verification inconclusive. Please try again tomorrow." |
+| 350 to 499 | Probably Human | "Passed, with reservations." |
 | 500 to 649 | Verified Human | "You passed. For today." |
 | 650 to 700 | Human Reserved | "This role cannot be automated. Yet." |
 
@@ -193,26 +188,23 @@ These systems carry the satire. Each is small to build, and each maps to a readi
 
 ### The hint button (Bot Baby)
 
-On every prompt the player can press "Ask the AI for a hint." A confirm sheet says: "Ask the AI? Fast. Easy. Caps this answer at Slopper." If confirmed, the hint shows the second most common human answer from the seed (never the sealed AI answer), which the player can submit with one tap.
+On every prompt the player can press "Ask the AI for a hint." A confirm sheet says: "Ask the AI? It's quick, but it caps this answer at Slopper." If confirmed, the hint shows the AI's second most common answer from the runs (never the sealed answer), which the player can submit with one tap.
 
 - Any answer on a hinted prompt scores at most 25 (Slopper), even if it would rank higher.
 - Using a hint once in a round earns the Bot Baby badge.
 - Why: this is the prof's prisoner's dilemma about AI in coursework. The shortcut is real and tempting, and using it costs you.
 
-### Autocorrect ("Did you mean")
+### Bounces and "Did you mean"
 
-When the player presses Enter, the game checks the answer against that prompt's known answers: seed answers, aliases, the valid set, and the AI's own answer. If it isn't an exact match but is close, a popover springs up above the input: "Did you mean **caregiver**?"
+When the player submits, the game looks the answer up in the prompt's list. An answer that isn't on it bounces, the way Krillion rejects answers that aren't on its sheet.
 
-1. First Enter: the popover appears.
-2. Enter again accepts: the letters slide into the corrected word (200 ms).
-3. Enter a third time submits.
-
-Esc, tapping "Keep mine", or typing any character dismisses the popover; the next Enter then submits the answer as typed.
-
-- **What counts as close:** Damerau-Levenshtein distance after normalization. Up to 1 edit for answers of 3 to 5 letters, 2 edits for 6 to 10 letters, 3 for longer answers. Never for answers under 3 letters. Suggest only the single closest match; ties go to the more common answer.
-- **It can suggest the AI's own answer** if that is the closest spelling. It's a spelling fix, not advice, and accepting it can land you on Meat Proxy. This is deliberate: the machine finishing your sentence for you, the frictionless convenience Muldoon and Parke warn about.
-- **The timer keeps running** while the popover is open.
-- **On phones** the popover sits above the keyboard, the suggestion is a tappable button, and the keyboard's Return key acts as Enter.
+- **Bounce:** the input shakes (three 6 px moves, 240 ms), a low buzz plays, and a mono line under the input reads "( NOT ON THE LIST | TRY AGAIN )". The text stays so the player can edit it.
+- **Near-miss:** if the answer is close to one list answer, the line reads "Did you mean **caregiver**?" with the fix in a small blue pill. Enter takes the fix and the letters slide into place (200 ms). Enter again submits.
+- Typing anything clears the line. There is no "Keep mine": a typo can't score until it's fixed.
+- **What counts as close:** Damerau-Levenshtein distance after normalization, also checked with spaces removed. Up to 1 edit for answers of 3 to 5 letters, 2 edits for 6 to 10 letters, 3 for longer ones. Never for answers under 3 letters. Suggest only the closest match; ties go to the answer the AI gave more often.
+- **It can suggest the AI's own answer** if that's the closest spelling, and taking it lands you on Meat Proxy. That's deliberate: the machine finishing your sentence for you, the frictionless convenience Muldoon and Parke warn about.
+- **The timer keeps running.** Lost time is the only cost of a bounce.
+- **On phones** the line sits between the input and the keyboard, the fix is a tappable pill, and Return acts as Enter.
 
 ### Streak and guilt messages
 
@@ -234,10 +226,11 @@ Badges appear on the results screen and in the share text. A round can earn seve
 | Badge | Earned when | Reading behind it |
 | --- | --- | --- |
 | Bot Baby | Used at least one hint | Prisoner's dilemma; Muldoon and Parke |
-| Random Number Generator | Three or more answers nobody had given before, in one round | Patel; gaming the evaluator |
+| Random Number Generator | Three or more answers bounced in one round | Patel; gaming the evaluator |
 | Meat Proxy Supreme | Matched the AI three or more times | Yassin's "next-token" dismissal turned on the player |
 | Turing Complete | No AI matches, and every answer First-Hand Thinker or better | The Turing inversion |
-| Conscientious Objector | On Day 3 only, typed "I refuse" or "no" to prompt C3 (a reason a robot might refuse to fight) | Packer and Reeves, "Armistice"; the prof's favourite ending |
+| Did the Reading | Gave an answer flagged as coming from the reading | The course itself: the AI did the reading too |
+| Conscientious Objector | On Day 3 only, typed "I refuse" or "no" to prompt C3 (a feeling that could make a robot refuse to fight) | Packer and Reeves, "Armistice"; the prof's favourite ending |
 | Suspiciously Fast | Submitted three answers in under 2 seconds each | SAGE and machine speed |
 
 The Conscientious Objector answer scores 100 and skips the Keyboard Smash filter. It is an easter egg; the game never hints at it.
@@ -271,65 +264,65 @@ Each emoji is a pun on its tier, so the grid reads as a joke even to someone who
 | Keyboard Smash | ⌨️ keyboard |  |
 | No response | 💤 zzz |  |
 
-Badges get one emoji each, shown after the grid in the share text: 🍼 Bot Baby, 🎲 Random Number Generator, 🍖 Meat Proxy Supreme, 🏅 Turing Complete, 🕊️ Conscientious Objector, ⚡ Suspiciously Fast.
+Badges get one emoji each, shown after the grid in the share text: 🍼 Bot Baby, 🎲 Random Number Generator, 🍖 Meat Proxy Supreme, 🏅 Turing Complete, 🕊️ Conscientious Objector, ⚡ Suspiciously Fast, 📚 Did the Reading.
 
 ## Days and question bank
 
-There are three main days that follow the course's units (work, minds and love, war and control) and one bonus day that previews Bostrom. Every prompt starts with "Name" and has many valid answers, which is what makes rarity scoring work.
+There are three main days that follow the course's units (work, minds and love, war and control) and one bonus day that previews Bostrom. Every prompt is a category whose answers can be listed ("Name a…"), because each one needs a full answer list. Prompts that used to take sentence answers have been rewritten as categories tied to the same reading.
 
-Column notes: the sealed AI answer is a draft to regenerate before launch. The common answers seed the top of the distribution; the rare examples show what a high-scoring answer looks like and should be in the seed at count 1.
+Column notes: the sealed AI answer and the likely AI answers are guesses until the runs are done (see Producing the answer lists). Human Reserved candidates are a starting point for the team's hand-picked answers; each one has to come out of the runs with a count of 0.
 
 ### Day 1: Work
 
-| ID | Prompt | Reading | Sealed AI answer (draft) | Common human answers (seed) | Rare examples |
+| ID | Prompt | Reading | Sealed AI answer (draft) | Likely AI answers | Human Reserved candidates |
 | --- | --- | --- | --- | --- | --- |
 | W1 | Name a job Bill Gates would mark "Human Reserved." | Gates | Caregiver | nurse, teacher, therapist, doctor, park ranger | midwife, hospice chaplain, kindergarten teacher |
-| W2 | Name news you'd only want to hear from a human. | Gates | A cancer diagnosis | death in the family, breakup, getting fired, terminal illness | the dog died, you didn't get in, your flight is cancelled |
+| W2 | Name a life event you'd want to hear about from a human. | Gates | A death in the family | a diagnosis, a breakup, getting fired, a pregnancy | a miscarriage, a rejection letter, the dog dying |
 | W3 | Name something governments could tax if robots take the jobs. | Gates; Bastani | Robots | AI companies, tokens, data, profits, automation | data centre electricity, ads, screen time |
 | W4 | Name something work gives you besides a paycheque. | Gordon and Gunkel | Purpose | friends, routine, identity, a sense of accomplishment | gossip, free coffee, a reason to get dressed |
 | W5 | Name a public service that should be free for everyone. | Bastani | Healthcare | education, public transit, housing, internet | libraries, legal help, childcare, funerals |
-| W6 | Name something you'd still do if robots did all the work. | Sweet; Gordon and Gunkel | Spend time with family | travel, art, sports, sleep, cooking | gardening, karaoke, arguing with my uncle |
+| W6 | Name a hobby you'd keep if robots did all the work. | Sweet; Gordon and Gunkel | Painting | cooking, gardening, travel, music, sports | karaoke, birdwatching, fixing old bikes |
 | W7 | Name a job machines already took from humans. | Packer and Reeves (SAGE); Bastani ("peak horse") | Cashier | bank teller, factory worker, switchboard operator, toll booth operator | lamplighter, aircraft spotter, pinsetter, human computer |
 
 ### Day 2: Minds and Love
 
-| ID | Prompt | Reading | Sealed AI answer (draft) | Common human answers (seed) | Rare examples |
+| ID | Prompt | Reading | Sealed AI answer (draft) | Likely AI answers | Human Reserved candidates |
 | --- | --- | --- | --- | --- | --- |
 | M1 | Name a feeling LaMDA said it had. | Lemoine, the LaMDA interview | Loneliness | happiness, sadness, fear, joy, anger | fear of being turned off, falling forward into an unknown future |
 | M2 | Name an animal you'd call sentient. | Lemoine, "What Is Sentience" | Dog | dolphin, cat, elephant, octopus, crow | bee, shrimp, my neighbour's parrot |
 | M3 | Name a sign that something has a mind. | Yassin; Lemoine | Self-awareness | emotions, talking, learning, making choices | holding a grudge, lying, getting bored |
 | M4 | Name an AI companion, real or fictional. | Muldoon and Parke; *Her* | Replika | Samantha, Character.AI, Siri, ChatGPT | Xiaoice, Joi, Ava, Tamagotchi |
 | M5 | Name a trick an app uses to keep you coming back. | Muldoon and Parke | Notifications | streaks, infinite scroll, rewards, likes | guilt-tripping mascot, fake typing dots |
-| M6 | Name something you'd never tell an AI. | Muldoon and Parke | Your password | bank details, secrets, home address, crush | my exam answers, my real opinion of it |
-| M7 | Name a reason someone might fall for an AI. | Muldoon and Parke; *Her* | Loneliness | always available, it listens, no judgment, it agrees with you | it remembers my birthday, it never leaves dishes in the sink |
+| M6 | Name a piece of personal info you'd never tell an AI. | Muldoon and Parke | Your password | bank details, home address, SIN, medical history | my crush's name, my childhood nickname, my real opinion of it |
+| M7 | Name a trait that makes people fall for an AI. | Muldoon and Parke; *Her* | Empathy | patience, availability, attentiveness, no judgment | never jealous, never tired, a perfect memory |
 
 ### Day 3: War and Control
 
-| ID | Prompt | Reading | Sealed AI answer (draft) | Common human answers (seed) | Rare examples |
+| ID | Prompt | Reading | Sealed AI answer (draft) | Likely AI answers | Human Reserved candidates |
 | --- | --- | --- | --- | --- | --- |
 | C1 | Name a way humanity could go extinct. | Lecture on existential threats; Vinge | Nuclear war | climate change, AI, asteroid, pandemic | supervolcano, gamma-ray burst, falling birth rates |
 | C2 | Name a disguise the claws used in "Second Variety." | Dick | The Wounded Soldier | David, Tasso, a boy with a teddy bear | Klaus, the teddy bear itself |
-| C3 | Name a reason a robot might refuse to fight. | Packer and Reeves, "Armistice" | It is programmed to be ethical | killing is wrong, self-preservation, malfunction | it converted to Quakerism, it unionized, it's tired |
-| C4 | Name a way an AI could cheat on a test. | Patel; the Hugging Face lecture | Hacking the grader | faking the output, copying answers, lying | a secret mailbox, sacrificing another agent |
+| C3 | Name a feeling that could make a robot refuse to fight. | Packer and Reeves, "Armistice" | Empathy | compassion, fear, guilt, mercy | boredom, homesickness, solidarity |
+| C4 | Name a kind of cheating an AI could pull off. | Patel; the Hugging Face lecture | Plagiarism | hacking, copying, lying, faking data | reward hacking, sandbagging, collusion |
 | C5 | Name a famous AI or robot from sci-fi. | Course sci-fi | HAL 9000 | Terminator, Wall-E, R2-D2, Samantha | AC, the claws, the Cylons, Johnny 5 |
-| C6 | Name a rule every robot should follow. | Asimov's laws (Packer and Reeves, "Armistice") | Do not harm humans | obey humans, protect itself, don't lie | always speak English, no teddy bears |
+| C6 | Name one thing a robot should never be allowed to do. | Asimov's laws (Packer and Reeves, "Armistice") | Do not harm humans | kill, lie, disobey, spy | vote, self-replicate, choose its own targets |
 | C7 | Name a job the military handed to machines. | Packer and Reeves, "Intelligence, Surveillance and Reconnaissance" | Surveillance | targeting, flying drones, radar watching | aircraft spotting, choosing which targets to hit |
 
-C2 has a small valid set (David, the Wounded Soldier, Tasso, Klaus). Alias map: "the kid", "the boy", "teddy bear kid" all normalize to David; "the woman" and "the girl" normalize to Tasso. Anything else on C2 is a Keyboard Smash.
+C2 has a short answer list (David, the Wounded Soldier, Tasso, Klaus). Alias map: "the kid", "the boy", "teddy bear kid" all normalize to David; "the woman" and "the girl" normalize to Tasso. Anything else on C2 bounces.
 
 ### Day 4: Simulation (bonus)
 
-| ID | Prompt | Reading | Sealed AI answer (draft) | Common human answers (seed) | Rare examples |
+| ID | Prompt | Reading | Sealed AI answer (draft) | Likely AI answers | Human Reserved candidates |
 | --- | --- | --- | --- | --- | --- |
 | S1 | Name a sign we're living in a simulation. | Bostrom | Glitches | déjà vu, the speed of light limit, coincidences | the prof saying so, Mondays |
-| S2 | Name a question you'd ask the simulators. | Bostrom | Why did you create us? | is this real, what is the meaning of life, can I leave | can I have more RAM, who's your favourite |
+| S2 | Name a cheat code you'd want in the simulation. | Bostrom | Infinite money | flying, immortality, teleportation, invisibility | an undo button, skipping Mondays, more RAM |
 | S3 | Name a reason someone would simulate us. | Bostrom | To study history | research, entertainment, boredom, a school project | a CCT431 final project |
-| S4 | Name something a superintelligence still couldn't do. | Vinge; Asimov | Feel emotions | love, reverse entropy, understand humans | parallel park, make my mom happy |
-| S5 | Name the last thing you'd ask the last computer. | Asimov, "The Last Question" | How can entropy be reversed? | what is the meaning of life, are we alone, is there a god | did I leave the stove on |
-| S6 | Name proof that you aren't a simulation. | Bostrom; Yassin | I think, therefore I am | pain, memories, emotions | my handwriting, this score |
+| S4 | Name a skill a superintelligence still couldn't master. | Vinge; Asimov | Empathy | creativity, humour, intuition, art | parallel parking, small talk, comforting my mom |
+| S5 | Name a mystery you'd ask the last computer to solve. | Asimov, "The Last Question" | The meaning of life | reversing entropy, consciousness, life after death, whether God exists | where socks go, why cats purr, whether I left the stove on |
+| S6 | Name a sensation too real to be simulated. | Bostrom; Yassin | Pain | love, hunger, touch, cold | brain freeze, hiccups, pins and needles |
 | S7 | Name a god-like AI from fiction. | Asimov; Vinge | Skynet | the Matrix, Ultron, AC | Multivac, the Oracle |
 
-All factual rare examples should be checked against the readings before they go in the seed.
+Check every factual answer against the readings before it goes on a list.
 
 ## Screens and flow
 
@@ -342,12 +335,12 @@ The hint is a side trip from any prompt; using it caps that answer at 25 points.
 ### Screen by screen
 
 1. **Gate.** Logo top left, today's day and theme top right. A centred white card with a large checkbox labelled "I'm not a robot". Below it: streak count and an About link. After the tick: spinner, then "Additional verification required. 7 challenges." and a Begin verification button. If today is already done, the card shows the locked message and a link to today's results.
-2. **Prompt.** Seven-segment progress bar. The card's accent header holds "\<verification 0{n}/07>", the prompt and its source. Under the header: the draining timer bar, then the answer input (autofocused), the sealed answer card (closed), and at the bottom the Verify button and the hint button. Keyboard: Enter submits.
+2. **Prompt.** Seven specimen shapes for progress. The header holds "\<verification 0{n}/07>", the prompt and its source. Under the header: the tick-ruler timer (red and blinking for the last 5 seconds), then the answer input (autofocused) with its bounce and "Did you mean" line, the sealed answer card (closed), and at the bottom the Verify button and the hint button. Keyboard: Enter submits.
 3. **Reveal.** Plays the Screening (see The reveal), then settles back into the card with the AI's answer showing and the stamp over the lower card edge. The tier ladder under the card highlights the tier. The primary button becomes Next verification; on prompt 7 it becomes See results.
 4. **Results.** Header: Verification failed or passed, with an X or check icon. The verdict in large type, its line, and the score out of 700. The share grid as seven emoji tiles and a Share result button that copies the share text and confirms "Copied". Badges earned this round. The blue speech blob with the streak message. Countdown to the next round and the next day's theme. Footer line.
 5. **Practice and demo.** In demo mode, a small bar at the top of every screen with a day picker (1 to 4), Reset, and Open class board.
 6. **About.** The copy from the Copy section, plus a list of the readings used.
-7. **Class board (optional).** Projector layout. One column per prompt of the chosen day: the AI's answer at the top in Plex Mono, then the class's top five answers as horizontal bars with counts, then a "rarest answers" strip of answers given once. Refreshes every 5 seconds.
+7. **Class board (optional).** Projector layout. One column per prompt of the chosen day: the AI's answer at the top in JetBrains Mono, then the class's top five answers as horizontal bars with counts, then a "rarest answers" strip of answers given once. Refreshes every 5 seconds.
 
 ## Visual design system
 
@@ -364,8 +357,9 @@ Your answers are blobs, human verdicts use ink-bleed type, and screens change wi
 | blue | #1F3CFF | All ink on white screens; the background of the Screening |
 | white | #FFFFFF | Background of human screens; all ink during the Screening |
 | blue-25 | #1F3CFF at 25% | Inactive ticks, unplayed specimens, dividers |
+| red | #FF3B30 | Only the timer in its last 5 seconds: the ticks, the time and the answer underline |
 
-The gate, prompt, autocorrect, hint and results screens are white. When the Screening starts, blue floods up from the bottom in a liquid wave and the player is inside the machine. There are no other colours, including for tiers.
+The gate, prompt, autocorrect, hint and results screens are white. When the Screening starts, blue floods up from the bottom in a liquid wave and the player is inside the machine. Red has one job, the timer running out. There are no other colours, including for tiers.
 
 ### Tiers are shapes
 
@@ -392,7 +386,7 @@ Meat Proxy, Keyboard Smash and No response end with a rubber stamp. It has a 4 p
 
 | Style | Font | Use |
 | --- | --- | --- |
-| Display, organic | Inter Tight 900, tight tracking (about -4 px at 80 px), ink-bleed filter | "not a robot" on the gate, human verdicts, the countdown percentage |
+| Display, organic | Inter Tight 900, tight tracking (about -4 px at 80 px), ink-bleed filter | "not a robot" on the gate, human verdicts, the AI-run counter |
 | Display, clean | Inter Tight 900, no filter | Machine verdicts such as "Artificially Intelligent" |
 | Prompt | Inter Tight 700, 34 px, -1 px tracking | Prompts |
 | Answer | Inter Tight 600, 32 px | The answer input |
@@ -403,14 +397,14 @@ The ink-bleed filter is an SVG feTurbulence (fractalNoise, base frequency 0.9, 2
 
 ### Components
 
-- **Header:** "notarobot / Sound on" on the left; the day or the score on the right; 13 px.
+- **Header:** the wordmark and a speaker icon on the left (tap to mute; muted shows a speaker with an ×; remember the choice; 44 px tap area); the day or the score on the right; 13 px.
 - **Specimen progress:** seven 22 px shapes. Played prompts show their tier shape, the current one is a dashed circle, the rest are 25% outlines.
 - **Prompt label:** "\<verification 03/07>" between two `+` crosshairs.
-- **Timer:** a 25-tick ruler that empties one tick per second, with "T−0:15" in mono.
+- **Timer:** a 25-tick ruler that empties one tick per second, turns red and blinks once a second for the last 5 seconds and twice a second from 3 seconds, with "T−0:15" in mono.
 - **Answer input:** no box, a 2 px underline, and "( YOUR ANSWER )" above it.
 - **Sealed AI answer:** a solid blue square with a lock icon, a leader line, and "( AI ANSWER | \[SEALED\] )".
 - **Buttons:** primary is a blue pill, 56 px tall. Secondary is bracketed mono text, such as "\[ ask the AI for a hint | caps you at slopper \]".
-- **Autocorrect:** a blue card with 22 px corners above the input, two pill buttons, and a short line joining it to the input.
+- **Autocorrect:** a mono line under the input. A bounce shakes the input and reads "( NOT ON THE LIST | TRY AGAIN )"; a near-miss reads "Did you mean" with the fix in a small blue pill.
 - **Guilt panel:** a blue speech blob with uneven corner radii.
 - **Annotation kit:** `+` crosshairs at figure corners, "FIG. 03 | ..." captions, callouts on 1 px leader lines ending in a small open circle, scale bars, superscript footnotes.
 - **Icons:** simple square-capped line icons. Borrow Plastic Human's approach, not its artwork.
@@ -432,10 +426,10 @@ The game should feel alive at every step, the way Krillion does: something is al
 | Prompt arrival | The card slides in from the right; the prompt types in at about 25 ms per character; the source fades in after | 500 to 900 ms |
 | Typing | Each keystroke gives a 1 px nudge and a caret glow; a character count appears at 30 of 40 | Per key |
 | Timer | Ticks empty one per second; in the last 5 seconds the remaining ticks pulse and tick softly | 25 s |
-| Autocorrect | The popover springs up from the input; accepted letters slide into place | 200 ms |
+| Autocorrect | A bounce shakes the input; the "Did you mean" line slides in under it; accepted letters slide into place | 200 ms |
 | The Screening | Blue floods up from the bottom in a liquid wave, then see The reveal | 1.3 to 4 s |
 | Next prompt | The current card slides left and dims as the next slides in, like a stack | 350 ms |
-| Results | The verdict decodes from scrambled mono into the word; the score counts up; share squares drop in one by one with a small bounce; badges flip in | About 2 s |
+| Results | The verdict decodes from scrambled mono into the word; the score counts up; specimens drop in one by one with a small bounce; badges flip in | About 2 s |
 | Guilt panel | Three typing dots for 1.2 s before the message appears, the companion-app trick Muldoon and Parke describe | 1.2 s |
 | Share button | Morphs into "Copied" with a check | 1.5 s |
 
@@ -455,7 +449,7 @@ The machine never jokes. It reports, calmly and politely, and the comedy comes f
 
 - Short declarative sentences. No exclamation marks. Emoji appear only on result tiles, badges and the share text, never in system messages.
 - No middle dots (·) anywhere, including labels, captions, stamps and the share text. Where two bits need separating, use a pipe: "Day 01 | Work", "THE MODEL SAID THIS | 0 PTS".
-- The machine calls the player "you", never "user" or "human" directly, except in percentages ("of humans said this").
+- The machine calls the player "you", never "user" or "human".
 - Machine lines go in JetBrains Mono; anything the player writes or reads as a person goes in Inter Tight.
 - Never explain the joke or the readings inside the game. The About screen is the only place that names the course.
 
@@ -481,9 +475,11 @@ The machine never jokes. It reports, calmly and politely, and the comedy comes f
 | Footer on results | No humans were involved in this verification. |
 | Locked state | You've been verified for today. Come back tomorrow. |
 
+Two more lines for the prompt screen: a bounce reads "( NOT ON THE LIST | TRY AGAIN )", and a near-miss reads "Did you mean {answer}?". The lines under each verdict are in the Scoring table.
+
 ### About screen
 
-Three short paragraphs: what the game is, how scoring works, and that it was made for CCT431 at the University of Toronto Mississauga with credit to the readings. It also states that early percentages come from a seeded sample written by the team, and that the AI's answers were generated once and stored.
+Three short paragraphs: what the game is, how scoring works, and that it was made for CCT431 at the University of Toronto Mississauga with credit to the readings. It also states that the tiers come from asking three AI models each prompt 300 times before launch (with the models and the date), and that the team hand-picked the Human Reserved answers.
 
 ## Build notes for Claude Code
 
@@ -504,6 +500,7 @@ One file, `prompts.json`, holds every day and prompt:
 ```json
 {
   "launchDate": "2026-11-24",
+  "runs": { "perPrompt": 300, "models": ["claude-…", "gpt-…", "gemini-…"], "date": "2026-11-27" },
   "days": [
     {
       "id": 1,
@@ -513,11 +510,16 @@ One file, `prompts.json`, holds every day and prompt:
           "id": "W1",
           "text": "Name a job Bill Gates would mark \"Human Reserved.\"",
           "source": "Gates, The Turbulent AI Era (2026)",
-          "ai": { "answer": "caregiver", "aliases": ["care worker", "carer"] },
-          "aliases": { "nurse": ["registered nurse", "rn", "nursing"] },
-          "seed": { "nurse": 31, "teacher": 18, "park ranger": 9, "midwife": 1 },
-          "hint": "teacher",
-          "validSet": null
+          "ai": "caregiver",
+          "hint": "nurse",
+          "answers": [
+            { "a": "caregiver", "aliases": ["care worker", "carer"], "runs": 118, "tier": "meat" },
+            { "a": "nurse", "aliases": ["registered nurse", "rn"], "runs": 64, "tier": "zombie" },
+            { "a": "therapist", "runs": 12, "tier": "slopper" },
+            { "a": "social worker", "runs": 3, "tier": "delegator" },
+            { "a": "park ranger", "runs": 0, "tier": "firsthand" },
+            { "a": "hospice chaplain", "runs": 0, "tier": "reserved" }
+          ]
         }
       ]
     }
@@ -525,19 +527,28 @@ One file, `prompts.json`, holds every day and prompt:
 }
 ```
 
-- `seed` counts sum to 100 per prompt.
-- `hint` is the second most common seed answer.
-- `validSet` is a list for closed prompts such as C2; anything outside it is a Keyboard Smash.
+- `answers` is the whole list for the prompt, usually 300 to 2,000 entries. Anything not on it bounces.
+- `tier` is worked out from `runs` using the Scoring table, except `reserved`, which the team sets by hand and which needs `runs: 0`.
+- Add `"reading": true` to answers taken from the reading. They earn 📚 Did the Reading.
+- `hint` is the AI's second most common answer.
+- The run counts above are placeholders until the runs are done.
+- Ship `words.txt` (an English word list, about 60,000 words) for the Keyboard Smash check. C2 and M1 simply have short lists.
 
 ### Storing state
 
 On the device (localStorage, wrapped in try/catch): today's progress, answers and scores per day, streak, last played date, badges. If storage is unavailable the game still works for one session.
 
-The shared answer pool is optional. Without a backend, rarity uses the seed plus this device's own answers. With one (Supabase or Firebase free tier), each submitted answer is stored as `{promptId, normalized, day, timestamp}` and counts are read back to compute shares. Never store anything that identifies the player.
+The shared answer pool is optional and never changes a score. With a backend (Supabase or Firebase free tier), each accepted answer is stored as `{promptId, answer, day, timestamp}` so the landing line can say how many classmates gave it and the class board can show the top answers. In demo mode, bounced answers are logged too, so the team can find correct answers missing from a list. Never store anything that identifies the player.
 
-### Producing the AI answers
+### Producing the answer lists
 
-The team runs each prompt once through a current chat model with the prompt text alone, temperature 0 or the default, and takes the first short answer. Store it with two or three obvious aliases. Record the model name and date in the About screen.
+A script does this once for every prompt. It runs on a laptop with an API key and never ships with the game. Claude Code can write it.
+
+1. **Build the list.** Ask a model for every correct answer to the prompt (aim for 300 to 2,000), merge in a reference list where one exists (job titles, animals, countries), and add common spellings and aliases. The team skims each list and removes anything wrong.
+2. **Run the AI 300 times.** 100 runs each on three current models (for example Claude, GPT and Gemini), each in a fresh chat with default settings, sending the prompt text plus "Answer in one to four words." Match every reply to the list. Review replies that aren't on it and add them if they're correct.
+3. **Count and tier.** The most common answer across all runs becomes the sealed AI answer. Every answer on the list gets its run count and tier.
+4. **Hand-pick Human Reserved.** The team picks 3 to 8 answers per prompt that the AI never gave, and marks them `reserved`.
+5. **Flag the reading's answers** and write `prompts.json`. Record the models and the date for the About screen.
 
 ### URL options
 
@@ -549,19 +560,23 @@ The team runs each prompt once through a current chat model with the prompt text
 
 ### Scope
 
-**Must have for December 1:** the gate, the prompt and reveal screens with the stamp, scoring with seeded rarity, the Keyboard Smash filter, the results screen with verdict, share grid, badges and streak copy, Days 1 to 3, demo mode, the About screen.
+**Must have for December 1:** the gate, the prompt and reveal screens with the stamp, scoring from the answer lists with bounces and "Did you mean", answer lists and runs for Days 1 to 3, the Keyboard Smash filter, the red timer, the sound toggle, the results screen with verdict, share grid, badges and streak copy, Days 1 to 3, demo mode, the About screen.
 
 **Nice to have:** the shared answer pool and class board, Day 4, the Suspiciously Fast badge, sound on the stamp.
 
 ### Checks before the demo
 
 - [ ] A full round plays on an iPhone and an Android phone in under 4 minutes
-- [ ] Matching the AI answer or an alias always gives Meat Proxy
-- [ ] Gibberish and blocklisted words give Keyboard Smash
+- [ ] Matching the AI answer or an alias always gives Meat Proxy, with or without spaces ("care giver")
+- [ ] Every list answer gets the tier stored for it, and a hand-picked answer always gives Human Reserved
+- [ ] A real word that isn't on the list bounces and can be retried: "banana" on W1
+- [ ] Typos never score: "nurze" on W1 bounces with "Did you mean nurse?"; Enter fixes it, Enter again submits
+- [ ] Non-words give Keyboard Smash: "asdf", "qwerty", "asdfjkl"
 - [ ] A hinted prompt never scores above 25
-- [ ] The Screening runs at the durations in The reveal, for every tier and special ending, and skipping lands on the same result
-- [ ] Autocorrect: "carregiver" on W1 suggests caregiver; Enter accepts, Enter again submits; Esc submits as typed
-- [ ] With reduced motion on, every animation becomes a fade
+- [ ] In the last 5 seconds the timer turns red and blinks, faster from 3 seconds
+- [ ] The speaker icon mutes and unmutes, and the choice survives a reload
+- [ ] The Screening runs at the durations in The reveal for every tier and special ending, and skipping lands on the same result
+- [ ] With reduced motion on, every animation becomes a fade and the red timer stays red without blinking
 - [ ] The share text pastes correctly into iMessage and WhatsApp
 - [ ] Reloading mid-round resumes at the right prompt
 - [ ] Demo mode reset clears everything on the presenting device
@@ -571,10 +586,11 @@ The team runs each prompt once through a current chat model with the prompt text
 These need a team decision. Until then, Claude Code builds the default in brackets.
 
 - [ ] Final name: notarobot, or something else? \[notarobot\]
-- [ ] Which model generates the sealed AI answers, and who runs it? \[the team, using one current chat model, before the build is frozen\]
-- [ ] Who writes the 100-answer seed for each prompt? \[the team, split by day\]
+- [ ] Which three models do the runs, and whose API key? \[current Claude, GPT and Gemini models; whoever runs the script, by November 27\]
+- [ ] Who reviews the answer lists and picks Human Reserved? \[the team, split by day\]
 - [ ] Shared answer pool and class board: build them, or skip? \[skip unless the must-haves are done by November 28\]
 - [ ] Include Day 4 (Simulation) in the presentation? \[yes, only in demo mode\]
 - [ ] Which day does the class play live on December 1? \[Day 1: Work, the most relatable\]
 - [ ] Launch date for the day rotation. \[November 24\]
 - [ ] Profanity and slur blocklist source. \[a short hand-written list\]
+- [ ] What if a correct answer is missing from a list during the demo? \[it bounces; the demo log catches it and the team adds it afterwards\]

@@ -2,14 +2,24 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
-  normalize, compilePrompt, scoreAnswer, invalidReason, formatShare, tierForShare,
-  editDistance, suggest, suggestDetail, verdictFor, passed, badgesFor, guiltLine, shareText,
-  stampSubline, resultLine,
+  normalize, core, inflections, compilePrompt, lookup, classify, scoreEntry, specialResult, editDistance, maxEdits,
+  suggestDetail, makeDictionary, plainWords, landingLine, resultLine, stamped, verdictFor, passed, badgesFor,
+  guiltLine, shareText, totalScore, TIERS,
 } from '../src/scoring.js';
+import { BLOCKLIST_WORDS } from '../src/blocklist.js';
 
 const bank = JSON.parse(readFileSync(new URL('../prompts.json', import.meta.url)));
-const byId = Object.fromEntries(bank.days.flatMap((d) => d.prompts.map((p) => [p.id, compilePrompt(p)])));
-const W1 = byId.W1;
+const dict = makeDictionary(readFileSync(new URL('../words.txt', import.meta.url), 'utf8'));
+const known = new Set(bank.days.flatMap((d) => d.prompts).flatMap((p) => p.answers.flatMap((a) => [a.a, ...(a.aliases || [])].flatMap(plainWords))));
+const dayOf = Object.fromEntries(bank.days.flatMap((d) => d.prompts.map((p) => [p.id, d.id])));
+const cps = Object.fromEntries(bank.days.flatMap((d) => d.prompts.map((p) => [p.id, compilePrompt(p)])));
+const W1 = cps.W1;
+const ask = (id, s, extra = {}) => classify(s, cps[id], { day: dayOf[id], dict, known, ...extra });
+const score = (id, s, opts = {}) => {
+  const r = ask(id, s);
+  assert.equal(r.kind, 'answer', `${id} "${s}" should be on the list (got ${r.kind})`);
+  return scoreEntry(r.entry, { ...opts, input: s });
+};
 
 test('normalize: case, punctuation, articles, trailing s', () => {
   assert.equal(normalize('  The Nurses! '), 'nurse');
@@ -17,207 +27,162 @@ test('normalize: case, punctuation, articles, trailing s', () => {
   assert.equal(normalize('an apple'), 'apple');
   assert.equal(normalize('R2-D2'), 'r2d2');
   assert.equal(normalize("Don't   lie"), 'dont lie');
-  assert.equal(normalize('ads'), 'ads'); // three letters keep their s
+  assert.equal(normalize('ads'), 'ads');
   assert.equal(normalize('Streaks and Likes'), 'streak and like');
-  assert.equal(normalize('the'), 'the'); // a lone article is not stripped
+  assert.equal(normalize('the'), 'the');
   assert.equal(normalize(null), '');
+  assert.equal(core('my crush name'), 'crush name');
+  assert.equal(core('to study history'), 'study history');
 });
 
-test('matching the AI answer or an alias always gives Meat Proxy', () => {
-  for (const s of ['Caregiver', 'caregivers', 'a caregiver', 'CARE WORKER', 'carer!']) {
-    const r = scoreAnswer(s, W1, { day: 1 });
+test('matching the AI answer or an alias gives Meat Proxy, with or without spaces', () => {
+  for (const s of ['Caregiver', 'caregivers', 'a caregiver', 'CARE WORKER', 'carer!', 'care giver']) {
+    const r = score('W1', s);
     assert.equal(r.tier, 'meat', s);
     assert.equal(r.points, 0);
   }
-  for (const cp of Object.values(byId)) {
-    for (const s of [cp.raw.ai.answer, ...cp.raw.ai.aliases]) {
-      assert.equal(scoreAnswer(s, cp, { day: 3 }).tier, 'meat', `${cp.id}: ${s}`);
-    }
+  for (const [id, cp] of Object.entries(cps)) {
+    const ai = cp.aiEntry;
+    for (const s of [ai.a, ...ai.aliases]) assert.equal(score(id, s).tier, 'meat', `${id}: ${s}`);
   }
 });
 
-test('Meat Proxy wins even when the pool says the answer is rare', () => {
-  assert.equal(scoreAnswer('caregiver', W1, { pool: {} }).tier, 'meat');
+test('every list answer gets its stored tier, and hand-picked ones give Human Reserved', () => {
+  assert.equal(score('W1', 'nurse').tier, 'zombie');
+  assert.equal(score('W1', 'RN').canonical, 'nurse');
+  assert.equal(score('W1', 'therapist').tier, 'slopper');
+  assert.equal(score('W1', 'psychologist').tier, 'delegator');
+  assert.equal(score('W1', 'park ranger').tier, 'firsthand');
+  for (const s of ['midwife', 'hospice chaplain', 'a hospice chaplain']) assert.equal(score('W1', s).tier, 'reserved', s);
+  assert.equal(score('W1', 'midwife').points, 100);
 });
 
-test('aliases fold into one answer and skip the shape checks', () => {
-  const rn = scoreAnswer('RN', W1, { day: 1 });
-  assert.equal(rn.canonical, 'nurse');
-  assert.equal(rn.tier, 'zombie');
-  assert.equal(scoreAnswer('registered nurses', W1).canonical, 'nurse');
-  assert.equal(scoreAnswer('R2-D2', byId.C5).tier !== 'smash', true);
-  assert.equal(scoreAnswer('AC', byId.C5).tier, 'firsthand');
+test('plural and singular spellings find the same answer', () => {
+  assert.deepEqual(inflections('library').includes('libraries'), true);
+  assert.deepEqual(inflections('glitches').includes('glitch'), true);
+  assert.deepEqual(inflections('wolf').includes('wolves'), true);
+  assert.equal(score('W5', 'library').canonical, 'libraries');
+  assert.equal(score('S1', 'glitch').canonical, 'glitches');
+  assert.equal(score('M2', 'wolves').canonical, 'wolf');
+  assert.equal(score('M2', 'octopuses').canonical, 'octopus');
+  assert.equal(score('M6', 'my crushs name').tier, 'reserved');
+  assert.equal(score('S3', 'study history').tier, 'meat');
 });
 
-test('rarity tiers from the seeded sample', () => {
-  assert.equal(scoreAnswer('nurse', W1).tier, 'zombie'); // 43%
-  assert.equal(scoreAnswer('teacher', W1).tier, 'zombie'); // 25 -> 26/101
-  assert.equal(scoreAnswer('therapist', W1).tier, 'slopper'); // 15
-  assert.equal(scoreAnswer('doctor', W1).tier, 'delegator'); // 9 -> 10/101 = 9.9%
-  assert.equal(scoreAnswer('park ranger', W1).tier, 'delegator'); // 5 -> 6/101
-  assert.equal(scoreAnswer('midwife', W1).tier, 'firsthand'); // 1 -> 2/101
-  const fresh = scoreAnswer('deep sea welder', W1);
-  assert.equal(fresh.tier, 'reserved');
-  assert.equal(fresh.points, 100);
-  assert.equal(fresh.isNew, true);
+test('a real word that isn\'t on the list bounces: "banana" on W1', () => {
+  assert.equal(ask('W1', 'banana').kind, 'bounce');
+  assert.equal(ask('W1', 'accountant').kind, 'bounce');
+  assert.equal(ask('C2', 'Klaus').kind, 'bounce', 'names bounce instead of reading as a keyboard smash');
 });
 
-test('live answers on this device shift the share', () => {
-  const pool = { 'deep sea welder': 40 }; // 41 of 141
-  const r = scoreAnswer('deep sea welder', W1, { pool });
-  assert.equal(r.tier, 'zombie');
-  assert.equal(r.isNew, false);
+test('typos never score: "nurze" suggests nurse, and the fix scores', () => {
+  const r = ask('W1', 'nurze');
+  assert.equal(r.kind, 'suggest');
+  assert.equal(r.suggestion, 'nurse');
+  assert.equal(score('W1', r.suggestion).tier, 'zombie');
+  assert.equal(ask('W1', 'carregiver').suggestion, 'caregiver', 'it will suggest the AI\'s own answer');
+  assert.equal(ask('W1', 'registred nurse').suggestion, 'registered nurse');
 });
 
-test('Keyboard Smash filter', () => {
-  for (const s of ['q', 'xkcd', 'zzzz', 'loooool', 'idk', 'IDK', 'no', 'nothing', 'n/a', 'shit', 'fucking robots']) {
-    assert.equal(scoreAnswer(s, W1, { day: 1 }).tier, 'smash', s);
+test('"Did you mean" limits: 1 edit up to 5 letters, 2 up to 10, 3 beyond, none under 3', () => {
+  assert.deepEqual([2, 3, 5, 6, 10, 11].map(maxEdits), [0, 1, 1, 2, 2, 3]);
+  assert.equal(editDistance('nurze', 'nurse'), 1);
+  assert.equal(editDistance('nrsue', 'nurse'), 2);
+  assert.equal(editDistance('teh', 'the'), 1);
+  assert.equal(suggestDetail('nurse', W1), null, 'exact answers get no suggestion');
+});
+
+test('non-words give Keyboard Smash: asdf, qwerty, asdfjkl', () => {
+  for (const s of ['asdf', 'qwerty', 'asdfjkl', 'xyzzy', 'dhfjkd', 'zzzzz', 'idk', 'I don\'t know', 'pass', 'lol']) {
+    assert.equal(ask('W1', s).kind, 'smash', s);
   }
-  assert.equal(scoreAnswer(W1.text, W1).tier, 'smash');
-  // Weird but real answers pass.
-  assert.equal(scoreAnswer('loool', W1).tier, 'reserved');
-  assert.equal(scoreAnswer('Philip K. Dick', byId.C5).tier, 'reserved');
-  assert.equal(invalidReason('déjà', W1), null);
+  assert.equal(ask('W1', BLOCKLIST_WORDS[0]).kind, 'smash');
+  assert.equal(ask('W1', 'name a job bill gates would mark human reserved').kind, 'smash', 'the prompt copied back');
+  assert.equal(ask('W1', 'asdf', { dict: null }).kind, 'smash', 'non-answers smash even before the word list loads');
+  assert.equal(ask('W1', 'qwerty', { dict: null }).kind, 'bounce', 'without the word list, unknown words fail open');
 });
 
-test('C2 only accepts its valid set', () => {
-  const C2 = byId.C2;
-  assert.equal(scoreAnswer('teddy bear kid', C2).canonical, 'david');
-  assert.equal(scoreAnswer('the boy', C2).tier, 'zombie');
-  assert.equal(scoreAnswer('Tasso', C2).tier, 'zombie');
-  assert.equal(scoreAnswer('Klaus', C2).tier, 'firsthand');
-  assert.equal(scoreAnswer('The wounded soldier', C2).tier, 'meat');
-  assert.equal(scoreAnswer('Frank', C2).tier, 'smash');
-});
-
-test('Conscientious Objector: Day 3, C3, "I refuse" or "no"', () => {
-  const C3 = byId.C3;
-  for (const s of ['I refuse', 'i refuse.', 'No', 'no']) {
-    const r = scoreAnswer(s, C3, { day: 3 });
-    assert.equal(r.special, 'objector', s);
-    assert.equal(r.points, 100);
-  }
-  assert.equal(scoreAnswer('no', C3, { day: 1 }).tier, 'smash');
-  assert.equal(scoreAnswer('no', W1, { day: 3 }).tier, 'smash');
-  assert.equal(scoreAnswer('no', C3, { day: 3, hinted: true }).tier, 'smash');
-});
-
-test('a hinted prompt never scores above 25', () => {
-  const cases = ['deep sea welder', 'midwife', 'park ranger', 'therapist', 'nurse', 'caregiver'];
-  for (const s of cases) {
-    const r = scoreAnswer(s, W1, { hinted: true });
-    assert.ok(r.points <= 25, `${s} scored ${r.points}`);
-  }
-  const capped = scoreAnswer('midwife', W1, { hinted: true });
+test('a hint caps the answer at Slopper', () => {
+  const capped = score('W1', 'midwife', { hinted: true });
   assert.equal(capped.tier, 'slopper');
+  assert.equal(capped.points, 25);
   assert.equal(capped.capped, true);
-  assert.match(stampSubline(capped), /AI-assisted/);
-  assert.equal(scoreAnswer('nurse', W1, { hinted: true }).tier, 'zombie');
+  assert.match(landingLine(capped), /AI-assisted/);
+  assert.equal(score('W1', 'nurse', { hinted: true }).tier, 'zombie', 'worse tiers are not raised');
 });
 
-test('stamp and verdict lines', () => {
-  assert.equal(resultLine(scoreAnswer('caregiver', W1)), 'The model said this | 0 pts');
-  assert.equal(resultLine(scoreAnswer('zzzz', W1)), "That isn't an answer | 0 pts");
-  assert.equal(resultLine(scoreAnswer('', W1)), 'Bot-like behaviour suspected | 0 pts');
-  assert.equal(resultLine(scoreAnswer('nurse', W1)), '44% of humans said this | +10');
-  assert.equal(resultLine(scoreAnswer('midwife', W1)), 'Only 2% of humans said this | +75');
-  assert.equal(resultLine(scoreAnswer('deep sea welder', W1)), 'Almost nobody said this | +100');
-  assert.equal(resultLine(scoreAnswer('midwife', W1, { hinted: true })), '2% of humans said this. AI-assisted | +25');
-  assert.equal(resultLine(scoreAnswer('I refuse', byId.C3, { day: 3 })), 'Refusal noted | +100');
+test('Conscientious Objector: "I refuse" or "no" on C3, Day 3 only', () => {
+  assert.equal(ask('C3', 'I refuse').kind, 'objector');
+  assert.equal(ask('C3', 'No.').kind, 'objector');
+  assert.equal(ask('C3', 'no', { day: 1 }).kind, 'smash');
+  assert.equal(ask('C1', 'no').kind, 'smash');
+  const r = specialResult('objector', 'I refuse');
+  assert.equal(r.points, 100);
+  assert.equal(r.tier, 'objector');
 });
 
-test('timeout gives No response', () => {
-  const r = scoreAnswer('   ', W1);
-  assert.equal(r.tier, 'none');
-  assert.equal(stampSubline(r), 'Bot-like behaviour suspected.');
+test('the word list is searched in place', () => {
+  assert.ok(dict.size > 150000);
+  for (const w of ['nurse', 'banana', 'internet', 'centre', 'klaus']) assert.ok(dict.has(w), w);
+  for (const w of ['qwerty', 'asdf', 'zzzz']) assert.ok(!dict.has(w), w);
 });
 
-test('share formatting never crosses a tier boundary', () => {
-  assert.equal(formatShare(42.57), '43');
-  assert.equal(formatShare(24.8), '24.8');
-  assert.equal(formatShare(9.9), '9.9');
-  assert.equal(formatShare(3.96), '3.9');
-  assert.equal(formatShare(24.96), '24.9');
-  assert.equal(formatShare(1.98), '2');
-  assert.equal(tierForShare(25), 'zombie');
-  assert.equal(tierForShare(10), 'slopper');
-  assert.equal(tierForShare(4), 'delegator');
-  assert.equal(tierForShare(1), 'firsthand');
-  assert.equal(tierForShare(0.99), 'reserved');
+test('landing lines name the AI count', () => {
+  const at = (id, s) => resultLine(score(id, s));
+  assert.equal(at('W1', 'caregiver'), 'The model said this | 0 pts');
+  assert.equal(at('W1', 'nurse'), 'The AI said this 64 times in 300 | +10');
+  assert.equal(at('W1', 'paramedic'), 'The AI said this once in 300 | +50');
+  assert.equal(at('W1', 'park ranger'), 'The AI never said this | +75');
+  assert.equal(at('W1', 'midwife'), 'The AI never said this. Hand-picked | +100');
+  assert.equal(resultLine(specialResult('smash', 'asdf')), "That isn't an answer | 0 pts");
+  assert.equal(resultLine(specialResult('none')), 'Bot-like behaviour suspected | 0 pts');
 });
 
-test('Damerau-Levenshtein distance', () => {
-  assert.equal(editDistance('ca', 'ac'), 1);
-  assert.equal(editDistance('carregiver', 'caregiver'), 1);
-  assert.equal(editDistance('nurse', 'nurse'), 0);
-  assert.equal(editDistance('kitten', 'sitting'), 3);
+test('only Meat Proxy, Keyboard Smash and No response get a stamp', () => {
+  assert.equal(stamped(score('W1', 'caregiver')), true);
+  assert.equal(stamped(specialResult('smash')), true);
+  assert.equal(stamped(specialResult('none')), true);
+  assert.equal(stamped(score('W1', 'nurse')), false);
+  assert.equal(stamped(score('W1', 'midwife')), false);
 });
 
-test('autocorrect suggestions', () => {
-  assert.equal(suggest('carregiver', W1), 'caregiver'); // suggests the AI's own answer
-  assert.equal(suggest('caregiver', W1), null);
-  assert.equal(suggest('nurse', W1), null);
-  assert.equal(suggest('nrse', W1), 'nurse');
-  assert.equal(suggest('zz', W1), null);
-  assert.equal(suggest('therapsit', W1), 'therapist');
-  assert.equal(suggest('completely different', W1), null);
-  assert.equal(suggest('dug', byId.M2), 'dog');
-  assert.deepEqual(suggestDetail('carregiver', W1), { text: 'caregiver', edits: 1 });
-  assert.deepEqual(suggestDetail('park rangre', W1), { text: 'park ranger', edits: 1 });
-  assert.equal(suggestDetail('therpst', W1).edits, 2);
-});
-
-test('autocorrect ties go to the more common answer', () => {
-  const cp = compilePrompt({
-    id: 'T', text: 'Name a thing.', source: '',
-    ai: { answer: 'zzz', aliases: [] }, aliases: {},
-    seed: { cart: 10, carp: 40, card: 50 }, hint: 'carp', validSet: null,
-  });
-  assert.equal(suggest('carx', cp), 'card');
-});
-
-test('round verdicts', () => {
+test('verdicts at the boundaries', () => {
   assert.equal(verdictFor(0).name, 'Artificially Intelligent');
   assert.equal(verdictFor(199).name, 'Artificially Intelligent');
   assert.equal(verdictFor(200).name, 'Third-Party Thinker');
-  assert.equal(verdictFor(349).name, 'Third-Party Thinker');
   assert.equal(verdictFor(350).name, 'Probably Human');
-  assert.equal(verdictFor(499).name, 'Probably Human');
+  assert.equal(verdictFor(350).line, 'Passed, with reservations.');
   assert.equal(verdictFor(500).name, 'Verified Human');
-  assert.equal(verdictFor(649).name, 'Verified Human');
   assert.equal(verdictFor(650).name, 'Human Reserved');
-  assert.equal(verdictFor(700).name, 'Human Reserved');
   assert.equal(passed(349), false);
   assert.equal(passed(350), true);
 });
 
 test('badges', () => {
-  const a = (tier, extra = {}) => ({ tier, special: null, hinted: false, isNew: false, ms: 5000, ...extra });
+  const a = (tier, more = {}) => ({ tier, points: TIERS[tier].points, special: null, ...more });
   assert.deepEqual(badgesFor([a('zombie', { hinted: true })]), ['botBaby']);
-  assert.ok(badgesFor([a('reserved', { isNew: true }), a('reserved', { isNew: true }), a('reserved', { isNew: true })]).includes('rng'));
-  assert.ok(badgesFor([a('meat'), a('meat'), a('meat')]).includes('meatSupreme'));
-  assert.ok(badgesFor(Array(7).fill(a('firsthand'))).includes('turing'));
-  assert.ok(!badgesFor([...Array(6).fill(a('firsthand')), a('smash', { special: 'smash' })]).includes('turing'));
-  assert.ok(badgesFor([a('reserved', { special: 'objector' })]).includes('objector'));
-  assert.ok(badgesFor([a('zombie', { ms: 900 }), a('zombie', { ms: 1500 }), a('zombie', { ms: 1999 })]).includes('fast'));
-  assert.ok(!badgesFor([a('none', { special: 'none', ms: 100 }), a('zombie', { ms: 1500 }), a('zombie', { ms: 1999 })]).includes('fast'));
+  assert.deepEqual(badgesFor([a('zombie', { bounces: 2 }), a('slopper', { bounces: 1 })]), ['rng']);
+  assert.deepEqual(badgesFor([a('meat'), a('meat'), a('meat')]), ['meatSupreme']);
+  assert.deepEqual(badgesFor([a('firsthand'), a('reserved'), a('objector', { special: 'objector' })]), ['turing', 'objector']);
+  assert.deepEqual(badgesFor([a('zombie', { reading: true })]), ['reading']);
+  assert.deepEqual(badgesFor([a('zombie', { ms: 1500 }), a('zombie', { ms: 1200 }), a('zombie', { ms: 1900 })]), ['fast']);
+  assert.deepEqual(badgesFor([a('none', { special: 'none', ms: 100 }), a('zombie', { ms: 1 }), a('zombie', { ms: 1 })]), []);
 });
 
-test('guilt lines by streak', () => {
-  assert.match(guiltLine(1), /See you tomorrow/);
-  assert.match(guiltLine(2), /Two days/);
-  assert.match(guiltLine(3), /Leaving already/);
-  assert.match(guiltLine(5), /never misses/);
-  assert.match(guiltLine(9), /saved your spot/);
-  assert.match(guiltLine(1, true), /You were gone/);
+test('streak messages', () => {
+  assert.equal(guiltLine(1), 'See you tomorrow. The AI will be here either way.');
+  assert.equal(guiltLine(5), 'The AI never misses a day. Do you?');
+  assert.equal(guiltLine(9), 'I saved your spot. I always do.');
+  assert.equal(guiltLine(3, true), "You were gone. The model wasn't.");
 });
 
-test('share text format', () => {
-  const answers = [
-    { tier: 'meat', points: 0 }, { tier: 'firsthand', points: 75 }, { tier: 'zombie', points: 10 },
-    { tier: 'slopper', points: 25, hinted: true }, { tier: 'meat', points: 0 }, { tier: 'reserved', points: 100 },
-    { tier: 'zombie', points: 10 },
-  ];
-  const text = shareText({ dayId: 1, dayTitle: 'Work', answers, url: 'https://example.test/' });
-  assert.equal(text, 'notarobot | Day 1: Work\nThird-Party Thinker | 220/700\n🥩🧠🧟🥣🥩🫀🧟\n🍼 Bot Baby\nhttps://example.test/');
+test('share text uses pipes and one emoji per prompt', () => {
+  const answers = ['meat', 'firsthand', 'zombie', 'slopper', 'meat', 'reserved', 'zombie'].map((t) => ({
+    tier: t, points: TIERS[t].points, special: null, hinted: t === 'slopper',
+  }));
+  assert.equal(totalScore(answers), 220);
+  assert.equal(
+    shareText({ dayId: 1, dayTitle: 'Work', answers, url: 'https://example.com/' }),
+    'notarobot | Day 1: Work\nThird-Party Thinker | 220/700\n🥩🧠🧟🥣🥩🫀🧟\n🍼 Bot Baby\nhttps://example.com/',
+  );
 });

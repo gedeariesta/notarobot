@@ -1,19 +1,29 @@
-// The Screening (DESIGN.md, The reveal; design pack v2 frames 04 to 07).
-// Blue floods up over the white prompt, and the answer falls through the gates as a white blob
-// that loses its geometry with every gate it passes. One GSAP timeline, so it can be skipped.
-import { GATES, LADDER, stampTitle, resultLine, formatShare } from './scoring.js';
-import { SHAPES, LAYER_SHAPE } from './shapes.js';
+// The Screening (DESIGN.md, The reveal). The camera flies into your answer until the screen is
+// blue, and the answer falls through the gates as a white particle scan that loses its geometry
+// with every gate it passes. One GSAP timeline drives everything, so it can be skipped.
+import { GATES, LADDER, stampTitle, resultLine } from './scoring.js';
+import { SHAPES, LAYER_SHAPE, shapePath } from './shapes.js';
+import { Figure, samplePath, sampleGrid, samplePoint, radiusFor } from './specimen.js';
+import { dust } from './plate.js';
+import { FLOOD_BLOB } from './figures.js';
 import { sound, vibrate } from './sound.js';
 import { ICONS, esc, pad2, wordLines, fitText } from './ui.js';
 
 const gsap = window.gsap;
-if (window.MorphSVGPlugin) gsap.registerPlugin(window.MorphSVGPlugin);
 
 const LAYER_NAMES = ['Prompt Zombie', 'Slopper', 'Decision Delegator', 'First-Hand Thinker'];
-const GATE_PCT = ['25%', '10%', '4%', '1%'];
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=<>/';
-const DOT_D = 'M50 34 C58.8 34 66 41.2 66 50 C66 58.8 58.8 66 50 66 C41.2 66 34 58.8 34 50 C34 41.2 41.2 34 50 34 Z';
 const HUMAN_TIERS = new Set(['firsthand', 'reserved']);
+const N = 420;
+// How porous each layer's scan is: the deeper it falls, the more human (and the more holes).
+const LAYER_SCAN = [
+  { porosity: 0.22, drops: 0.01 },
+  { porosity: 0.05, drops: 0 },
+  { porosity: 0.14, drops: 0.01 },
+  { porosity: 0.2, drops: 0.02 },
+  { porosity: 0.27, drops: 0.03 },
+  { porosity: 0.3, drops: 0.05 },
+];
 
 function scramble(final, progress) {
   const keep = Math.floor(final.length * progress);
@@ -53,9 +63,27 @@ function clearWave(node) {
   node.style.webkitClipPath = '';
 }
 
+/** A porous blob that scales from a point until it covers the screen: flying into the scan. */
+export function floodBlob(color, origin) {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const node = document.createElement('div');
+  node.className = 'flood';
+  node.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="${FLOOD_BLOB.d}" fill="${color}"/>
+    <g class="flood-holes">${FLOOD_BLOB.holes.map(([cx, cy, rx, ry]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${color === '#FFFFFF' ? '#1F3CFF' : '#FFFFFF'}"/>`).join('')}</g></svg>`;
+  const svg = node.firstElementChild;
+  const base = 60;
+  Object.assign(svg.style, { width: `${base}px`, height: `${base}px`, left: `${origin.x - base / 2}px`, top: `${origin.y - base / 2}px` });
+  document.body.appendChild(node);
+  // Far enough that the blob's smallest radius clears the furthest corner.
+  const far = Math.hypot(Math.max(origin.x, vw - origin.x), Math.max(origin.y, vh - origin.y));
+  const maxScale = (far / (base * 0.38)) * 1.15;
+  return { node, svg, holes: svg.querySelector('.flood-holes'), maxScale };
+}
+
 /**
  * Plays the Screening as a full-screen layer over the prompt.
- * opts: { result, aiAnswer, index, prevTotal, reduced, isLast, headerHTML, onLand, onNext }
+ * opts: { result, aiAnswer, aiRuns, index, prevTotal, reduced, isLast, headerHTML, origin, onLand, onNext }
  * Returns { el, timeline, skip(), drain(), landed }.
  */
 export function playScreening(opts) {
@@ -69,7 +97,7 @@ export function playScreening(opts) {
   const target = stopsAtTop ? 0 : LADDER.indexOf(result.tier); // 1 Prompt Zombie ... 5 Human Reserved
   const nn = pad2(index + 1);
   const total = prevTotal + result.points;
-  const finalShare = stopsAtTop ? null : result.share;
+  const finalRuns = isMeat ? (result.runs ?? opts.aiRuns ?? 300) : stopsAtTop ? null : result.runs ?? 0;
   const nextLabel = `${isLast ? 'See results' : 'Next verification'} ${ICONS.arrow}`;
   const stampName = isMeat ? 'Meat Proxy' : isSmash ? 'Keyboard Smash' : 'No response';
   const stampRot = isMeat ? -7 : isSmash ? -5 : -6;
@@ -77,6 +105,7 @@ export function playScreening(opts) {
   const human = HUMAN_TIERS.has(result.tier);
   const line = resultLine(result);
   const calloutText = isNone ? '' : `( ${esc(result.input)} )`;
+  const origin = opts.origin || { x: window.innerWidth / 2, y: window.innerHeight * 0.6 };
 
   // ---------------------------------------------------------------- DOM
   const root = document.createElement('div');
@@ -114,16 +143,16 @@ export function playScreening(opts) {
         <div class="scr-col" data-cap="descending" aria-hidden="true">
           <div class="figcap"><span class="plus">+</span><span class="cap">FIG. ${nn} | Answer,<span class="cap-s" data-c="descending">descending</span><span class="cap-s" data-c="landed">landed</span><span class="cap-s" data-c="normalised">normalised</span><span class="cap-s" data-c="unreadable">unreadable</span><span class="cap-s" data-c="none">not received</span><span class="cap-s" data-c="declined">declined</span></span><span class="plus">+</span></div>
           <div class="ai-row" data-state="sealed">
-            <div class="ai-box">${ICONS.lock}<svg class="xmark" viewBox="0 0 40 40" aria-hidden="true"><path d="M10 10 L30 30"/><path d="M30 10 L10 30"/></svg></div>
+            <div class="ai-box"><svg class="ai-grid" viewBox="0 0 100 100" aria-hidden="true">${gridRects(5)}</svg>${ICONS.lock}<svg class="xmark" viewBox="0 0 40 40" aria-hidden="true"><path d="M10 10 L30 30"/><path d="M30 10 L10 30"/></svg></div>
             <div class="ai-lines">
               <div><span data-s="sealed">( AI | [SEALED] )</span><span data-s="nomatch">( AI | <s>${esc(aiAnswer)}</s> )</span><span data-s="match">( AI | ${esc(aiAnswer)} )</span><span data-s="smash none">( MODEL CHECK )</span></div>
               <div><span data-s="sealed" class="scan-text">COMPARING WITH MODEL</span><span data-s="nomatch">≠ NOT A MATCH</span><span data-s="match">= MATCH</span><span data-s="smash">? NO WORDS FOUND</span><span data-s="none">– NOTHING TO COMPARE</span></div>
             </div>
           </div>
-          ${[0, 1, 2, 3].map((i) => `
+          ${GATES.map((gate, i) => `
           <div class="gate" data-g="${i}"${result.hinted && i === 1 ? ' data-locked="1"' : ''}>
             <i class="g-half l"></i><i class="g-half r"></i><i class="g-dot"></i>
-            <span class="g-pct">${GATE_PCT[i]}<span data-s="ok"> ✓</span><span data-s="broken"> | BROKEN</span><span data-s="locked"> | AI-ASSISTED</span></span>
+            <span class="g-pct">${gate.label}<span data-s="ok"> ✓</span><span data-s="broken"> | BROKEN</span><span data-s="locked"> | AI-ASSISTED</span></span>
             <span class="g-name">${LAYER_NAMES[i]}</span>
             ${i === 3 ? '<span class="g-debris"><i></i><i></i><i></i></span>' : ''}
           </div>`).join('')}
@@ -137,26 +166,18 @@ export function playScreening(opts) {
             ${[1, 2, 3, 4].map((k) => `<svg class="trail" data-k="${k}" viewBox="0 0 100 100"><path vector-effect="non-scaling-stroke" d="${SHAPES[LAYER_SHAPE[k]].d}"/></svg>`).join('')}
             ${isMeat ? `<svg class="trail dashed" data-k="was" viewBox="0 0 100 100"><path vector-effect="non-scaling-stroke" d="${SHAPES.subject.d}"/></svg>` : ''}
           </div>
+          <canvas class="scan-canvas"></canvas>
           <div class="debris"></div>
           <svg class="dims" aria-hidden="true"></svg>
           <div class="sq-text"></div>
-          <div class="blob-wrap">
-            <svg class="blob" viewBox="0 0 100 100">
-              <path class="sp-body" d="${isNone ? DOT_D : SHAPES.subject.d}"/>
-              <ellipse class="sp-hole" data-h="1" cx="40" cy="40" rx="6" ry="4"/>
-              <ellipse class="sp-hole" data-h="2" cx="44" cy="44" rx="7" ry="4"/>
-              <ellipse class="sp-hole" data-h="3" cx="62" cy="64" rx="3" ry="2"/>
-              ${SHAPES.splatter.drops.map((d, i) => `<circle class="sp-body" data-d="${i}" cx="50" cy="50" r="${d.r}"/>`).join('')}
-            </svg>
-            ${isNone ? '' : `<div class="callout"><svg width="58" height="16"><path d="M0 12 L44 12 L56 2"/><circle cx="0" cy="12" r="3.5"/></svg><span class="callout-text">${result.hinted ? ICONS.lock : ''}${calloutText}</span></div>`}
-          </div>
+          ${isNone ? '' : `<div class="callout"><svg width="58" height="16"><path d="M0 12 L44 12 L56 2"/><circle cx="0" cy="12" r="3.5"/></svg><span class="callout-text">${result.hinted ? ICONS.lock : ''}${calloutText}</span></div>`}
         </div>
         <div class="scr-bottom">
           <div class="scr-stage">
-            <div class="gauge"${isNone ? ' style="opacity:0"' : ''}>
+            <div class="gauge"${stopsAtTop && !isMeat ? ' style="opacity:0"' : ''}>
               <div class="scalebar mono keep-case"><span>1 gate</span><i class="bar"></i></div>
-              <div class="mono">Humans who said this</div>
-              <div class="gauge-num ink-strong">100%</div>
+              <div class="mono">AI runs that said this</div>
+              <div class="gauge-row"><span class="gauge-num">300</span><span class="gauge-of">/300</span></div>
             </div>
             ${stopsAtTop && !isObjector ? `
             <div class="stamp">
@@ -195,11 +216,7 @@ export function playScreening(opts) {
   const liquid = $('.floor-liquid');
   const scanner = $('.scanner');
   const ghosts = Object.fromEntries($$('.trail').map((n) => [n.dataset.k, n]));
-  const wrap = $('.blob-wrap');
-  const blobSvg = $('.blob');
-  const body = blobSvg.querySelector('.sp-body');
-  const holes = $$('.sp-hole');
-  const drops = $$('[data-d]');
+  const canvas = $('.scan-canvas');
   const callout = $('.callout');
   const dims = $('.dims');
   const sqText = $('.sq-text');
@@ -220,47 +237,51 @@ export function playScreening(opts) {
   const floorTop = H - floorH;
   const S = (floorTop - 94) / 3.575; // gate spacing: 80 px at full height
   const g = [0, 1, 2, 3].map((i) => Math.round(AI_BOTTOM + 0.575 * S + i * S));
-  const size = Math.round(Math.max(36, Math.min(56, S * 0.62)));
+  const size = Math.round(Math.max(40, Math.min(60, S * 0.66)));
   const cx = Math.round(W * 0.42);
   const restCenter = (layer) => (layer <= 4 ? g[layer - 1] - size / 2 - 1 : floorTop + floorH * 0.42);
-  const restTop = (layer) => Math.round(restCenter(layer) - size / 2);
-  const left = cx - size / 2;
-  const startTop = restTop(1);
+  const startY = restCenter(1);
 
-  gates.forEach((el, i) => (el.style.top = `${g[i]}px`));
+  gates.forEach((node, i) => (node.style.top = `${g[i]}px`));
   notReached.style.top = `${g[0] - 14}px`;
   floor.style.height = `${floorH}px`;
-  blobSvg.setAttribute('width', size);
-  blobSvg.setAttribute('height', size);
-  if (callout) {
-    callout.style.left = `${size - 3}px`;
-    callout.style.top = `${size / 2 - 12}px`;
-    callout.querySelector('.callout-text').style.maxWidth = `${Math.max(80, W - (cx + size / 2 - 3) - 60)}px`;
-  }
-  Object.entries(ghosts).forEach(([k, el]) => {
-    el.setAttribute('width', size);
-    el.setAttribute('height', size);
-    gsap.set(el, { x: left, y: k === 'was' ? startTop : restTop(Number(k)) });
+  if (callout) callout.querySelector('.callout-text').style.maxWidth = `${Math.max(80, W - (cx + size / 2 - 3) - 60)}px`;
+  Object.entries(ghosts).forEach(([k, node]) => {
+    node.setAttribute('width', size);
+    node.setAttribute('height', size);
+    gsap.set(node, { x: cx - size / 2, y: (k === 'was' ? startY : restCenter(Number(k))) - size / 2 });
   });
-  gsap.set(wrap, { x: left, y: startTop });
-  gsap.set(holes, { opacity: 0 });
-  gsap.set(drops, { opacity: 0 });
   gsap.set(liquid, { yPercent: 100 });
 
-  // Gauge: "humans who said this", counting down like a depth meter.
-  const gauge = { v: 100 };
-  const gaugeSize = (txt) => {
-    const em = [...txt].reduce((s, c) => s + (c === '%' ? 0.86 : c === '.' ? 0.28 : 0.6), 0) - 0.054 * txt.length;
-    return Math.min(148, Math.floor((W - 4) / em));
+  // ---------------------------------------------------------------- the scan
+  const fig = new Figure(canvas, { count: N, radius: radiusFor(N, 0.62), color: '#FFFFFF', seed: `${result.input}|${index}`, reduced });
+  const shp = {};
+  const seedBase = `${index}|${result.input}`;
+  LAYER_SHAPE.forEach((name, k) => {
+    shp[name] = fig.addShape(samplePath(N, shapePath(name), { box: [0, 0, 100, 100], seed: `${seedBase}|${name}`, holeScale: 6, edge: 0.04, ...LAYER_SCAN[k] }));
+  });
+  shp.square = fig.addShape(sampleGrid(N, { w: 0.92, h: 0.92 }));
+  shp.dot = fig.addShape(samplePoint(N, 0.32, `${seedBase}|dot`));
+  shp.dust = fig.addShape(dust(N, `${seedBase}|dust`, 3.2));
+  const st = fig.state;
+  Object.assign(st, { from: isNone ? shp.dot : shp.subject, to: isNone ? shp.dot : shp.subject, t: 1, x: cx, y: startY, size, scatter: 0.16, alpha: 0, drift: 1 });
+  fig.render();
+  if (fig.ok) fig.start();
+  else canvas.remove();
+
+  const syncCallout = () => {
+    if (!callout) return;
+    callout.style.left = `${Math.round(st.x + st.size * 0.42)}px`;
+    callout.style.top = `${Math.round(st.y - 12)}px`;
   };
+  syncCallout();
+
+  // Gauge: "AI runs that said this", counting down from 300 like a depth meter.
+  const gauge = { v: 300 };
   const renderGauge = () => {
-    const txt = gauge.v < 1 ? '<1%' : `${formatShare(gauge.v)}%`;
-    if (gaugeNum.textContent !== txt) {
-      gaugeNum.textContent = txt;
-      gaugeNum.style.fontSize = `${gaugeSize(txt)}px`;
-    }
+    const txt = String(Math.max(0, Math.round(gauge.v)));
+    if (gaugeNum.textContent !== txt) gaugeNum.textContent = txt;
   };
-  gaugeNum.style.fontSize = `${gaugeSize('100%')}px`;
 
   // Fit the big words to the column.
   if (verdictEl) fitText(verdictEl.querySelector('.verdict-name'), result.tier === 'reserved' ? 76 : 56, 28);
@@ -273,7 +294,7 @@ export function playScreening(opts) {
     while (stampEl.offsetWidth > W - 24 && fs > 28) nameEl.style.fontSize = `${(fs -= 2)}px`;
   }
 
-  // Meat Proxy: the answer snaps into a measured square in the middle of the column.
+  // Meat Proxy: the answer snaps to the machine's grid, measured, in the middle of the column.
   const Q = Math.round(Math.min(108, H * 0.28));
   const sqX = Math.round(W / 2 - Q / 2);
   const sqY = Math.round((g[0] + g[2]) / 2 - Q / 2);
@@ -281,7 +302,7 @@ export function playScreening(opts) {
     sqText.textContent = result.input;
     Object.assign(sqText.style, { left: `${sqX}px`, top: `${sqY}px`, width: `${Q}px`, height: `${Q}px` });
     const wasX = cx + size * 0.35;
-    const wasY = startTop + size * 0.15;
+    const wasY = startY - size * 0.35;
     dims.setAttribute('width', W);
     dims.setAttribute('height', H);
     dims.innerHTML = `
@@ -304,7 +325,7 @@ export function playScreening(opts) {
   const bits = [];
   if (isSmash) {
     const chars = [...(result.input || '?')].filter((c) => c.trim()).slice(0, 10);
-    const yMin = startTop + size + 20;
+    const yMin = startY + size / 2 + 20;
     const yMax = Math.max(yMin + 20, Math.min(g[2] + S * 0.4, floorTop - 30));
     chars.forEach((ch, i) => {
       const s = document.createElement('span');
@@ -312,11 +333,6 @@ export function playScreening(opts) {
       debris.appendChild(s);
       bits.push({ el: s, x: 14 + (W - 46) * ((i + 0.5) / chars.length) + (rand() - 0.5) * 30, y: yMin + rand() * (yMax - yMin), r: rand() * 80 - 40 });
     });
-    for (let i = 0; i < 5; i++) {
-      const sq = document.createElement('i');
-      debris.appendChild(sq);
-      bits.push({ el: sq, x: 10 + rand() * (W - 20), y: yMin + rand() * (yMax - yMin + 30), r: 0 });
-    }
   }
 
   // ---------------------------------------------------------------- timeline
@@ -324,12 +340,12 @@ export function playScreening(opts) {
   let landed = false;
   const sfx = (fn) => () => { if (!skipping) fn(); };
   // Nothing renders before its moment, so a skip lands on the same frame as a full play.
-  const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
-  gsap.set(wrap, { opacity: 0 });
+  const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false }, onUpdate: syncCallout });
   if (callout) gsap.set(callout, { opacity: 0 });
-  const morph = (d, at, dur, ease = 'power2.inOut') => {
-    if (window.MorphSVGPlugin) tl.to(body, { morphSVG: d, duration: dur, ease }, at);
-    else tl.set(body, { attr: { d } }, at + dur / 2);
+  /** Morphs the scan from one shape to the next, particle by particle. */
+  const morph = (from, to, at, dur, scatter = 0.16) => {
+    tl.set(st, { from, to, t: 0, scatter }, at);
+    tl.to(st, { t: 1.35, duration: dur, ease: 'none' }, at);
   };
   const dimGates = (at) => {
     tl.to($$('.g-half, .g-dot'), { opacity: 0.25, duration: 0.2 }, at);
@@ -338,25 +354,26 @@ export function playScreening(opts) {
     tl.to(floor, { opacity: 0.4, duration: 0.2 }, at);
   };
 
-  // 0. Blue floods up from the bottom in a liquid wave.
-  const T1 = reduced ? 0 : 0.15;
+  // 0. The camera flies into the answer until the screen is blue.
+  let flood = null;
+  const T1 = reduced ? 0 : 0.42;
   if (!reduced) {
-    const flood = { p: 0, ph: 0 };
-    setWave(blue, 0, 0, 0);
+    flood = floodBlob('#1F3CFF', origin);
+    gsap.set(blue, { opacity: 0 });
     tl.call(sfx(sound.flood), null, 0);
-    tl.to(flood, {
-      p: 1, ph: 5, duration: 0.42, ease: 'power2.inOut',
-      onUpdate: () => setWave(blue, flood.p, flood.ph, 2.6 * Math.sin(Math.PI * flood.p)),
-      onComplete: () => clearWave(blue),
-    }, 0);
+    tl.fromTo(flood.svg, { scale: 0.05, rotation: -12 }, { scale: flood.maxScale, rotation: 18, duration: 0.42, ease: 'power3.in' }, 0);
+    tl.to(flood.holes, { opacity: 0, duration: 0.12 }, 0.3);
+    tl.set(blue, { opacity: 1 }, 0.4);
+    tl.set(flood.node, { display: 'none' }, 0.42);
   }
 
-  // 1. Lift-off (300 ms): the answer drops in as a white blob with its callout.
+  // 1. Lift-off (300 ms): the answer assembles into a white scan with its callout.
   if (isNone) {
-    tl.fromTo(wrap, { y: startTop - 70, opacity: 0 }, { y: startTop, opacity: 1, duration: 0.3, ease: 'bounce.out' }, T1);
+    tl.fromTo(st, { y: startY - 70, alpha: 0 }, { y: startY, alpha: 1, duration: 0.3, ease: 'bounce.out' }, T1);
   } else {
-    tl.fromTo(wrap, { y: startTop - 34, opacity: 0 }, { y: startTop, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, T1);
-    tl.fromTo(blobSvg, { scale: 0.6, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.3, ease: 'back.out(2.5)' }, T1);
+    tl.set(st, { from: shp.dust, to: shp.subject, t: 0, alpha: 1, scatter: 0.1 }, T1);
+    tl.to(st, { t: 1.35, duration: 0.45, ease: 'power2.out' }, T1);
+    tl.fromTo(st, { y: startY - 34 }, { y: startY, duration: 0.3, ease: 'back.out(2)' }, T1);
     tl.fromTo(callout, { opacity: 0, x: -6 }, { opacity: 1, x: 0, duration: 0.2 }, T1 + 0.12);
   }
 
@@ -364,10 +381,11 @@ export function playScreening(opts) {
   const T2 = T1 + 0.3;
   if (!isNone) {
     tl.set(scanner, { y: 30, opacity: 1 }, T2);
-    tl.to(scanner, { y: startTop + size + 6, duration: 0.27, ease: 'none', yoyo: true, repeat: 1 }, T2);
+    tl.to(scanner, { y: startY + size / 2 + 6, duration: 0.27, ease: 'none', yoyo: true, repeat: 1 }, T2);
     tl.set(scanner, { opacity: 0 }, T2 + 0.54);
     const sc = { p: 0 };
     tl.to(sc, { p: 1, duration: 0.55, ease: 'none', onUpdate: () => (scanText.textContent = scramble('COMPARING WITH MODEL', sc.p)) }, T2);
+    tl.to(st, { lattice: 0.5, grid: 0.12, duration: 0.2, yoyo: true, repeat: 1, ease: 'power2.inOut' }, T2 + 0.1);
     tl.call(sfx(sound.tick), null, T2);
     tl.call(sfx(sound.tick), null, T2 + 0.27);
   }
@@ -381,30 +399,32 @@ export function playScreening(opts) {
     dimGates(T1 + 0.15);
     LAND = T3;
   } else if (isMeat) {
-    // Match: the blob snaps into a perfect square. Deliberately abrupt.
+    // Match: the scan snaps into a perfect grid square. Deliberately abrupt.
     tl.set(aiRow, { attr: { 'data-state': 'match' } }, T3);
     tl.set(col, { attr: { 'data-cap': 'normalised' } }, T3);
     tl.call(sfx(sound.buzz), null, T3);
     tl.fromTo(aiBox, { scale: 1 }, { scale: 1.12, duration: 0.06, yoyo: true, repeat: 1 }, T3);
     tl.to(callout, { opacity: 0, duration: 0.08 }, T3);
-    morph(SHAPES.square.d, T3, 0.12, 'power4.out');
-    tl.to(wrap, { x: sqX, y: sqY, scale: Q / size, transformOrigin: '0 0', duration: 0.22, ease: 'expo.out' }, T3 + 0.05);
+    morph(shp.subject, shp.square, T3, 0.14, 0);
+    tl.to(st, { x: sqX + Q / 2, y: sqY + Q / 2, size: Q, duration: 0.22, ease: 'expo.out' }, T3 + 0.04);
     tl.to(ghosts.was, { opacity: 0.6, duration: 0.15 }, T3 + 0.08);
     tl.to(sqText, { opacity: 1, duration: 0.1 }, T3 + 0.22);
     tl.to(dims, { opacity: 1, duration: 0.2 }, T3 + 0.22);
+    tl.to(gauge, { v: finalRuns, duration: 0.2, ease: 'power2.out', onUpdate: renderGauge }, T3);
     dimGates(T3 + 0.05);
     LAND = T3 + 0.16;
   } else if (isSmash) {
-    // Unreadable: the blob glitches and comes apart into loose letters.
+    // Unreadable: the scan glitches and comes apart into loose letters.
     tl.set(aiRow, { attr: { 'data-state': 'smash' } }, T3);
     tl.set(col, { attr: { 'data-cap': 'unreadable' } }, T3);
     tl.call(sfx(sound.glitch), null, T3);
-    for (let i = 0; i < 6; i++) tl.set(blobSvg, { x: (rand() - 0.5) * 14, skewX: (rand() - 0.5) * 24 }, T3 + i * 0.04);
-    tl.set(blobSvg, { x: 0, skewX: 0, opacity: 0.6 }, T3 + 0.24);
-    tl.set(body, { attr: { class: 'sp-line', 'stroke-dasharray': '4 7' } }, T3 + 0.24);
+    for (let i = 0; i < 6; i++) tl.set(st, { x: cx + (rand() - 0.5) * 14, lattice: rand() * 0.9, grid: 0.18 }, T3 + i * 0.04);
+    tl.set(st, { x: cx, lattice: 0 }, T3 + 0.24);
+    tl.to(callout, { opacity: 0, duration: 0.1 }, T3 + 0.2);
+    tl.to(st, { explode: 1, alpha: 0, duration: 0.5, ease: 'power2.out' }, T3 + 0.24);
     bits.forEach((b, i) => {
       tl.fromTo(b.el,
-        { x: cx - 6, y: startTop + size / 2 - 10, rotation: 0, opacity: 1 },
+        { x: cx - 6, y: startY - 10, rotation: 0, opacity: 1 },
         { x: b.x, y: b.y, rotation: b.r, duration: 0.45, ease: 'power3.out' },
         T3 + 0.24 + i * 0.012);
     });
@@ -417,14 +437,14 @@ export function playScreening(opts) {
     tl.set($('.xmark'), { opacity: 1 }, T3);
     tl.to(xPaths, { strokeDashoffset: 0, duration: 0.12, stagger: 0.05 }, T3 + 0.06);
     tl.call(sfx(sound.tick), null, T3);
-    morph(SHAPES.circle.d, T3 + 0.05, 0.22);
+    morph(shp.subject, shp.circle, T3 + 0.05, 0.3, 0.08);
 
     if (isObjector) {
-      // The chip refuses to drop. Then the blue drains back to white.
+      // The answer refuses to drop. Then the blue drains back to white.
       tl.set(col, { attr: { 'data-cap': 'declined' } }, T3);
       const halves0 = gates[0].querySelectorAll('.g-half');
       tl.to(halves0, { opacity: 0.15, duration: 0.05, yoyo: true, repeat: 5 }, T3 + 0.3);
-      tl.to(wrap, { y: startTop - 10, duration: 0.13, ease: 'power2.out', yoyo: true, repeat: 3 }, T3 + 0.3);
+      tl.to(st, { y: startY - 10, duration: 0.13, ease: 'power2.out', yoyo: true, repeat: 3 }, T3 + 0.3);
       const drain = { p: 1, ph: 0 };
       tl.call(sfx(sound.flood), null, T3 + 0.9);
       tl.to(drain, {
@@ -441,7 +461,7 @@ export function playScreening(opts) {
         const halves = gates[i].querySelectorAll('.g-half');
         if (last) {
           // 5. The hang, Human Reserved: the last gate strains twice, then breaks.
-          tl.to(wrap, { y: restTop(4) + 6, duration: 0.09, yoyo: true, repeat: 3, ease: 'power1.inOut' }, t);
+          tl.to(st, { y: restCenter(4) + 6, duration: 0.09, yoyo: true, repeat: 3, ease: 'power1.inOut' }, t);
           tl.to(halves, { y: 3, duration: 0.09, yoyo: true, repeat: 3, ease: 'power1.inOut' }, t);
           tl.call(sfx(sound.tick), null, t + 0.1);
           tl.call(sfx(sound.tick), null, t + 0.28);
@@ -456,16 +476,10 @@ export function playScreening(opts) {
           tl.to(halves, { scaleX: 0.36, duration: Math.min(0.1, d * 0.4), ease: 'power2.out' }, t);
           tl.to(halves, { scaleX: 1, duration: 0.12, ease: 'power2.in' }, t + d * 0.8);
         }
-        tl.to(wrap, { y: restTop(i + 2), duration: d, ease: 'power1.in' }, t);
-        tl.fromTo(blobSvg, { scaleX: 1, scaleY: 1 }, { scaleX: 0.9, scaleY: 1.12, duration: d / 2, yoyo: true, repeat: 1, ease: 'sine.inOut', transformOrigin: '50% 50%' }, t);
-        morph(SHAPES[LAYER_SHAPE[i + 2]].d, t + d * 0.2, d * 0.6);
-        if (i + 2 === 4) tl.to(holes[0], { opacity: 1, duration: d * 0.4 }, t + d * 0.5);
-        if (i + 2 === 5) {
-          tl.to(holes[0], { opacity: 0, duration: d * 0.3 }, t + d * 0.3);
-          tl.to([holes[1], holes[2]], { opacity: 1, duration: d * 0.4 }, t + d * 0.5);
-        }
-        tl.to(ghosts[i + 1], { opacity: 0.25 + i * 0.07, duration: 0.2 }, t + d * 0.3);
-        tl.to(gauge, { v: GATES[i] - 0.0001, duration: d, ease: 'none', onUpdate: renderGauge }, t);
+        tl.to(st, { y: restCenter(i + 2), duration: d, ease: 'power1.in' }, t);
+        morph(shp[LAYER_SHAPE[i + 1]], shp[LAYER_SHAPE[i + 2]], t + d * 0.1, Math.max(0.3, d * 0.9));
+        tl.to(ghosts[i + 1], { opacity: 0.22 + i * 0.07, duration: 0.2 }, t + d * 0.3);
+        tl.to(gauge, { v: Math.max(0, GATES[i].runs - 1), duration: d, ease: 'none', onUpdate: renderGauge }, t);
         // Each gate it passes flashes, ticks a check and plays a soft tick.
         tl.set(gates[i], { attr: { 'data-passed': '1' } }, t + d * 0.2);
         tl.call(sfx(sound.tick), null, t + d * 0.2);
@@ -474,17 +488,17 @@ export function playScreening(opts) {
         d *= 1.4;
       }
       if (target < 5) {
-        // 5. The hang: the chip pauses above the gate it can't pass while the scanner flickers.
+        // 5. The hang: the scan pauses above the gate it can't pass while the scanner flickers.
         const hg = target - 1;
         const hd = target === 1 ? 0.4 : 0.5;
         tl.set(scanner, { y: g[hg] - 1 }, t);
         tl.to(scanner, { opacity: 1, duration: 0.05, repeat: Math.round(hd / 0.1) - 1, yoyo: true, ease: 'steps(1)' }, t);
         tl.set(scanner, { opacity: 0 }, t + hd);
-        tl.to(wrap, { y: restTop(target) + 5, duration: 0.1, yoyo: true, repeat: 1, ease: 'power1.out' }, t + 0.05);
-        tl.to(gauge, { v: finalShare, duration: 0.2, ease: 'power1.out', onUpdate: renderGauge }, t + hd - 0.2);
+        tl.to(st, { y: restCenter(target) + 5, duration: 0.1, yoyo: true, repeat: 1, ease: 'power1.out' }, t + 0.05);
+        tl.to(gauge, { v: finalRuns, duration: 0.3, ease: 'power1.out', onUpdate: renderGauge }, t + hd - 0.3);
         t += hd;
       } else {
-        tl.to(gauge, { v: finalShare, duration: 0.2, ease: 'power1.out', onUpdate: renderGauge }, t - 0.2);
+        tl.to(gauge, { v: finalRuns, duration: 0.2, ease: 'power1.out', onUpdate: renderGauge }, t - 0.2);
       }
       LAND = t;
     }
@@ -498,18 +512,16 @@ export function playScreening(opts) {
     tl.to(col, { x: 2, duration: 0.03, yoyo: true, repeat: 3, ease: 'none' }, LAND);
     tl.set(col, { attr: { 'data-cap': isMeat ? 'normalised' : isSmash ? 'unreadable' : isNone ? 'none' : 'landed' } }, L);
     if (target >= 1) {
-      tl.fromTo(blobSvg, { scaleX: 1.14, scaleY: 0.84 }, { scaleX: 1, scaleY: 1, duration: 0.32, ease: 'elastic.out(1, 0.45)', transformOrigin: '50% 100%' }, LAND);
+      tl.fromTo(st, { size: size * 1.12 }, { size, duration: 0.32, ease: 'elastic.out(1, 0.45)' }, LAND);
     }
     if (target >= 1 && target <= 4) tl.set(gNames[target - 1], { attr: { 'data-here': '1' } }, L);
     if (target === 5) {
       tl.set(floorLabel, { attr: { 'data-here': '1' } }, L);
       tl.to(liquid, { yPercent: 0, duration: 0.45, ease: 'power2.out' }, LAND - 0.15);
-      drops.forEach((dot, i) => {
-        const to = SHAPES.splatter.drops[i];
-        tl.fromTo(dot, { opacity: 1, attr: { cx: 50, cy: 50 } }, { attr: { cx: to.cx, cy: to.cy }, duration: 0.3, ease: 'power3.out' }, LAND);
-      });
+      tl.to(st, { scatter: 0.5, duration: 0.3 }, LAND);
     }
-    tl.to(gaugeEl, { opacity: 0, y: 8, duration: 0.15 }, LAND);
+    if (!isMeat) tl.to(gaugeEl, { opacity: 0, y: 8, duration: 0.15 }, LAND);
+    else tl.to(gaugeEl, { opacity: 0, y: 8, duration: 0.15 }, LAND + 0.02);
     if (stampEl) {
       tl.set(stampEl, { visibility: 'visible' }, L);
       tl.fromTo(stampEl, { opacity: 0, scale: 2.1, rotation: stampRot - 9 }, { opacity: 1, scale: 1, rotation: stampRot, duration: 0.16, ease: 'power4.in' }, LAND + 0.04);
@@ -565,27 +577,30 @@ export function playScreening(opts) {
       tl.seek(landAt, false);
       skipping = false;
       scanText.textContent = 'COMPARING WITH MODEL';
-      if (finalShare != null) { gauge.v = finalShare; renderGauge(); }
+      if (finalRuns != null) { gauge.v = finalRuns; renderGauge(); }
       if (isObjector) setWave(blue, 0, 0, 0);
       else clearWave(blue);
+      flood?.node.remove();
+      syncCallout();
       return true;
     },
-    /** Blue drains away, revealing whatever is now underneath. */
+    /** A white blob floods the screen back to paper, revealing whatever is now underneath. */
     drain(onDone) {
       if (ctrl.draining) return;
       ctrl.draining = true;
-      const finish = () => { root.remove(); onDone?.(); };
+      const finish = () => { root.remove(); fig.destroy(); flood?.node.remove(); onDone?.(); };
       if (reduced || isObjector) {
         gsap.to(root, { opacity: 0, duration: reduced ? 0.15 : 0.3, onComplete: finish });
         return;
       }
-      const s = { p: 1, ph: 0 };
       sound.flood();
-      gsap.to(s, {
-        p: 0, ph: -5, duration: 0.45, ease: 'power2.inOut',
-        onUpdate: () => setWave(blue, s.p, s.ph, 2.6 * Math.sin(Math.PI * s.p)),
-        onComplete: finish,
-      });
+      const b = nextBtn.getBoundingClientRect();
+      const back = floodBlob('#FFFFFF', { x: b.left + b.width / 2, y: b.top + b.height / 2 });
+      gsap.timeline({ onComplete: () => { back.node.remove(); } })
+        .fromTo(back.svg, { scale: 0.05, rotation: 10 }, { scale: back.maxScale, rotation: -14, duration: 0.42, ease: 'power3.in' }, 0)
+        .to(back.holes, { opacity: 0, duration: 0.12 }, 0.3)
+        .call(finish, null, 0.42)
+        .to(back.node, { opacity: 0, duration: 0.2 }, 0.42);
     },
   };
 
@@ -595,6 +610,7 @@ export function playScreening(opts) {
     skipping = true;
     tl.progress(1, false);
     skipping = false;
+    syncCallout();
     sound.clunk();
     if (stampEl) sound.thud();
     gsap.fromTo(root, { opacity: 0 }, { opacity: 1, duration: 0.15 });
@@ -602,4 +618,11 @@ export function playScreening(opts) {
     tl.play(0);
   }
   return ctrl;
+}
+
+function gridRects(n) {
+  const step = 100 / n;
+  let out = '';
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) out += `<rect x="${x * step + 2}" y="${y * step + 2}" width="${step - 4}" height="${step - 4}"/>`;
+  return out;
 }

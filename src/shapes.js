@@ -28,9 +28,22 @@ export const TIER_SHAPE = {
   delegator: 'dent',
   firsthand: 'lump',
   reserved: 'splatter',
+  objector: 'subject',
   smash: 'dashed',
   none: 'dot',
 };
+
+const ellipseD = (cx, cy, rx, ry) =>
+  `M${cx - rx} ${cy} A${rx} ${ry} 0 1 0 ${cx + rx} ${cy} A${rx} ${ry} 0 1 0 ${cx - rx} ${cy} Z`;
+
+/** One path for a shape, holes and drops included (fill it even-odd), for sampling particles. */
+export function shapePath(name) {
+  const s = SHAPES[name];
+  let d = s.d;
+  for (const h of s.holes || []) d += ` ${ellipseD(h.cx, h.cy, h.rx, h.ry)}`;
+  for (const p of s.drops || []) d += ` ${ellipseD(p.cx, p.cy, p.r, p.r)}`;
+  return d;
+}
 
 /** The shape the falling blob takes in each layer of the Screening, top to bottom. */
 export const LAYER_SHAPE = ['subject', 'circle', 'wobble', 'dent', 'lump', 'splatter'];

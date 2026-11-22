@@ -24,12 +24,14 @@ function write(key, value) {
 }
 
 /**
- * A namespace keeps demo-mode play apart from the real daily game.
- * Shape: { rounds: { [roundKey]: Round }, pool: { [promptId]: { [canonical]: n } }, streak: { count, last } }
+ * A namespace keeps demo-mode play apart from the real daily game. Scores never depend on what
+ * other players said (DESIGN.md, Other players), so nothing here feeds back into scoring.
+ * Shape: { rounds: { [roundKey]: Round }, streak: { count, last }, bounces: [{ promptId, input, at }] }
  */
 export function createStore(ns) {
-  const key = `${ns}:v1`;
-  let data = read(key, null) || { rounds: {}, pool: {}, streak: null };
+  const key = `${ns}:v2`;
+  const data = read(key, null) || { rounds: {}, streak: null, bounces: [] };
+  data.bounces = data.bounces || [];
   const save = () => write(key, data);
   return {
     get data() {
@@ -42,14 +44,14 @@ export function createStore(ns) {
       data.rounds[k] = round;
       save();
     },
-    poolFor(promptId) {
-      return data.pool[promptId] || {};
-    },
-    addToPool(promptId, canonical) {
-      if (!canonical) return;
-      const p = (data.pool[promptId] = data.pool[promptId] || {});
-      p[canonical] = (p[canonical] || 0) + 1;
+    /** Demo mode logs bounced answers, so the team can find correct answers missing from a list. */
+    logBounce(entry) {
+      data.bounces.push(entry);
+      if (data.bounces.length > 500) data.bounces.splice(0, data.bounces.length - 500);
       save();
+    },
+    get bounces() {
+      return data.bounces;
     },
     get streak() {
       return data.streak;

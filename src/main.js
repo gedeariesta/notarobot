@@ -1,20 +1,24 @@
-// notarobot: screens and flow. DESIGN.md sets every rule here; the v2 Specimen page of the
-// design pack sets the look.
+// notarobot: screens and flow. DESIGN.md sets every rule; the look is a lab specimen sheet:
+// people are porous particle scans, machines are grids, and labels hang off both.
 import {
-  compilePrompt, scoreAnswer, suggestDetail, TIERS, LADDER, BADGES, verdictFor, passed,
-  badgesFor, totalScore, guiltLine, shareText, stampTitle, resultLine,
+  compilePrompt, classify, scoreEntry, specialResult, TIERS, LADDER, BADGES, verdictFor, passed, badgesFor,
+  totalScore, guiltLine, shareText, stampTitle, resultLine, makeDictionary, plainWords,
 } from './scoring.js';
 import { dateKey, dayForDate, liveStreak, completeStreak, msUntilMidnight, formatHMS, addDays } from './days.js';
 import { createStore, resetAll } from './state.js';
 import { sound } from './sound.js';
 import { playScreening } from './reveal.js';
 import { specimenSVG, pendingSVG, shapeMarkup, TIER_SHAPE } from './shapes.js';
-import { ICONS, esc, el, casual, smartQuotes, pad2, wordLines, fitText, markChanges } from './ui.js';
+import { ICONS, esc, el, smartQuotes, pad2, wordLines, fitText } from './ui.js';
+import { Plate, plateHTML, dust } from './plate.js';
+import { DAY_FIGURE, DAY_FIGURE_NAME } from './figures.js';
 
 const gsap = window.gsap;
 const ROUND_LEN = 7;
 const TIMER_S = 25;
 const MAX_LEN = 40;
+const BONUS_DAY = 4;
+const BONUS_STREAK = 3;
 
 const params = new URLSearchParams(location.search);
 const DEMO = params.get('demo') === '1';
@@ -29,10 +33,13 @@ const store = createStore(DEMO ? 'demo' : 'main');
 const today = dateKey();
 
 let bank = null;
-let session = null; // { mode, day, key, round, prompts }
+let session = null; // { mode, day, key, round, prompts, bonusLocked }
 let keyHandler = null;
 let countdownTimer = null;
 let activeBackstop = 0;
+let plates = [];
+let dict = null; // the Keyboard Smash word list, loaded in the background
+let known = null; // every word used by any answer list
 
 // ------------------------------------------------------------------ boot
 
@@ -45,6 +52,7 @@ async function init() {
   const res = await fetch('prompts.json', { cache: 'no-cache' });
   if (!res.ok) throw new Error(`Could not load prompts.json (${res.status}).`);
   bank = await res.json();
+  known = new Set(bank.days.flatMap((d) => d.prompts).flatMap((p) => p.answers.flatMap((a) => [a.a, ...(a.aliases || [])].flatMap(plainWords))));
   // Big type is fitted to the column, so wait (briefly) for the fonts.
   await Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, 1500))]);
 
@@ -53,6 +61,15 @@ async function init() {
   document.addEventListener('click', onSoundToggle);
   window.addEventListener('hashchange', route);
   route();
+  // The word list is only needed once an answer misses the list, so it loads after first paint.
+  setTimeout(loadWords, 600);
+}
+
+function loadWords() {
+  fetch('words.txt')
+    .then((r) => (r.ok ? r.text() : ''))
+    .then((t) => { if (t) dict = makeDictionary(t); })
+    .catch(() => { /* without it, unknown words bounce instead of smashing */ });
 }
 
 const dayById = (id) => bank.days.find((d) => d.id === id);
@@ -63,18 +80,20 @@ const streakNow = () => liveStreak(store.streak, today);
 function makeSession() {
   let mode = 'scored';
   let dayId = scoredDayId();
+  let bonusLocked = false;
   if (DEMO) {
     mode = 'demo';
     dayId = DAY_PARAM && dayById(DAY_PARAM) ? DAY_PARAM : dayId;
   } else if (DAY_PARAM && dayById(DAY_PARAM)) {
-    mode = 'practice';
-    dayId = DAY_PARAM;
+    // Day 4 is a bonus, unlocked by a 3-day streak.
+    if (DAY_PARAM === BONUS_DAY && streakNow() < BONUS_STREAK) bonusLocked = true;
+    else { mode = 'practice'; dayId = DAY_PARAM; }
   }
   const day = dayById(dayId);
   const key = mode === 'scored' ? today : mode === 'demo' ? `demo-day-${dayId}` : null;
   const stored = key ? store.getRound(key) : null;
   const round = stored || freshRound(day, mode);
-  return { mode, day, key, round, prompts: day.prompts.map(compilePrompt) };
+  return { mode, day, key, round, prompts: day.prompts.map(compilePrompt), bonusLocked };
 }
 
 function freshRound(day, mode) {
@@ -86,7 +105,7 @@ function saveRound() {
 }
 
 function route() {
-  document.querySelectorAll('.scr, .sheet-backdrop').forEach((n) => n.remove());
+  document.querySelectorAll('.scr, .sheet-backdrop, .flood').forEach((n) => n.remove());
   clearScreen();
   if (location.hash === '#about') return renderAbout();
   if (BOARD) return renderBoard();
@@ -103,6 +122,9 @@ function clearScreen() {
   clearInterval(countdownTimer);
   clearTimeout(activeBackstop);
   gsap.globalTimeline.getChildren(false, true, true).forEach((t) => t.kill());
+  plates.forEach((p) => p.destroy());
+  plates = [];
+  app.classList.remove('wide');
 }
 
 function announce(text) {
@@ -112,22 +134,25 @@ function announce(text) {
 
 // ------------------------------------------------------------------ chrome
 
-/** "notarobot / Sound on" on the left; the day, the score or the stage on the right. */
+/** The wordmark and the speaker on the left; a tagline in the middle on wide screens; the stage on the right. */
 function headerHTML(right, { num = false } = {}) {
   return `<header class="hdr">
-    <div class="hdr-left"><a href="${location.pathname}${location.search}">notarobot</a><span aria-hidden="true">/</span><button class="hdr-sound" type="button" data-sound aria-pressed="${!sound.muted}">${sound.muted ? 'Sound off' : 'Sound on'}</button></div>
+    <div class="hdr-left"><a href="${location.pathname}${location.search}">notarobot</a><span aria-hidden="true">/</span>${soundButton()}</div>
+    <div class="hdr-mid">A daily CAPTCHA you can’t quite pass</div>
     <div class="hdr-right${num ? ' num' : ''}">${right}</div>
   </header>`;
+}
+
+function soundButton() {
+  const on = !sound.muted;
+  return `<button class="hdr-sound" type="button" data-sound aria-pressed="${on}" aria-label="${on ? 'Sound on. Tap to mute' : 'Sound off. Tap to unmute'}">${on ? ICONS.speaker : ICONS.speakerOff}</button>`;
 }
 
 function onSoundToggle(e) {
   if (!e.target.closest('[data-sound]')) return;
   sound.setMuted(!sound.muted);
   if (!sound.muted) { sound.unlock(); sound.click(); }
-  document.querySelectorAll('[data-sound]').forEach((b) => {
-    b.textContent = sound.muted ? 'Sound off' : 'Sound on';
-    b.setAttribute('aria-pressed', String(!sound.muted));
-  });
+  document.querySelectorAll('[data-sound]').forEach((b) => b.replaceWith(el(soundButton())));
 }
 
 function setupDemoBar() {
@@ -138,6 +163,7 @@ function setupDemoBar() {
     <span class="tag-demo">[ Demo ]</span>
     ${bank.days.map((d) => `<button type="button" data-day="${d.id}" aria-pressed="${d.id === current}" aria-label="Day ${d.id}: ${esc(d.title)}">D${d.id}</button>`).join('')}
     <span class="spacer"></span>
+    <button type="button" data-log title="Answers that bounced on this device">Log</button>
     <button type="button" data-reset>Reset</button>
     <button type="button" disabled title="The class board needs the shared answer pool, which is not built yet.">Board</button>`;
   const setH = () => document.documentElement.style.setProperty('--demo-h', `${bar.offsetHeight}px`);
@@ -148,6 +174,8 @@ function setupDemoBar() {
     if (!b) return;
     if (b.dataset.day) {
       location.href = `?demo=1&day=${b.dataset.day}`;
+    } else if ('log' in b.dataset) {
+      showBounceLog();
     } else if ('reset' in b.dataset) {
       if (!b.classList.contains('armed')) {
         b.classList.add('armed');
@@ -161,6 +189,31 @@ function setupDemoBar() {
   });
 }
 
+/** Demo mode: every bounced answer, so the team can add correct ones to the lists. */
+function showBounceLog() {
+  const rows = store.bounces.slice().reverse();
+  const text = rows.map((b) => `${b.promptId}\t${b.input}`).join('\n');
+  const sheet = el(`
+    <div class="sheet-backdrop">
+      <div class="sheet" role="dialog" aria-modal="true" aria-label="Bounced answers">
+        <div class="sheet-top mono"><span class="keep-case">&lt;bounce log&gt;</span><span>${rows.length} answers</span></div>
+        <div class="log">${rows.length ? rows.map((b) => `<div><span class="mono">${esc(b.promptId)}</span>${esc(b.input)}</div>`).join('') : '<p class="mono">Nothing has bounced yet.</p>'}</div>
+        <div class="ac-btns">
+          <button class="pill sm fix" type="button" data-copy ${rows.length ? '' : 'disabled'}>Copy list</button>
+          <button class="pill sm ghost" type="button" data-close>Close</button>
+        </div>
+      </div>
+    </div>`);
+  document.body.appendChild(sheet);
+  const close = () => sheet.remove();
+  sheet.querySelector('[data-close]').addEventListener('click', close);
+  sheet.addEventListener('click', (e) => { if (e.target === sheet) close(); });
+  sheet.querySelector('[data-copy]').addEventListener('click', async (e) => {
+    const ok = await copyText(text);
+    e.currentTarget.textContent = ok ? 'Copied' : 'Copy failed';
+  });
+}
+
 function startCountdown(node, format) {
   if (!node) return;
   const paint = () => (node.textContent = format(formatHMS(msUntilMidnight())));
@@ -169,49 +222,60 @@ function startCountdown(node, format) {
   countdownTimer = setInterval(() => (node.isConnected ? paint() : clearInterval(countdownTimer)), 1000);
 }
 
-// ------------------------------------------------------------------ 1. gate
+// ------------------------------------------------------------------ plates
 
-function gateFigure(locked) {
-  return `<svg viewBox="0 0 354 380" role="img" aria-label="An organic blue blob labelled you, surrounded by small particles">
-    <g class="f-text" font-size="16"><text x="0" y="22">+</text><text x="342" y="22">+</text><text x="0" y="376">+</text><text x="342" y="376">+</text></g>
-    <rect class="f-ink" x="74" y="12" width="6" height="6"/>
-    <text class="f-text" x="86" y="19" font-size="9.5" letter-spacing="0.5">FIG. 00 | SUBJECT, ${locked ? 'VERIFIED' : 'UNVERIFIED'}</text>
-    <g class="gate-blob">
-      <path class="f-ink" d="M176 58 C214 54 250 80 260 116 C268 146 284 164 276 194 C268 222 284 244 262 270 C240 294 206 294 180 292 C150 290 122 300 98 280 C74 260 86 234 76 208 C66 182 58 156 72 128 C86 98 108 76 136 66 C150 61 162 59 176 58Z"/>
-      <path class="f-paper" d="M132 118 C140 112 152 116 150 126 C148 136 134 134 132 128 Z"/>
-      <path class="f-paper" d="M196 104 C204 102 210 108 206 114 C202 120 192 116 196 104 Z"/>
-      <path class="f-paper" d="M150 176 C162 170 176 178 170 190 C166 200 154 202 148 194 C142 186 144 180 150 176 Z"/>
-      <ellipse class="f-paper" cx="224" cy="160" rx="7" ry="4" transform="rotate(-30 224 160)"/>
-      <ellipse class="f-paper" cx="112" cy="222" rx="3" ry="5"/>
-      <ellipse class="f-paper" cx="210" cy="238" rx="9" ry="5" transform="rotate(20 210 238)"/>
-    </g>
-    <g class="f-ink gate-particles"><circle cx="40" cy="120" r="2.5"/><circle cx="58" cy="96" r="1.5"/><circle cx="300" cy="86" r="3"/><circle cx="318" cy="150" r="1.5"/><circle cx="296" cy="300" r="2"/><circle cx="44" cy="292" r="3.5"/><circle cx="30" cy="210" r="1.5"/><circle cx="268" cy="330" r="1.5"/><circle cx="122" cy="332" r="2.5"/><circle cx="318" cy="236" r="2.5"/></g>
-    <g class="f-line"><path d="M262 132 L300 112 L312 112"/><path d="M44 292 L44 320 L26 320"/></g>
-    <circle class="f-dot" cx="262" cy="132" r="4"/>
-    <text class="f-text" x="266" y="105" font-size="10">( YOU )</text>
-    <text class="f-text" x="0" y="336" font-size="10">( 8 BILLION OTHERS )</text>
-    <g class="f-line"><line x1="270" y1="356" x2="330" y2="356"/><line x1="270" y1="352" x2="270" y2="360"/><line x1="330" y1="352" x2="330" y2="360"/></g>
-    <text class="f-text" x="300" y="347" text-anchor="middle" font-size="9">1 human</text>
-  </svg>`;
+const BUST_CALLOUTS = (locked) => [
+  { text: locked ? 'Verified' : 'You', at: [118, 34], dx: -112, dy: -12 },
+  { text: 'Language', at: [46, 112], dx: -26, dy: 34 },
+];
+const DAY_CALLOUTS = {
+  hand: [{ text: 'Five digits', at: [104, 50], dx: -96, dy: -16 }, { text: 'Hand, open', at: [26, 128], dx: -10, dy: 52 }],
+  brain: [{ text: 'Cortex', at: [118, 22], dx: -100, dy: -10 }, { text: 'Unverified', at: [52, 120], dx: -20, dy: 46 }],
+  claw: [{ text: 'Three talons', at: [100, 30], dx: -86, dy: -6 }, { text: 'Targeting', at: [30, 186], dx: -16, dy: 34 }],
+  globe: [{ text: 'Surface, rendered', at: [100, 10], dx: -60, dy: -14 }, { text: 'You are here', at: [64, 112], dx: -50, dy: 60 }],
+};
+
+/** The subject sits on the right, cropped at the shoulders; other figures sit centred. */
+function heroLayout(w, h, name) {
+  if (name === 'bust') {
+    const size = Math.min(h * 0.98, w * 1.12);
+    return { x: w - size * 0.417 - 4, y: h * 0.6, size };
+  }
+  const size = Math.min(w * 0.8, h * 0.78);
+  return { x: w * 0.58, y: h * 0.56, size };
 }
+
+function makePlate(root, opts) {
+  const plate = new Plate(root, { reduced: reduced(), ...opts });
+  plates.push(plate);
+  return plate;
+}
+
+// ------------------------------------------------------------------ 1. gate
 
 function renderGate({ locked = false } = {}) {
   clearScreen();
-  const { day, mode } = session;
+  const { day, mode, bonusLocked } = session;
   const streak = streakNow();
   const foot = mode === 'practice' ? '¹ Practice | Not counted' : `¹ ${ROUND_LEN} challenges | 25 s each | Once a day`;
+  app.classList.add('wide');
 
   app.innerHTML = `
     <section class="screen gate-screen" data-screen="gate">
       ${headerHTML(esc(dayLabel(day)))}
-      <div class="tag" style="margin-top:14px">Best played with sound</div>
-      <figure class="gate-fig">${gateFigure(locked)}</figure>
+      <div class="intro">
+        <div class="mono intro-k">(00) ${locked ? 'Verified' : 'Verification'}</div>
+        <p class="intro-p">${locked ? 'You have been verified for today. The model will be here tomorrow.' : 'You are about to be verified. Seven challenges, 25 seconds each. Best played with sound.'}</p>
+        ${bonusLocked ? `<p class="mono note">Day ${pad2(BONUS_DAY)} unlocks after a ${BONUS_STREAK}-day streak.</p>` : ''}
+      </div>
+      ${plateHTML({ cap: locked ? 'FIG. 00 | Subject, verified' : 'FIG. 00 | Subject, 2,400-point scan', cls: 'gate-plate' })}
+      <h1 class="gate-title" aria-label="not a robot"><span class="ink">not a</span><span class="ink">robot</span></h1>
       <div class="gate-action">
         ${locked ? `
         <div class="challenge">
           <p class="locked-msg mono">You've been verified for today. Come back tomorrow.</p>
           <button class="pill" type="button" data-results>View today's results ${ICONS.arrow}</button>
-          <div class="mono" data-countdown></div>
+          <div class="mono countdown" data-countdown></div>
         </div>` : `
         <button class="robot-pill" type="button" role="checkbox" aria-checked="false" aria-label="I'm not a robot">
           <span class="rbox pulse"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="tick" d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
@@ -219,7 +283,6 @@ function renderGate({ locked = false } = {}) {
         </button>
         <div class="loading-line mono" aria-live="polite"></div>`}
       </div>
-      <h1 class="gate-title" aria-label="not a robot"><span class="ink">not a</span><span class="ink">robot</span></h1>
       <div class="gate-foot mono"><span>${foot}</span><span>Streak ${pad2(streak)}</span></div>
       <div class="gate-links"><a class="bracket" href="#about">[ about ]</a></div>
     </section>`;
@@ -227,15 +290,31 @@ function renderGate({ locked = false } = {}) {
   const $ = (s) => app.querySelector(s);
   const title = $('.gate-title');
   const action = $('.gate-action');
+  const plateEl = $('.gate-plate');
+
+  // The subject: a 2,400-point scan that assembles out of loose particles, then breathes.
+  const plate = makePlate(plateEl, { count: 2400, seed: 'subject', layout: heroLayout });
+  const sDust = plate.add('dust', dust(2400, 'gate-dust', 1.6));
+  const sBust = plate.add('bust');
+  plate.place('bust');
+  plate.setCallouts('bust', BUST_CALLOUTS(locked));
+  const st = plate.fig.state;
+  if (plate.ok) {
+    if (reduced()) Object.assign(st, { from: sBust, to: sBust, t: 1 });
+    else {
+      Object.assign(st, { from: sDust, to: sBust, t: 0, scatter: 0.12 });
+      gsap.to(st, { t: 1.35, duration: 1.8, ease: 'power2.out' });
+      gsap.from(plateEl.querySelectorAll('.callout-l, .plate-lines, .cross, .plate-cap, .plate-scale'), { opacity: 0, duration: 0.5, stagger: 0.06, delay: 1 });
+    }
+    plate.fig.start();
+  } else {
+    plateEl.classList.add('no-gl');
+  }
 
   if (!reduced()) {
-    // The ink-bleed title settles in from a blurred blot; particles drift; the blob breathes.
+    // The ink-bleed title settles in from a blurred blot.
     gsap.fromTo(title, { filter: 'blur(14px)', opacity: 0.25, scale: 1.04, transformOrigin: '0% 100%' },
-      { filter: 'blur(0px)', opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out', clearProps: 'filter' });
-    gsap.to('.gate-blob', { scale: 1.025, transformOrigin: '50% 50%', duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-    app.querySelectorAll('.gate-particles circle').forEach((c) => {
-      gsap.to(c, { x: gsap.utils.random(-9, 9), y: gsap.utils.random(-9, 9), duration: gsap.utils.random(2.2, 4.4), yoyo: true, repeat: -1, ease: 'sine.inOut' });
-    });
+      { filter: 'blur(0px)', opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out', clearProps: 'filter', delay: 0.15 });
   }
 
   if (locked) {
@@ -257,6 +336,13 @@ function renderGate({ locked = false } = {}) {
     box.classList.remove('pulse');
     box.innerHTML = '<span class="spin" role="img" aria-label="Checking"></span>';
     typeInto(line, 'Comparing you to 8 billion humans and 1 model.', 16);
+    // The machine reads you: a scan line passes and the particles snap to its grid for a moment.
+    if (!reduced() && plate.ok) {
+      const scan = el('<i class="scanline"></i>');
+      plateEl.appendChild(scan);
+      gsap.fromTo(scan, { top: '0%', opacity: 1 }, { top: '100%', duration: 1.1, ease: 'none', onComplete: () => scan.remove() });
+      gsap.to(st, { lattice: 0.85, grid: 0.045, duration: 0.5, ease: 'power2.inOut', yoyo: true, repeat: 1, delay: 0.1 });
+    }
     setTimeout(() => {
       box.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path class="tick" d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
       box.classList.add('checked');
@@ -267,10 +353,41 @@ function renderGate({ locked = false } = {}) {
   });
 
   function flip() {
+    // The card flips to the challenge side, and the subject comes apart into today's figure.
+    const figName = DAY_FIGURE[day.id];
+    if (plate.ok) {
+      const sDay = plate.add(figName);
+      const w = plateEl.clientWidth;
+      const h = plateEl.clientHeight;
+      const target = heroLayout(w, h, figName);
+      const swapLabels = () => {
+        plate.current = figName;
+        plate.setCaption(`FIG. ${pad2(day.id)} | Day ${pad2(day.id)}, ${DAY_FIGURE_NAME[day.id]}`);
+        plate.setCallouts(figName, DAY_CALLOUTS[figName]);
+      };
+      if (reduced()) {
+        Object.assign(st, { from: sDay, to: sDay, t: 1, ...target });
+        swapLabels();
+      } else {
+        Object.assign(st, { from: sBust, to: sDay, t: 0, scatter: 0.3 });
+        gsap.to(plateEl.querySelectorAll('.callout-l, .plate-lines'), { opacity: 0, duration: 0.15 });
+        gsap.to(st, { t: 1.35, x: target.x, y: target.y, size: target.size, duration: 1.5, ease: 'power2.inOut',
+          onUpdate: () => plate.drawCallouts() });
+        gsap.delayedCall(1.0, () => {
+          swapLabels();
+          gsap.to(plateEl.querySelectorAll('.callout-l, .plate-lines'), { opacity: 1, duration: 0.3 });
+        });
+      }
+    }
+    sound.flood();
+    // The intro has done its job: fold it away so the challenge fits on a small phone.
+    const intro = app.querySelector('.intro');
+    if (reduced()) intro.remove();
+    else gsap.to(intro, { height: 0, marginTop: 0, opacity: 0, duration: 0.35, ease: 'power2.inOut', onComplete: () => intro.remove() });
     const swap = () => {
       action.innerHTML = `
         <div class="challenge">
-          <p class="mono" style="margin:0;font-size:11px">Additional verification required. ${ROUND_LEN} challenges.</p>
+          <p class="mono challenge-k">Additional verification required. ${ROUND_LEN} challenges.</p>
           <div class="challenge-theme">Day ${pad2(day.id)}: ${esc(day.title)}</div>
           <button class="pill" type="button" data-begin>Begin verification ${ICONS.arrow}</button>
         </div>`;
@@ -281,7 +398,12 @@ function renderGate({ locked = false } = {}) {
           session.round = freshRound(day, mode);
           saveRound();
         }
-        renderPrompt(0);
+        const go = () => renderPrompt(0);
+        if (reduced() || !plate.ok) return go();
+        // The figure comes apart, and the first challenge slides in.
+        gsap.to(st, { explode: 1, alpha: 0, duration: 0.45, ease: 'power2.in' });
+        gsap.to(app.querySelectorAll('.gate-title, .gate-action, .intro, .gate-foot, .gate-links, .plate-labels, .plate-lines'), { opacity: 0, x: -24, duration: 0.3, ease: 'power2.in' });
+        gsap.delayedCall(0.42, go);
       });
       begin.focus({ preventScroll: true });
       keyHandler = (e) => { if (e.key === 'Enter' && document.activeElement !== begin) { e.preventDefault(); begin.click(); } };
@@ -310,11 +432,20 @@ function typeInto(node, text, msPerChar) {
 
 // ------------------------------------------------------------------ 2. prompt
 
+/** The sealed AI answer: the machine holds its answer in a perfect grid. */
+function latticeSVG(size = 46) {
+  const n = 6;
+  const step = 100 / n;
+  let dots = '';
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) dots += `<rect x="${x * step + 1.2}" y="${y * step + 1.2}" width="${step - 2.4}" height="${step - 2.4}"/>`;
+  return `<svg class="lattice" width="${size}" height="${size}" viewBox="0 0 100 100" aria-hidden="true">${dots}</svg>`;
+}
+
 function renderPrompt(index, { delay = 0 } = {}) {
   clearScreen();
   const { round, prompts, day } = session;
   const cp = prompts[index];
-  const ps = { hinted: false, popover: null, suppressSuggest: false, submitted: false, startedAt: 0, raf: 0, lastSecond: null, sheet: null };
+  const ps = { hinted: false, suggestion: null, submitted: false, startedAt: 0, raf: 0, lastSecond: null, sheet: null, bounces: 0 };
   const played = round.answers.length;
 
   app.innerHTML = `
@@ -327,17 +458,15 @@ function renderPrompt(index, { delay = 0 } = {}) {
       <div class="prompt-body">
         <div class="vlabel"><span class="plus" aria-hidden="true">+</span><span class="lbl">&lt;verification ${pad2(index + 1)}/07&gt;</span><span class="plus" aria-hidden="true">+</span></div>
         <h2 class="prompt-text" id="prompt-text" aria-label="${esc(cp.text)}"></h2>
-        <div class="src-row mono"><span class="src">Src | ${esc(cp.raw.source)}</span><span class="t-inline" aria-hidden="true">T−0:${TIMER_S}</span></div>
+        <div class="src-row mono"><span class="src">Src | ${esc(cp.source)}</span></div>
         <div class="ruler-row"><div class="ruler" aria-hidden="true">${Array.from({ length: TIMER_S }, (_, i) => `<i${i % 5 === 0 ? ' class="major"' : ''}></i>`).join('')}</div><span class="t-read" role="timer" aria-label="Time left">T−0:${TIMER_S}</span></div>
-        <div class="ac-slot"></div>
         <div class="answer-block">
           <label class="answer-label mono" for="answer">${ICONS.lock}<span class="al-text">( Your answer )</span></label>
-          <div class="answer-field"><input id="answer" class="answer" type="text" maxlength="${MAX_LEN}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-describedby="prompt-text" /></div>
-          <div class="answer-count mono" aria-hidden="true"></div>
+          <div class="answer-field"><input id="answer" class="answer" type="text" maxlength="${MAX_LEN}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-describedby="prompt-text bounce" /></div>
+          <div class="answer-meta"><div class="bounce mono" id="bounce" aria-live="polite"></div><div class="answer-count mono" aria-hidden="true"></div></div>
         </div>
-        <p class="ac-notes mono">¹ Enter to fix it, enter again to submit.<br>² The timer keeps running.</p>
         <div class="sealed-row">
-          <div class="seal-box">${ICONS.lock}</div><i class="seal-leader"></i><i class="seal-dot"></i>
+          <div class="seal-box">${latticeSVG(46)}<span class="seal-lock">${ICONS.lock}</span></div><i class="seal-leader"></i><i class="seal-dot"></i>
           <div class="seal-text"><span class="mono">( AI answer | [sealed] )</span><span class="s2">The AI sealed its answer.</span></div>
         </div>
         <div class="hint-slot"></div>
@@ -356,11 +485,10 @@ function renderPrompt(index, { delay = 0 } = {}) {
   const block = $('.answer-block');
   const field = $('.answer-field');
   const count = $('.answer-count');
+  const bounceLine = $('.bounce');
   const ruler = $('.ruler');
   const ticks = [...ruler.children];
   const tRead = $('.t-read');
-  const tInline = $('.t-inline');
-  const acSlot = $('.ac-slot');
   const hintSlot = $('.hint-slot');
   const hintBtn = $('[data-hint]');
   const verifyBtn = $('[data-verify]');
@@ -368,14 +496,16 @@ function renderPrompt(index, { delay = 0 } = {}) {
   // Focus now, inside the tap that got us here, so phones raise the keyboard.
   input.focus({ preventScroll: true });
 
-  // Arrival: slide in from the right, type the prompt at about 25 ms a character, fade the source in.
+  // Arrival: the card slides in from the right, the prompt types at about 25 ms a character,
+  // and the source fades in after.
   const text = smartQuotes(cp.text);
   if (reduced()) {
     promptText.textContent = text;
     gsap.from(screen, { opacity: 0, duration: 0.15, delay });
     setTimeout(startTimer, delay * 1000);
   } else {
-    gsap.from('.prompt-body, .specimens, .prompt-actions', { x: 40, opacity: 0, duration: 0.35, ease: 'power3.out', delay });
+    gsap.from('.prompt-body, .specimens, .prompt-actions', { x: 48, opacity: 0, duration: 0.35, ease: 'power3.out', delay });
+    gsap.from('.specimens .specimen', { scale: 0, duration: 0.3, stagger: 0.03, ease: 'back.out(3)', delay: delay + 0.1 });
     gsap.set(source, { opacity: 0 });
     promptText.innerHTML = '<span class="typed"></span><span class="caret"></span>';
     const typed = promptText.querySelector('.typed');
@@ -391,13 +521,11 @@ function renderPrompt(index, { delay = 0 } = {}) {
     setTimeout(step, delay * 1000 + 160);
   }
 
-  // Timer: a 25-tick ruler that empties one tick a second. The last 5 pulse and tick.
+  // Timer: 25 ticks, one a second. Red for the last 5; blinks once a second, twice from 3.
   function paintTimer(left) {
     ticks.forEach((t, i) => t.classList.toggle('spent', i >= left));
-    ruler.classList.toggle('urgent', left > 0 && left <= 5);
-    const txt = `T−0:${pad2(left)}`;
-    tRead.textContent = txt;
-    tInline.textContent = txt;
+    screen.dataset.urgent = left > 0 && left <= 3 ? 'fast' : left > 0 && left <= 5 ? 'slow' : '';
+    tRead.textContent = `T−0:${pad2(left)}`;
   }
   function startTimer() {
     if (ps.startedAt || ps.submitted || !input.isConnected) return;
@@ -418,15 +546,23 @@ function renderPrompt(index, { delay = 0 } = {}) {
     // Backstop: animation frames pause in background tabs, timeouts still fire.
     activeBackstop = setTimeout(() => { if (input.isConnected) timeout(); }, TIMER_S * 1000 + 50);
   }
+
+  // Timeout: typed text is submitted automatically and counts only if it's on the list.
   function timeout() {
-    // Typed but not submitted text goes in as typed; nothing typed is No response.
-    submit(input.value);
+    if (ps.submitted) return;
+    const val = input.value.trim();
+    if (!val) return submit(specialResult('none', '', { hinted: ps.hinted }));
+    const r = classify(val, cp, { day: day.id, dict, known });
+    if (r.kind === 'answer') return submit(scoreEntry(r.entry, { hinted: ps.hinted, input: val }));
+    if (r.kind === 'objector') return submit(specialResult('objector', val));
+    submit(specialResult('none', val, { hinted: ps.hinted }));
   }
 
-  // Typing: a 1 px nudge and a glow on every key; the count appears at 30 of 40.
+  // Typing: a 1 px nudge and a caret glow on every key, the count at 30 of 40, and the bounce
+  // line clears.
   let glowT = 0;
   input.addEventListener('input', () => {
-    if (ps.popover) closePopover();
+    clearBounce();
     sound.key();
     if (!reduced()) gsap.fromTo(input, { y: 1 }, { y: 0, duration: 0.08, ease: 'power1.out' });
     input.classList.add('glow');
@@ -438,7 +574,6 @@ function renderPrompt(index, { delay = 0 } = {}) {
   input.addEventListener('keydown', (e) => {
     if (ps.sheet) return;
     if (e.key === 'Enter') { e.preventDefault(); attempt(); }
-    else if (e.key === 'Escape' && ps.popover) { e.preventDefault(); closePopover(); }
   });
   verifyBtn.addEventListener('click', () => { attempt(); if (!ps.submitted) input.focus({ preventScroll: true }); });
   keyHandler = (e) => {
@@ -447,61 +582,69 @@ function renderPrompt(index, { delay = 0 } = {}) {
     else if (e.key === 'Enter' && !e.target.closest?.('button')) { e.preventDefault(); ps.sheet.querySelector('[data-ok]').click(); }
   };
 
-  function nudgeEmpty() {
-    if (!reduced()) gsap.fromTo(field, { x: -5 }, { x: 0, duration: 0.35, ease: 'elastic.out(1, 0.3)' });
+  function shake() {
+    // Three 6 px moves in 240 ms.
+    if (reduced()) return;
+    gsap.timeline()
+      .to(field, { x: -6, duration: 0.04 })
+      .to(field, { x: 6, duration: 0.08 })
+      .to(field, { x: -6, duration: 0.08 })
+      .to(field, { x: 0, duration: 0.04 });
   }
 
-  // Autocorrect: the first Enter suggests, the second accepts, the third submits.
+  function clearBounce() {
+    if (!bounceLine.innerHTML) return;
+    bounceLine.innerHTML = '';
+    ps.suggestion = null;
+    block.classList.remove('bounced');
+  }
+
   function attempt() {
     if (ps.submitted) return;
+    if (ps.suggestion) return acceptSuggestion();
     const val = input.value;
-    if (ps.popover) return acceptSuggestion();
-    if (!val.trim()) return nudgeEmpty();
-    if (!ps.suppressSuggest) {
-      const s = suggestDetail(val, cp);
-      if (s && s.text !== val.trim()) return showPopover(s);
+    if (!val.trim()) {
+      if (!reduced()) gsap.fromTo(field, { x: -5 }, { x: 0, duration: 0.35, ease: 'elastic.out(1, 0.3)' });
+      return;
     }
-    submit(val);
+    const r = classify(val, cp, { day: day.id, dict, known });
+    if (r.kind === 'answer') return submit(scoreEntry(r.entry, { hinted: ps.hinted, input: val.trim() }));
+    if (r.kind === 'objector') return submit(specialResult('objector', val.trim()));
+    if (r.kind === 'smash') return submit(specialResult('smash', val.trim(), { hinted: ps.hinted }));
+    if (r.kind === 'suggest') return suggestFix(r.suggestion);
+    return bounce(val.trim());
   }
 
-  function showPopover({ text: suggestion, edits }) {
+  // Bounce: the input shakes, a low buzz, and "( NOT ON THE LIST | TRY AGAIN )". The text stays.
+  function bounce(val) {
+    ps.bounces++;
+    sound.buzz();
+    shake();
+    block.classList.add('bounced');
+    bounceLine.innerHTML = '<span class="bl">( Not on the list | Try again )</span>';
+    if (!reduced()) gsap.from(bounceLine.firstElementChild, { y: -6, opacity: 0, duration: 0.2, ease: 'power2.out' });
+    if (DEMO) store.logBounce({ promptId: cp.id, input: val, day: day.id, at: Date.now() });
+  }
+
+  // Near miss: "Did you mean caregiver?" with the fix in a small pill. Enter takes it.
+  function suggestFix(suggestion) {
+    ps.suggestion = suggestion;
     sound.tick();
-    screen.classList.add('has-popover');
-    input.classList.add('wavy');
-    acSlot.innerHTML = `
-      <div class="ac-card" role="dialog" aria-label="Did you mean ${esc(suggestion)}?">
-        <div class="ac-top mono"><span class="keep-case">&lt;autocorrect&gt;</span><span>${edits} ${edits === 1 ? 'edit' : 'edits'} away</span></div>
-        <div class="ac-q">Did you mean<br>${markChanges(input.value.trim(), suggestion)}?</div>
-        <div class="ac-btns">
-          <button class="pill sm fix" type="button">Fix it <span class="k">[↵]</span></button>
-          <button class="pill sm ghost" type="button" data-keep>Keep mine <span class="k">[esc]</span></button>
-        </div>
-      </div>
-      <div class="ac-connector" aria-hidden="true"><i></i></div>`;
-    ps.popover = { suggestion };
-    acSlot.querySelector('.fix').addEventListener('click', () => { acceptSuggestion(); input.focus({ preventScroll: true }); });
-    acSlot.querySelector('[data-keep]').addEventListener('click', () => { closePopover(); input.focus({ preventScroll: true }); });
-    if (!reduced()) {
-      gsap.fromTo(acSlot.querySelector('.ac-card'), { y: 14, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2)' });
-      gsap.fromTo(acSlot.querySelector('.ac-connector i'), { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.2, ease: 'power2.out' });
-    }
-  }
-
-  function closePopover() {
-    ps.popover = null;
-    ps.suppressSuggest = true; // Esc, Keep mine or typing: the next Enter submits as typed.
-    acSlot.innerHTML = '';
-    screen.classList.remove('has-popover');
-    input.classList.remove('wavy');
+    shake();
+    block.classList.add('bounced');
+    bounceLine.innerHTML = `<span class="bl">Did you mean</span><button type="button" class="fix-pill">${esc(suggestion)}</button><span class="bl">?</span>`;
+    bounceLine.querySelector('.fix-pill').addEventListener('click', () => { acceptSuggestion(); input.focus({ preventScroll: true }); });
+    if (!reduced()) gsap.from(bounceLine.children, { y: -6, opacity: 0, duration: 0.2, stagger: 0.03, ease: 'power2.out' });
   }
 
   function acceptSuggestion() {
-    const s = ps.popover.suggestion;
-    closePopover();
+    const s = ps.suggestion;
+    clearBounce();
     input.value = s;
+    count.textContent = s.length >= 30 ? `${s.length} / ${MAX_LEN}` : '';
     sound.click();
     if (reduced()) return;
-    // The letters slide into the corrected word (200 ms).
+    // The letters slide into place (200 ms).
     const overlay = el(`<div class="answer-overlay" aria-hidden="true">${[...s].map((c) => `<span>${c === ' ' ? '&nbsp;' : esc(c)}</span>`).join('')}</div>`);
     field.appendChild(overlay);
     input.classList.add('ghosted');
@@ -511,7 +654,7 @@ function renderPrompt(index, { delay = 0 } = {}) {
     });
   }
 
-  // Hint (Bot Baby): a confirm sheet, then the second most common human answer.
+  // Hint (Bot Baby): a confirm sheet, then the AI's second most common answer, one tap to submit.
   hintBtn.addEventListener('click', () => {
     if (ps.submitted || ps.hinted) return;
     sound.click();
@@ -553,38 +696,36 @@ function renderPrompt(index, { delay = 0 } = {}) {
     block.querySelector('.al-text').textContent = '( Your answer | AI-assisted )';
     hintBtn.disabled = true;
     hintBtn.textContent = '[ hint used | capped at slopper ]';
-    const hint = casual(cp.hint);
+    const entry = cp.hintEntry;
+    const hint = cp.hint;
     hintSlot.innerHTML = `
       <div class="hint-offer">
         <div><div class="mono">( The AI suggests )</div><div class="hw">${esc(hint)}</div></div>
-        <button class="pill sm" type="button">Use this ${ICONS.arrow}</button>
+        <button class="pill sm" type="button">Use it ${ICONS.arrow}</button>
       </div>`;
     if (!reduced()) gsap.from(hintSlot.firstElementChild, { y: -8, opacity: 0, duration: 0.2, ease: 'power2.out' });
-    hintSlot.querySelector('button').addEventListener('click', () => { input.value = hint; submit(hint); });
+    hintSlot.querySelector('button').addEventListener('click', () => {
+      input.value = hint;
+      submit(scoreEntry(entry, { hinted: true, input: hint }));
+    });
     input.focus({ preventScroll: true });
   }
 
-  // Submit and score, then hand over to the Screening.
-  function submit(raw) {
+  // Score, store, then hand over to the Screening.
+  function submit(result) {
     if (ps.submitted) return;
     ps.submitted = true;
     cancelAnimationFrame(ps.raf);
     clearTimeout(activeBackstop);
     if (ps.sheet) { ps.sheet.remove(); ps.sheet = null; }
-    if (ps.popover) closePopover();
     input.blur();
     // Measured from when the prompt finished typing in; answering before that counts as instant.
     const ms = ps.startedAt ? performance.now() - ps.startedAt : 0;
-    const result = scoreAnswer(raw, cp, { day: day.id, hinted: ps.hinted, pool: store.poolFor(cp.id) });
     session.round.answers.push({
-      promptId: cp.id, input: result.input, tier: result.tier, points: result.points, share: result.share,
-      hinted: result.hinted, capped: result.capped, special: result.special, isNew: result.isNew,
-      canonical: result.canonical, ms: Math.round(ms),
+      promptId: cp.id, input: result.input, canonical: result.canonical, tier: result.tier, trueTier: result.trueTier,
+      points: result.points, runs: result.runs, reading: result.reading, hinted: result.hinted, capped: result.capped,
+      special: result.special, ms: Math.round(ms), bounces: ps.bounces,
     });
-    // Practice rounds never touch the answer pool. Rejected answers are not answers.
-    if (session.mode !== 'practice' && result.special !== 'smash' && result.special !== 'none') {
-      store.addToPool(cp.id, result.canonical);
-    }
     saveRound();
     verifyBtn.disabled = true;
     hintBtn.disabled = true;
@@ -596,14 +737,17 @@ function renderPrompt(index, { delay = 0 } = {}) {
   function reveal(result) {
     const isLast = index === ROUND_LEN - 1;
     let going = false;
+    const r = field.getBoundingClientRect();
     const ctrl = playScreening({
       result,
-      aiAnswer: casual(cp.aiAnswer),
+      aiAnswer: cp.aiAnswer,
+      aiRuns: cp.aiEntry?.runs ?? null,
       index,
       prevTotal: totalScore(session.round.answers) - result.points,
       reduced: reduced(),
       isLast,
       headerHTML,
+      origin: { x: r.left + Math.min(r.width, 40 + input.value.length * 12) / 2, y: r.top + r.height / 2 },
       onLand: () => announce(`${stampTitle(result)}. ${result.points} points. ${resultLine(result)}.`),
       onNext: () => go(),
     });
@@ -650,40 +794,45 @@ function finishRound({ delay = 0 } = {}) {
 
 const BADGE_DETAIL = {
   botBaby: (a) => `Asked the AI × ${a.filter((x) => x.hinted).length}`,
-  rng: (a) => `${a.filter((x) => x.isNew && !x.special && x.tier !== 'meat').length} answers nobody gave`,
+  rng: (a) => `${a.reduce((s, x) => s + (x.bounces || 0), 0)} bounced`,
   meatSupreme: (a) => `Matched the model × ${a.filter((x) => x.tier === 'meat').length}`,
   turing: () => 'No model matches',
+  reading: (a) => `From the reading × ${a.filter((x) => x.reading).length}`,
   objector: () => 'Refusal noted',
   fast: (a) => `${a.filter((x) => x.special !== 'none' && x.ms < 2000).length} answers under 2 s`,
 };
 
-/** FIG. 07: today's specimens, from machine-perfect square to human splatter. */
+/** FIG. 07: today's specimens on a line, machine-perfect square to human splatter. */
 function specimensFigure(answers) {
   const n = answers.length;
-  const xs = Array.from({ length: n }, (_, i) => 31 + i * ((342 - 31 - 20) / Math.max(1, ROUND_LEN - 1)));
-  const sz = 36;
+  const x0 = 26;
+  const x1 = 328;
+  const xs = Array.from({ length: n }, (_, i) => x0 + i * ((x1 - x0) / Math.max(1, ROUND_LEN - 1)));
+  const sz = 34;
   let most = -1;
-  let best = 0;
+  let best = -1;
   answers.forEach((a, i) => {
-    const r = a.special === 'smash' || a.special === 'none' ? -1 : LADDER.indexOf(a.tier);
-    if (r > best) { best = r; most = i; }
+    const rank = a.special === 'smash' || a.special === 'none' ? -1 : a.tier === 'objector' ? 6 : LADDER.indexOf(a.tier);
+    if (rank > best) { best = rank; most = i; }
   });
   const names = answers.map((a) => TIERS[a.tier].name).join(', ');
   let callout = '';
-  if (most >= 0) {
+  if (most >= 0 && best >= 3) {
     const x = xs[most];
     const flip = x > 230;
     callout = flip
-      ? `<path class="f-line" d="M${x - 12} 62 L${x - 26} 36 L${x - 44} 36"/><circle class="f-dot" cx="${x - 12}" cy="62" r="3.5"/><text class="f-text" x="${x - 48}" y="39" font-size="9" text-anchor="end">( MOST HUMAN )</text>`
-      : `<path class="f-line" d="M${x + 12} 62 L${x + 26} 36 L${x + 44} 36"/><circle class="f-dot" cx="${x + 12}" cy="62" r="3.5"/><text class="f-text" x="${x + 48}" y="39" font-size="9">( MOST HUMAN )</text>`;
+      ? `<path class="f-line" d="M${x - 10} 54 L${x - 24} 30 L${x - 42} 30"/><circle class="f-dot" cx="${x - 10}" cy="54" r="3.5"/><text class="f-text" x="${x - 46}" y="33" font-size="9" text-anchor="end">( MOST HUMAN )</text>`
+      : `<path class="f-line" d="M${x + 10} 54 L${x + 24} 30 L${x + 42} 30"/><circle class="f-dot" cx="${x + 10}" cy="54" r="3.5"/><text class="f-text" x="${x + 46}" y="33" font-size="9">( MOST HUMAN )</text>`;
   }
-  return `<svg viewBox="0 0 354 170" role="img" aria-label="Today's specimens: ${esc(names)}">
-    <g class="f-text" font-size="16"><text x="0" y="16">+</text><text x="342" y="16">+</text><text x="0" y="168">+</text><text x="342" y="168">+</text></g>
-    <rect class="f-ink" x="86" y="6" width="6" height="6"/>
-    <text class="f-text" x="98" y="13" font-size="9.5" letter-spacing="0.5">FIG. 07 | TODAY'S SPECIMENS</text>
-    ${answers.map((a, i) => `<g class="spec-drop"><g transform="translate(${xs[i] - sz / 2} ${83 - sz / 2}) scale(${sz / 100})">${shapeMarkup(TIER_SHAPE[a.tier])}</g></g>`).join('')}
-    <g class="f-text" font-size="9" text-anchor="middle">${answers.map((a, i) => `<text x="${xs[i]}" y="122">${pad2(i + 1)}</text>`).join('')}</g>
-    <g font-size="13" text-anchor="middle">${answers.map((a, i) => `<text x="${xs[i]}" y="143">${TIERS[a.tier].emoji}</text>`).join('')}</g>
+  return `<svg viewBox="0 0 354 172" role="img" aria-label="Today's specimens: ${esc(names)}">
+    <g class="f-text" font-size="16"><text x="0" y="14">+</text><text x="342" y="14">+</text><text x="0" y="170">+</text><text x="342" y="170">+</text></g>
+    <rect class="f-ink" x="94" y="4" width="6" height="6"/>
+    <text class="f-text" x="106" y="11" font-size="9.5" letter-spacing="0.5">FIG. 07 | TODAY'S SPECIMENS</text>
+    <line class="f-line" x1="${x0}" y1="110" x2="${x1}" y2="110"/>
+    ${answers.map((a, i) => `<g class="spec-drop"><g transform="translate(${xs[i] - sz / 2} ${76 - sz / 2}) scale(${sz / 100})">${shapeMarkup(TIER_SHAPE[a.tier])}</g></g>`).join('')}
+    ${answers.map((a, i) => `<circle class="f-ink spec-dot" cx="${xs[i]}" cy="110" r="3"/>`).join('')}
+    <g class="f-text" font-size="9" text-anchor="middle">${answers.map((a, i) => `<text x="${xs[i]}" y="128">${pad2(i + 1)}</text>`).join('')}</g>
+    <g font-size="14" text-anchor="middle">${answers.map((a, i) => `<text class="spec-emoji" x="${xs[i]}" y="152">${TIERS[a.tier].emoji}</text>`).join('')}</g>
     ${callout}
   </svg>`;
 }
@@ -700,13 +849,16 @@ function renderResults({ delay = 0 } = {}) {
   const streak = round.streak ?? streakNow();
   const share = shareText({ dayId: day.id, dayTitle: day.title, answers, url: location.origin + location.pathname });
   // Practice other days afterwards. Day 4 is a bonus after a 3-day streak (demo mode has the day picker).
-  const practiceDays = mode === 'demo' ? [] : bank.days.filter((d) => d.id !== day.id && (!d.bonus || streak >= 3));
+  const practiceDays = mode === 'demo' ? [] : bank.days.filter((d) => d.id !== day.id && (d.id !== BONUS_DAY || streak >= BONUS_STREAK));
+  const human = Math.round((total / (ROUND_LEN * 100)) * 100);
+  app.classList.add('wide');
 
   app.innerHTML = `
     <section class="screen results" data-screen="results">
       ${headerHTML(esc(dayLabel(day)))}
       <div class="res-label mono">${ok ? ICONS.check : ICONS.x}<span>[ Verification ${ok ? 'passed' : 'failed'} ]</span>${mode === 'practice' ? '<span>[ Practice | Not counted ]</span>' : ''}</div>
       <h1 class="verdict-big${ok ? ' ink' : ''}" aria-label="${esc(verdict.name)}">${wordLines(verdict.name)}</h1>
+      ${plateHTML({ cap: `FIG. 08 | Subject, re-scanned at ${total}/700`, cls: 'res-plate' })}
       <div class="score-row"><span class="score-big" data-score>${total}</span><span class="score-of">/ ${ROUND_LEN * 100}</span></div>
       <p class="verdict-line-res mono">${esc(verdict.line)}</p>
       <figure class="spec-fig">${specimensFigure(answers)}</figure>
@@ -717,18 +869,18 @@ function renderResults({ delay = 0 } = {}) {
         <div class="dots" aria-label="typing"><i></i><i></i><i></i></div>
       </div>
       <div class="res-actions">
-        <button class="pill" type="button" data-share>Share specimens ${ICONS.arrow}</button>
+        <button class="pill" type="button" data-share>Share result ${ICONS.arrow}</button>
         <div class="countdown mono" data-countdown></div>
       </div>
       <details class="review">
         <summary class="bracket">[ review answers ]</summary>
         <ol>${answers.map((a, i) => `
           <li>${specimenSVG(a.tier, 20)}<span class="a">${a.input ? esc(a.input) : 'No answer'}</span><span class="mono">+${a.points}</span>
-          <span class="q mono">${pad2(i + 1)} | ${esc(TIERS[a.tier].name)} | AI: ${esc(casual(prompts[i].aiAnswer))}</span></li>`).join('')}</ol>
+          <span class="q mono">${pad2(i + 1)} | ${esc(TIERS[a.tier].name)}${a.reading ? ' | 📚' : ''} | AI: ${esc(prompts[i].aiAnswer)}</span></li>`).join('')}</ol>
       </details>
       <div class="res-more">
         ${mode === 'demo' ? `<button class="bracket" type="button" data-again>[ play day ${pad2(day.id)} again ]</button>` : ''}
-        ${practiceDays.map((d) => `<a class="bracket" href="?day=${d.id}">[ practice day ${pad2(d.id)}${d.bonus ? ' | bonus' : ''} ]</a>`).join('')}
+        ${practiceDays.map((d) => `<a class="bracket" href="?day=${d.id}">[ practice day ${pad2(d.id)}${d.id === BONUS_DAY ? ' | bonus' : ''} ]</a>`).join('')}
         ${mode === 'practice' ? `<a class="bracket" href="./">[ today's round ]</a>` : ''}
       </div>
       <p class="footer-line mono">No humans were involved in this verification.</p>
@@ -739,7 +891,32 @@ function renderResults({ delay = 0 } = {}) {
   const scoreEl = $('[data-score]');
   const guilt = $('.guilt');
   const shareBtn = $('[data-share]');
-  const size = fitText(verdictEl, 56, 30);
+  const plateEl = $('.res-plate');
+  const size = fitText(verdictEl, 64, 30);
+
+  // FIG. 08: the subject, re-scanned. The lower the score, the more of you snaps to the machine's grid.
+  const plate = makePlate(plateEl, { count: 2200, seed: 'rescan', layout: (w, h) => {
+    const s = Math.min(h * 1.04, w * 1.15);
+    return { x: w - s * 0.417 - 4, y: h * 0.56, size: s };
+  } });
+  const sDust = plate.add('dust', dust(2200, 'res-dust', 1.6));
+  const sBust = plate.add('bust');
+  plate.place('bust');
+  plate.setCallouts('bust', [
+    { text: `${human}% human`, at: [118, 34], dx: -112, dy: -12 },
+    { text: ok ? 'Passed' : 'Machine-readable', at: [46, 112], dx: -26, dy: 34 },
+  ]);
+  const lattice = Math.max(0, Math.min(1, 1 - total / 560));
+  if (plate.ok) {
+    const st = plate.fig.state;
+    if (reduced()) Object.assign(st, { from: sBust, to: sBust, t: 1, lattice, grid: 0.05 });
+    else {
+      Object.assign(st, { from: sDust, to: sBust, t: 0, scatter: 0.1, grid: 0.05 });
+      gsap.to(st, { t: 1.35, duration: 1.6, ease: 'power2.out', delay });
+      gsap.to(st, { lattice, duration: 0.8, ease: 'power3.inOut', delay: delay + 1.4 });
+    }
+    plate.fig.start();
+  }
 
   startCountdown($('[data-countdown]'), (t) => `[ Next verification in ${t} | Day ${pad2(nextDay.id)}: ${nextDay.title} ]`);
 
@@ -749,7 +926,7 @@ function renderResults({ delay = 0 } = {}) {
     const done = await copyText(share);
     shareBtn.innerHTML = done ? `Copied ${ICONS.check}` : 'Copy failed';
     if (!reduced()) gsap.fromTo(shareBtn, { scale: 0.96 }, { scale: 1, duration: 0.3, ease: 'back.out(3)' });
-    setTimeout(() => { if (shareBtn.isConnected) shareBtn.innerHTML = `Share specimens ${ICONS.arrow}`; }, 1500);
+    setTimeout(() => { if (shareBtn.isConnected) shareBtn.innerHTML = `Share result ${ICONS.arrow}`; }, 1500);
   });
   $('[data-again]')?.addEventListener('click', () => {
     session.round = freshRound(day, mode);
@@ -798,8 +975,9 @@ function renderResults({ delay = 0 } = {}) {
         [...verdictEl.children].forEach((span, i) => (span.textContent = lines[i]));
       },
     }, 0.1)
-    .to(counter, { n: total, duration: 0.8, ease: 'power1.out', onUpdate: () => (scoreEl.textContent = Math.round(counter.n)) }, 0.2)
+    .to(counter, { n: total, duration: 0.9, ease: 'power1.out', onUpdate: () => (scoreEl.textContent = Math.round(counter.n)) }, 0.2)
     .from(app.querySelectorAll('.spec-drop'), { y: -26, opacity: 0, duration: 0.35, stagger: 0.08, ease: 'back.out(2.5)' }, 0.55)
+    .from(app.querySelectorAll('.spec-emoji'), { opacity: 0, y: 4, duration: 0.2, stagger: 0.08 }, 0.7)
     .call(() => sound.tick(), null, 0.55)
     .from(app.querySelectorAll('.badge'), { rotationX: -90, opacity: 0, transformOrigin: '50% 0%', transformPerspective: 600, duration: 0.35, stagger: 0.12, ease: 'power2.out' }, 1.2)
     .call(() => setTimeout(showGuilt, 1200), null, 1.3);
@@ -845,16 +1023,19 @@ function renderAbout() {
     'Nick Bostrom, "Are We Living in a Computer Simulation?"',
     'Isaac Asimov, "The Last Question"',
   ];
-  const model = bank.aiModel ? `${esc(bank.aiModel)}, ${esc(bank.aiGeneratedOn || '')}` : 'not yet recorded. The answers in this build are drafts';
+  const runs = bank.runs || {};
+  const runsNote = runs.simulated
+    ? 'The run counts in this build are simulated. The team replaces them with real runs before launch.'
+    : `Models: ${esc((runs.models || []).join(', '))}. Run on ${esc(runs.date || 'an unrecorded date')}.`;
   app.innerHTML = `
     <section class="screen prose" data-screen="about">
       ${headerHTML('About')}
       <div class="vlabel"><span class="plus" aria-hidden="true">+</span><span class="lbl">&lt;about&gt;</span><span class="plus" aria-hidden="true">+</span></div>
       <h1 class="prose-title">About notarobot</h1>
-      <p>notarobot is a daily CAPTCHA you can't quite pass. Each day you answer seven open prompts, and a machine decides how human each answer is by how unlike an AI it is.</p>
-      <p>Before you answer, an AI has already sealed its own answer. Match it and you score nothing. Otherwise, the fewer people who gave your answer, the more points it earns, up to 100 a prompt and 700 a round. Early percentages come from a seeded sample of 100 answers per prompt, written by the team, plus the answers given on this device. The AI's answers were generated once and stored; the game never calls a model while you play.</p>
+      <p>notarobot is a daily CAPTCHA you can't quite pass. Each day you answer seven prompts, and a machine decides how human each answer is by how unlike an AI it is.</p>
+      <p>Every prompt has a list of correct answers; anything else bounces. Before launch, three AI models were each asked every prompt 100 times. Match the AI's most common answer and you score nothing. The less often the models gave your answer, the more it earns, up to 100 a prompt and 700 a round. The Human Reserved answers were hand-picked by the team, and the AI never gave them. Nothing calls a model while you play.</p>
       <p>Made for CCT431 at the University of Toronto Mississauga. The prompts draw on the course readings listed below.</p>
-      <p class="note mono">Model used for the sealed answers: ${model}.</p>
+      <p class="note mono">${runsNote}</p>
       <div class="mono" style="margin-top:22px">[ Readings ]</div>
       <ol class="readings">${readings.map((r, i) => `<li><span class="n mono">${pad2(i + 1)}</span><span>${esc(r)}</span></li>`).join('')}</ol>
       <div class="prompt-actions"><a class="pill ghost" href="${location.pathname}${location.search}">Back</a></div>

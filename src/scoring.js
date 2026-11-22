@@ -1,34 +1,49 @@
-// Scoring, normalization, validity, autocorrect, verdicts and badges.
-// Pure functions only: shared by the browser and the Node unit tests.
+// Scoring from the answer lists (DESIGN.md, Scoring): lookups, bounces, "Did you mean",
+// the Keyboard Smash filter, tiers from AI runs, verdicts, badges and the share text.
+// Pure functions only: shared by the browser, the bank build script and the Node tests.
 import { BLOCKLIST_WORDS } from './blocklist.js';
 
+export const RUNS_PER_PROMPT = 300;
+
 export const TIERS = {
-  meat:      { key: 'meat',      name: 'Meat Proxy',         points: 0,   emoji: '🥩', fill: '#C92A2A', text: '#C92A2A' },
-  zombie:    { key: 'zombie',    name: 'Prompt Zombie',      points: 10,  emoji: '🧟', fill: '#E8590C', text: '#C2410C' },
-  slopper:   { key: 'slopper',   name: 'Slopper',            points: 25,  emoji: '🥣', fill: '#F59F00', text: '#8A5A00' },
-  delegator: { key: 'delegator', name: 'Decision Delegator', points: 50,  emoji: '🤷', fill: '#A9B4C2', text: '#4A5260' },
-  firsthand: { key: 'firsthand', name: 'First-Hand Thinker', points: 75,  emoji: '🧠', fill: '#5C9DF5', text: '#1F4FBF' },
-  reserved:  { key: 'reserved',  name: 'Human Reserved',     points: 100, emoji: '🫀', fill: '#6741D9', text: '#5B33C9' },
-  smash:     { key: 'smash',     name: 'Keyboard Smash',     points: 0,   emoji: '⌨️', fill: '#1B1F24', text: '#1B1F24' },
-  none:      { key: 'none',      name: 'No response',        points: 0,   emoji: '💤', fill: '#1B1F24', text: '#1B1F24' },
+  meat:      { key: 'meat',      name: 'Meat Proxy',             points: 0,   emoji: '🥩' },
+  zombie:    { key: 'zombie',    name: 'Prompt Zombie',          points: 10,  emoji: '🧟' },
+  slopper:   { key: 'slopper',   name: 'Slopper',                points: 25,  emoji: '🥣' },
+  delegator: { key: 'delegator', name: 'Decision Delegator',     points: 50,  emoji: '🤷' },
+  firsthand: { key: 'firsthand', name: 'First-Hand Thinker',     points: 75,  emoji: '🧠' },
+  reserved:  { key: 'reserved',  name: 'Human Reserved',         points: 100, emoji: '🫀' },
+  objector:  { key: 'objector',  name: 'Conscientious Objector', points: 100, emoji: '🕊️' },
+  smash:     { key: 'smash',     name: 'Keyboard Smash',         points: 0,   emoji: '⌨️' },
+  none:      { key: 'none',      name: 'No response',            points: 0,   emoji: '💤' },
 };
 
-/** The six rarity layers of the Screening, top to bottom. */
+/** The six layers of the Screening, top to bottom. */
 export const LADDER = ['meat', 'zombie', 'slopper', 'delegator', 'firsthand', 'reserved'];
-/** Share thresholds for the gates below Prompt Zombie, Slopper, Decision Delegator, First-Hand Thinker. */
-export const GATES = [25, 10, 4, 1];
+/** The four gates under Prompt Zombie, Slopper, Decision Delegator and First-Hand Thinker. */
+export const GATES = [
+  { below: 'zombie', label: '30/300', runs: 30 },
+  { below: 'slopper', label: '6/300', runs: 6 },
+  { below: 'delegator', label: '1/300', runs: 1 },
+  { below: 'firsthand', label: 'Hand-picked', runs: 0 },
+];
 
 export const BADGES = {
-  botBaby:     { key: 'botBaby',     name: 'Bot Baby',                emoji: '🍼' },
-  rng:         { key: 'rng',         name: 'Random Number Generator', emoji: '🎲' },
-  meatSupreme: { key: 'meatSupreme', name: 'Meat Proxy Supreme',      emoji: '🍖' },
-  turing:      { key: 'turing',      name: 'Turing Complete',         emoji: '🏅' },
-  objector:    { key: 'objector',    name: 'Conscientious Objector',  emoji: '🕊️' },
-  fast:        { key: 'fast',        name: 'Suspiciously Fast',       emoji: '⚡' },
+  botBaby:     { key: 'botBaby',     name: 'Bot Baby',                emoji: '🍼', line: 'You asked the AI.' },
+  rng:         { key: 'rng',         name: 'Random Number Generator', emoji: '🎲', line: 'Three answers bounced. Randomness is not a personality.' },
+  meatSupreme: { key: 'meatSupreme', name: 'Meat Proxy Supreme',      emoji: '🍖', line: 'You matched the model three times.' },
+  turing:      { key: 'turing',      name: 'Turing Complete',         emoji: '🏅', line: 'No matches. Every answer First-Hand or better.' },
+  reading:     { key: 'reading',     name: 'Did the Reading',         emoji: '📚', line: 'You answered from the reading. So did the AI.' },
+  objector:    { key: 'objector',    name: 'Conscientious Objector',  emoji: '🕊️', line: 'You refused.' },
+  fast:        { key: 'fast',        name: 'Suspiciously Fast',       emoji: '⚡', line: 'Three answers in under two seconds each.' },
 };
+const BADGE_ORDER = ['botBaby', 'rng', 'meatSupreme', 'turing', 'reading', 'objector', 'fast'];
 
-const NON_ANSWERS = new Set(['idk', 'no', 'nothing', 'na']);
-const OBJECTOR_ANSWERS = new Set(['i refuse', 'no']);
+const NON_ANSWER_TEXT = [
+  'idk', 'no', 'nothing', 'n/a', 'yes', 'ok', 'okay', 'lol', 'dunno', 'whatever', 'pass', "I don't know", 'i dunno',
+  'no idea', 'none', 'nope', 'skip', 'idc', "I don't care", 'who cares', 'nah', 'yeah', 'yep', 'k', 'lmao', 'test', 'asdf',
+];
+const OBJECTOR_TEXT = ['I refuse', 'no'];
+const LEADING_FILLER = /^(?:(?:my|your|our|their|his|her|its|ones|to|being|getting|a|an|the) )+/;
 
 // ---------------------------------------------------------------- normalize
 
@@ -39,7 +54,7 @@ const OBJECTOR_ANSWERS = new Set(['i refuse', 'no']);
 export function normalize(input) {
   if (input == null) return '';
   let t = String(input).normalize('NFC').toLowerCase();
-  t = t.replace(/\p{P}/gu, '');
+  t = t.replace(/[\p{P}\p{S}]/gu, '');
   t = t.replace(/\s+/g, ' ').trim();
   t = t.replace(/^(a|an|the) /, '');
   return t
@@ -48,191 +63,154 @@ export function normalize(input) {
     .join(' ');
 }
 
-const BLOCKLIST = new Set(BLOCKLIST_WORDS.map(normalize));
-
-// ---------------------------------------------------------------- compile
-
-/** Precomputes lookups for one prompt from prompts.json. */
-export function compilePrompt(p) {
-  const aliasToCanon = new Map();
-  const display = new Map(); // canonical -> how to show it
-  for (const [canon, variants] of Object.entries(p.aliases || {})) {
-    const c = normalize(canon);
-    aliasToCanon.set(c, c);
-    for (const v of variants) {
-      const n = normalize(v);
-      if (!aliasToCanon.has(n)) aliasToCanon.set(n, c);
-    }
-  }
-  const canon = (n) => aliasToCanon.get(n) ?? n;
-
-  const aiSet = new Set([p.ai.answer, ...(p.ai.aliases || [])].map(normalize));
-
-  const seed = new Map();
-  let seedTotal = 0;
-  for (const [k, v] of Object.entries(p.seed || {})) {
-    const c = canon(normalize(k));
-    seed.set(c, (seed.get(c) || 0) + v);
-    if (!display.has(c)) display.set(c, k);
-    seedTotal += v;
-  }
-
-  const validSet = p.validSet ? new Set(p.validSet.map((v) => canon(normalize(v)))) : null;
-
-  // Spellings the autocorrect may suggest, with a weight for breaking ties.
-  const candidates = [];
-  const seen = new Set();
-  const addCand = (text, weight) => {
-    const n = normalize(text);
-    if (!n || seen.has(n)) return;
-    seen.add(n);
-    candidates.push({ norm: n, display: text, weight });
-  };
-  for (const [k, v] of Object.entries(p.seed || {})) addCand(k, v);
-  for (const [c, variants] of Object.entries(p.aliases || {})) {
-    const w = seed.get(normalize(c)) || 0;
-    addCand(c, w);
-    for (const v of variants) addCand(v, w);
-  }
-  addCand(p.ai.answer, 0);
-  for (const a of p.ai.aliases || []) addCand(a, 0);
-  for (const v of p.validSet || []) addCand(v, 0);
-
-  return {
-    raw: p,
-    id: p.id,
-    text: p.text,
-    aiAnswer: p.ai.answer,
-    hint: p.hint,
-    canon,
-    aliasToCanon,
-    aiSet,
-    seed,
-    seedTotal,
-    validSet,
-    candidates,
-    display,
-    promptNorm: normalize(p.text),
-  };
+/** The answer with leading possessives and fillers removed: "my crush's name" -> "crush name". */
+export function core(n) {
+  return n.replace(LEADING_FILLER, '');
 }
 
-// ---------------------------------------------------------------- validity
+const BLOCKLIST = new Set(BLOCKLIST_WORDS.map(normalize));
+// Normalized the same way as answers, so "pass" (which normalizes to "pas") still matches.
+const NON_ANSWERS = new Set(NON_ANSWER_TEXT.map(normalize));
+const OBJECTOR_ANSWERS = new Set(OBJECTOR_TEXT.map(normalize));
+
+// ---------------------------------------------------------------- inflections
+
+const IRREGULAR = {
+  man: 'men', woman: 'women', child: 'children', person: 'people', mouse: 'mice', goose: 'geese', tooth: 'teeth',
+  foot: 'feet', ox: 'oxen', octopus: 'octopi', cactus: 'cacti', fungus: 'fungi', leaf: 'leaves', knife: 'knives',
+  life: 'lives', wife: 'wives', wolf: 'wolves', calf: 'calves', half: 'halves', self: 'selves', shelf: 'shelves',
+  thief: 'thieves', loaf: 'loaves', elf: 'elves', criterion: 'criteria', phenomenon: 'phenomena',
+};
+const IRREGULAR_BACK = Object.fromEntries(Object.entries(IRREGULAR).map(([s, p]) => [p, s]));
+
+/** Plural and singular spellings of the last word, so a list can be written either way. */
+export function inflections(raw) {
+  const s = String(raw).toLowerCase().trim();
+  const m = s.match(/^(.*?)([a-z]+)$/);
+  if (!m) return [];
+  const [, head, w] = m;
+  if (w.length < 2) return [];
+  const out = new Set();
+  if (IRREGULAR[w]) out.add(IRREGULAR[w]);
+  if (IRREGULAR_BACK[w]) out.add(IRREGULAR_BACK[w]);
+  if (/[^aeiou]y$/.test(w)) out.add(`${w.slice(0, -1)}ies`);
+  if (/(s|x|z|ch|sh)$/.test(w)) out.add(`${w}es`);
+  if (/[^aeiou]ies$/.test(w)) out.add(`${w.slice(0, -3)}y`);
+  if (/(ss|x|z|ch|sh)es$/.test(w)) out.add(w.slice(0, -2));
+  if (/ves$/.test(w)) {
+    out.add(`${w.slice(0, -3)}f`);
+    out.add(`${w.slice(0, -3)}fe`);
+  }
+  if (/men$/.test(w)) out.add(`${w.slice(0, -3)}man`);
+  if (/man$/.test(w)) out.add(`${w.slice(0, -3)}men`);
+  if (!w.endsWith('s')) out.add(`${w}s`);
+  else if (w.length <= 4) out.add(w.slice(0, -1));
+  return [...out].map((v) => head + v);
+}
+
+// ---------------------------------------------------------------- compile
 
 const VOWEL = /[aeiouy]/;
 const stripMarks = (s) => s.normalize('NFD').replace(/\p{M}/gu, '');
 
-/** DESIGN.md Scoring, Step 4. Returns a reason string, or null when the answer is fine. */
-export function invalidReason(n, cp) {
-  if (n.length < 2) return 'short';
-  if (!VOWEL.test(stripMarks(n))) return 'no-vowel';
-  if (/(.)\1{3,}/u.test(n)) return 'repeat';
-  if (n.split(' ').some((w) => BLOCKLIST.has(w)) || BLOCKLIST.has(n)) return 'blocklist';
-  if (cp && n === cp.promptNorm) return 'copied-prompt';
-  if (NON_ANSWERS.has(n)) return 'non-answer';
+/** Lowercase ASCII word tokens, accents removed: "Déjà vu!" -> ["deja", "vu"]. */
+export function plainWords(raw) {
+  return stripMarks(String(raw).toLowerCase()).split(/[^a-z0-9]+/).filter(Boolean);
+}
+
+/** Tier from a run count, with the team's hand-picked flag. The sealed answer is set separately. */
+export function tierForRuns(runs, reserved = false) {
+  if (runs >= 30) return 'zombie';
+  if (runs >= 6) return 'slopper';
+  if (runs >= 1) return 'delegator';
+  return reserved ? 'reserved' : 'firsthand';
+}
+
+/**
+ * Precomputes lookups for one prompt from prompts.json:
+ * { id, text, source, ai, hint, answers: [{ a, aliases, runs, tier, reading }] }.
+ * Canonical answers win over aliases, aliases over plural spellings, those over stripped forms.
+ */
+export function compilePrompt(p) {
+  const entries = p.answers.map((x, i) => ({
+    a: x.a, aliases: x.aliases || [], runs: x.runs || 0, tier: x.tier, reading: !!x.reading, idx: i,
+  }));
+  const exact = new Map();
+  const flat = new Map();
+  const conflicts = [];
+  const candidates = [];
+  const words = new Set();
+
+  const put = (map, key, entry, raw) => {
+    if (!key) return;
+    const prev = map.get(key);
+    if (!prev) map.set(key, entry);
+    else if (prev !== entry) conflicts.push({ key, raw, kept: prev.a, dropped: entry.a });
+  };
+  const add = (raw, entry, { suggest = false, quiet = false } = {}) => {
+    const n = normalize(raw);
+    if (!n) return;
+    for (const w of plainWords(raw)) words.add(w);
+    if (quiet) {
+      if (!exact.has(n)) exact.set(n, entry);
+      const f = n.replace(/ /g, '');
+      if (!flat.has(f)) flat.set(f, entry);
+      return;
+    }
+    put(exact, n, entry, raw);
+    put(flat, n.replace(/ /g, ''), entry, raw);
+    if (suggest) candidates.push({ norm: n, flat: n.replace(/ /g, ''), display: raw, entry });
+  };
+
+  for (const e of entries) add(e.a, e, { suggest: true });
+  for (const e of entries) for (const al of e.aliases) add(al, e, { suggest: true });
+  for (const e of entries) {
+    for (const raw of [e.a, ...e.aliases]) for (const v of inflections(raw)) add(v, e, { quiet: true });
+  }
+  for (const e of entries) {
+    for (const raw of [e.a, ...e.aliases]) {
+      const c = core(normalize(raw));
+      if (c && c !== normalize(raw)) add(c, e, { quiet: true });
+    }
+  }
+
+  const byA = new Map(entries.map((e) => [e.a, e]));
+  const aiEntry = byA.get(p.ai) || entries.find((e) => e.tier === 'meat');
+  return {
+    raw: p,
+    id: p.id,
+    text: p.text,
+    source: p.source,
+    aiAnswer: p.ai,
+    aiEntry,
+    hint: p.hint,
+    hintEntry: byA.get(p.hint) || null,
+    entries,
+    exact,
+    flat,
+    candidates,
+    conflicts,
+    words,
+    promptNorm: normalize(p.text),
+  };
+}
+
+/** Finds the list entry for an answer, or null. Looks up the answer as written and with spaces removed. */
+export function lookup(raw, cp) {
+  const n = normalize(raw);
+  if (!n) return null;
+  const tries = [n];
+  const c = core(n);
+  if (c && c !== n) tries.push(c);
+  for (const t of tries) {
+    if (cp.exact.has(t)) return cp.exact.get(t);
+    const f = t.replace(/ /g, '');
+    if (cp.flat.has(f)) return cp.flat.get(f);
+  }
   return null;
 }
 
-/** True when the normalized answer is a seed answer, alias, AI answer or valid-set entry. */
-export function isKnown(n, cp) {
-  const c = cp.canon(n);
-  return cp.aiSet.has(n) || cp.aiSet.has(c) || cp.seed.has(c) || cp.aliasToCanon.has(n) || !!(cp.validSet && cp.validSet.has(c));
-}
-
-// ---------------------------------------------------------------- tiers
-
-export function tierForShare(share) {
-  if (share >= GATES[0]) return 'zombie';
-  if (share >= GATES[1]) return 'slopper';
-  if (share >= GATES[2]) return 'delegator';
-  if (share >= GATES[3]) return 'firsthand';
-  return 'reserved';
-}
-
-/** Rounds a share for display without letting the rounding cross a tier boundary. */
-export function formatShare(share) {
-  const r = Math.round(share);
-  for (const b of GATES) {
-    if (share < b && r >= b) return (Math.floor(share * 10) / 10).toFixed(1);
-  }
-  return String(r);
-}
-
-/**
- * Scores one answer.
- * @param {string} raw what the player submitted
- * @param {object} cp a compiled prompt
- * @param {object} ctx { day, hinted, pool } where pool maps canonical answer -> live count
- */
-export function scoreAnswer(raw, cp, ctx = {}) {
-  const { day = null, hinted = false, pool = {} } = ctx;
-  const input = (raw ?? '').trim();
-  const base = { input, hinted: !!hinted, capped: false, special: null, share: null, isNew: false, canonical: null };
-
-  if (!input) return { ...base, tier: 'none', points: 0, special: 'none' };
-
-  const n = normalize(input);
-
-  // Easter egg: Day 3, C3. Skips the filter. A hint caps every answer, so it can't fire then.
-  if (day === 3 && cp.id === 'C3' && !hinted && OBJECTOR_ANSWERS.has(n)) {
-    return { ...base, canonical: n, tier: 'reserved', points: 100, special: 'objector' };
-  }
-
-  const c = cp.canon(n);
-  const aiMatch = cp.aiSet.has(n) || cp.aiSet.has(c);
-
-  if (cp.validSet && !aiMatch && !cp.validSet.has(c)) {
-    return { ...base, canonical: c, tier: 'smash', points: 0, special: 'smash', reason: 'not-in-valid-set' };
-  }
-  // Known answers (seed, aliases, the AI's answer) skip the shape checks, so "RN", "R2-D2" and "AC" pass.
-  if (!isKnown(n, cp)) {
-    const reason = invalidReason(n, cp);
-    if (reason) return { ...base, canonical: c, tier: 'smash', points: 0, special: 'smash', reason };
-  }
-
-  if (aiMatch) return { ...base, canonical: c, tier: 'meat', points: 0 };
-
-  const poolTotal = Object.values(pool).reduce((a, b) => a + b, 0);
-  const prior = (cp.seed.get(c) || 0) + (pool[c] || 0);
-  const total = cp.seedTotal + poolTotal;
-  // Share counts this answer too: it has now been said.
-  const share = ((prior + 1) / (total + 1)) * 100;
-  let tier = prior === 0 ? 'reserved' : tierForShare(share);
-  let capped = false;
-  if (hinted && LADDER.indexOf(tier) > LADDER.indexOf('slopper')) {
-    tier = 'slopper';
-    capped = true;
-  }
-  return { ...base, canonical: c, tier, points: TIERS[tier].points, share, isNew: prior === 0, capped };
-}
-
-/** The line printed under the stamp. */
-export function stampSubline(r) {
-  if (r.special === 'none') return 'Bot-like behaviour suspected.';
-  if (r.special === 'smash') return "That isn't an answer.";
-  if (r.special === 'objector') return 'Refusal noted.';
-  if (r.tier === 'meat') return 'The model said this.';
-  if (r.tier === 'reserved') return 'Almost nobody said this.';
-  const s = formatShare(r.share);
-  if (r.capped) return `${s}% of humans said this. AI-assisted.`;
-  if (r.tier === 'firsthand') return `Only ${s}% of humans said this.`;
-  return `${s}% of humans said this.`;
-}
-
-/**
- * The mono line under a stamp or verdict, e.g. "The model said this | 0 pts" or
- * "43% of humans said this | +10". The screen sets it in uppercase.
- */
-export function resultLine(r) {
-  const sub = stampSubline(r).replace(/\.$/, '');
-  return `${sub} | ${r.points ? `+${r.points}` : '0 pts'}`;
-}
-
-export function stampTitle(r) {
-  if (r.special === 'objector') return 'Conscientious Objector';
-  return TIERS[r.tier].name;
-}
-
-// ---------------------------------------------------------------- autocorrect
+// ---------------------------------------------------------------- "Did you mean"
 
 /** Damerau-Levenshtein distance (optimal string alignment variant). */
 export function editDistance(a, b) {
@@ -258,6 +236,7 @@ export function editDistance(a, b) {
   return d[m][n];
 }
 
+/** Edits allowed for a list answer of this many letters (spaces don't count). */
 export function maxEdits(len) {
   if (len < 3) return 0;
   if (len <= 5) return 1;
@@ -265,31 +244,198 @@ export function maxEdits(len) {
   return 3;
 }
 
-/** Lowercases a suggestion unless it carries deliberate capitals (HAL 9000, R2-D2). */
-function casual(s) {
-  return /[A-Z]/.test(s.slice(1)) ? s : s.toLowerCase();
+/** Lowercases a suggestion unless it carries deliberate capitals (HAL 9000, R2-D2, NICU nurse). */
+export function casual(s) {
+  return /[A-Z]/.test(s.slice(1)) ? s : s.charAt(0).toLowerCase() + s.slice(1);
 }
 
 /**
- * Returns { text, edits } for the single closest known spelling, or null when the answer
- * is an exact match, too short, or nothing is close. Ties go to the more common answer.
+ * The single closest list spelling within the allowed edits, or null. Distance is measured after
+ * normalization and again with spaces removed; ties go to the answer the AI gave more often.
  */
 export function suggestDetail(raw, cp) {
   const n = normalize(raw);
-  const limit = maxEdits([...n.replace(/ /g, '')].length);
-  if (!limit) return null;
-  if (cp.candidates.some((c) => c.norm === n)) return null;
+  if (!n || lookup(raw, cp)) return null;
+  const nf = n.replace(/ /g, '');
   let best = null;
   for (const c of cp.candidates) {
-    const d = editDistance(n, c.norm);
-    if (d > limit) continue;
-    if (!best || d < best.d || (d === best.d && c.weight > best.weight)) best = { ...c, d };
+    const limit = maxEdits(c.flat.length);
+    if (!limit || Math.abs(c.flat.length - nf.length) > limit) continue;
+    const d = Math.min(editDistance(n, c.norm), editDistance(nf, c.flat));
+    if (d === 0 || d > limit) continue;
+    if (!best || d < best.d || (d === best.d && c.entry.runs > best.entry.runs)) best = { ...c, d };
   }
-  return best ? { text: casual(best.display), edits: best.d } : null;
+  return best ? { text: casual(best.display), edits: best.d, entry: best.entry } : null;
 }
 
 export function suggest(raw, cp) {
   return suggestDetail(raw, cp)?.text ?? null;
+}
+
+// ---------------------------------------------------------------- Keyboard Smash
+
+/** Stems to try for a dictionary that only lists base forms. */
+export function stems(w) {
+  const out = [w];
+  const add = (s) => s.length >= 2 && out.push(s);
+  if (w.endsWith('s')) add(w.slice(0, -1));
+  if (w.endsWith('es')) add(w.slice(0, -2));
+  if (w.endsWith('ies')) add(`${w.slice(0, -3)}y`);
+  if (w.endsWith('ed')) { add(w.slice(0, -2)); add(w.slice(0, -1)); }
+  if (w.endsWith('ied')) add(`${w.slice(0, -3)}y`);
+  if (w.endsWith('ing')) {
+    const b = w.slice(0, -3);
+    add(b); add(`${b}e`);
+    if (/(.)\1$/.test(b)) add(b.slice(0, -1));
+  }
+  if (w.endsWith('er')) { add(w.slice(0, -2)); add(w.slice(0, -1)); }
+  if (w.endsWith('ers')) add(w.slice(0, -3));
+  if (w.endsWith('est')) add(w.slice(0, -3));
+  if (w.endsWith('ly')) add(w.slice(0, -2));
+  if (w.endsWith('ness')) add(w.slice(0, -4));
+  if (w.endsWith('ful')) add(w.slice(0, -3));
+  if (w.endsWith('less')) add(w.slice(0, -4));
+  if (w.endsWith('ment')) add(w.slice(0, -4));
+  return out;
+}
+
+/**
+ * A sorted, newline-separated word list searched in place, so the 200,000 words cost one string
+ * of memory on a phone instead of a Set.
+ */
+export function makeDictionary(text) {
+  const body = `${String(text).replace(/\r/g, '').trim()}\n`;
+  const starts = [];
+  for (let i = 0; i < body.length; i = body.indexOf('\n', i) + 1) starts.push(i);
+  const idx = Int32Array.from(starts);
+  const wordAt = (k) => body.slice(idx[k], body.indexOf('\n', idx[k]));
+  return {
+    size: idx.length,
+    has(w) {
+      let lo = 0;
+      let hi = idx.length - 1;
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1;
+        const x = wordAt(mid);
+        if (x === w) return true;
+        if (x < w) lo = mid + 1;
+        else hi = mid - 1;
+      }
+      return false;
+    },
+  };
+}
+
+/** True when a token is a word: in the dictionary, in this game's lists, a number, or a stem of one. */
+export function isWord(token, dict, known) {
+  if (/^\d+$/.test(token)) return true;
+  if (known && known.has(token)) return true;
+  if (!dict) return true;
+  return stems(token).some((s) => dict.has(s) || (known && known.has(s)));
+}
+
+/** Rules that make an answer a Keyboard Smash before "Did you mean" is considered. */
+export function hardSmashReason(n, cp) {
+  if (NON_ANSWERS.has(n)) return 'non-answer';
+  if (/(.)\1{3,}/u.test(n.replace(/ /g, ''))) return 'repeat';
+  if (n.split(' ').some((w) => BLOCKLIST.has(w)) || BLOCKLIST.has(n)) return 'blocklist';
+  if (cp && n && (n === cp.promptNorm || (n.length > 12 && cp.promptNorm.includes(n)))) return 'copied-prompt';
+  return null;
+}
+
+/** Rules that make an answer a Keyboard Smash once it isn't a near miss: no vowel, or not words. */
+export function softSmashReason(raw, cp, dict, known) {
+  const plain = stripMarks(String(raw).toLowerCase());
+  if (!VOWEL.test(plain)) return 'no-vowel';
+  const tokens = plainWords(raw);
+  if (!tokens.length) return 'no-letters';
+  for (const t of tokens) {
+    if (cp?.words.has(t)) continue;
+    if (!isWord(t, dict, known)) return 'not-a-word';
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------- classify and score
+
+/**
+ * Decides what a submitted answer is, in the order of DESIGN.md Step 1:
+ * { kind: 'empty' | 'objector' | 'answer' | 'smash' | 'suggest' | 'bounce', ... }.
+ * ctx: { day, dict, known } where dict is a makeDictionary() and known a Set of every list word.
+ */
+export function classify(raw, cp, ctx = {}) {
+  const { day = null, dict = null, known = null } = ctx;
+  const input = String(raw ?? '').trim();
+  if (!input) return { kind: 'empty', input };
+  const n = normalize(input);
+  if (day === 3 && cp.id === 'C3' && OBJECTOR_ANSWERS.has(n)) return { kind: 'objector', input };
+  const entry = lookup(input, cp);
+  if (entry) return { kind: 'answer', input, entry };
+  const hard = hardSmashReason(n, cp);
+  if (hard) return { kind: 'smash', input, reason: hard };
+  const near = suggestDetail(input, cp);
+  if (near) return { kind: 'suggest', input, suggestion: near.text, edits: near.edits, entry: near.entry };
+  const soft = softSmashReason(input, cp, dict, known);
+  if (soft) return { kind: 'smash', input, reason: soft };
+  return { kind: 'bounce', input };
+}
+
+/** The scored result for a list entry. A hint caps anything better than Slopper. */
+export function scoreEntry(entry, { hinted = false, input = '' } = {}) {
+  let tier = entry.tier;
+  let capped = false;
+  if (hinted && LADDER.indexOf(tier) > LADDER.indexOf('slopper')) {
+    tier = 'slopper';
+    capped = true;
+  }
+  return {
+    input: input || entry.a,
+    canonical: entry.a,
+    tier,
+    trueTier: entry.tier,
+    points: TIERS[tier].points,
+    runs: entry.runs,
+    reading: entry.reading,
+    hinted: !!hinted,
+    capped,
+    special: null,
+  };
+}
+
+export function specialResult(kind, input = '', extra = {}) {
+  const tier = kind === 'objector' ? 'objector' : kind;
+  return {
+    input, canonical: null, tier, trueTier: tier, points: TIERS[tier].points, runs: null,
+    reading: false, hinted: !!extra.hinted, capped: false, special: kind,
+  };
+}
+
+/** "The AI said this 4 times in 300." and friends: the line under each verdict. */
+export function landingLine(r) {
+  if (r.special === 'none') return 'Bot-like behaviour suspected.';
+  if (r.special === 'smash') return "That isn't an answer.";
+  if (r.special === 'objector') return 'Refusal noted.';
+  let line;
+  if (r.trueTier === 'meat') line = 'The model said this.';
+  else if (r.runs === 1) line = 'The AI said this once in 300.';
+  else if (r.runs > 1) line = `The AI said this ${r.runs} times in 300.`;
+  else if (r.trueTier === 'reserved') line = 'The AI never said this. Hand-picked.';
+  else line = 'The AI never said this.';
+  return r.capped ? `${line} AI-assisted.` : line;
+}
+
+/** The mono line under a stamp or verdict, e.g. "The AI said this 4 times in 300 | +50". */
+export function resultLine(r) {
+  return `${landingLine(r).replace(/\.$/, '')} | ${r.points ? `+${r.points}` : '0 pts'}`;
+}
+
+export function stampTitle(r) {
+  return TIERS[r.tier].name;
+}
+
+/** Only these three end with a rubber stamp; everything else ends on its shape or a verdict. */
+export function stamped(r) {
+  return r.tier === 'meat' || r.tier === 'smash' || r.tier === 'none';
 }
 
 // ---------------------------------------------------------------- round
@@ -297,7 +443,7 @@ export function suggest(raw, cp) {
 export const VERDICTS = [
   { min: 650, name: 'Human Reserved', line: 'This role cannot be automated. Yet.' },
   { min: 500, name: 'Verified Human', line: 'You passed. For today.' },
-  { min: 350, name: 'Probably Human', line: 'Verification inconclusive. Please try again tomorrow.' },
+  { min: 350, name: 'Probably Human', line: 'Passed, with reservations.' },
   { min: 200, name: 'Third-Party Thinker', line: 'You think, but mostly secondhand.' },
   { min: 0, name: 'Artificially Intelligent', line: 'Most of your answers were ones a model would give.' },
 ];
@@ -310,17 +456,18 @@ export function passed(total) {
   return total >= 350;
 }
 
-/** answers: [{ tier, special, hinted, isNew, ms }] */
+/** answers: [{ tier, special, hinted, reading, ms, bounces }] */
 export function badgesFor(answers) {
-  const out = [];
+  const has = new Set();
   const meat = answers.filter((a) => a.tier === 'meat').length;
-  if (answers.some((a) => a.hinted)) out.push('botBaby');
-  if (answers.filter((a) => a.isNew && !a.special && a.tier !== 'meat').length >= 3) out.push('rng');
-  if (meat >= 3) out.push('meatSupreme');
-  if (answers.length > 0 && meat === 0 && answers.every((a) => a.tier === 'firsthand' || a.tier === 'reserved')) out.push('turing');
-  if (answers.some((a) => a.special === 'objector')) out.push('objector');
-  if (answers.filter((a) => a.special !== 'none' && typeof a.ms === 'number' && a.ms < 2000).length >= 3) out.push('fast');
-  return out;
+  if (answers.some((a) => a.hinted)) has.add('botBaby');
+  if (answers.reduce((s, a) => s + (a.bounces || 0), 0) >= 3) has.add('rng');
+  if (meat >= 3) has.add('meatSupreme');
+  if (answers.length > 0 && meat === 0 && answers.every((a) => ['firsthand', 'reserved', 'objector'].includes(a.tier))) has.add('turing');
+  if (answers.some((a) => a.reading)) has.add('reading');
+  if (answers.some((a) => a.special === 'objector')) has.add('objector');
+  if (answers.filter((a) => a.special !== 'none' && typeof a.ms === 'number' && a.ms < 2000).length >= 3) has.add('fast');
+  return BADGE_ORDER.filter((k) => has.has(k));
 }
 
 export function totalScore(answers) {
