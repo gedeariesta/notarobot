@@ -265,7 +265,7 @@ function renderGate({ locked = false } = {}) {
       ${headerHTML(esc(dayLabel(day)))}
       <div class="intro">
         <div class="mono intro-k">(00) ${locked ? 'Verified' : 'Verification'}</div>
-        <p class="intro-p">${locked ? 'You have been verified for today. The model will be here tomorrow.' : 'You are about to be verified. Seven challenges, 25 seconds each. Best played with sound.'}</p>
+        <p class="intro-p">${locked ? 'You have been verified for today. The model will be here tomorrow.' : 'You are about to be verified. Seven challenges, 25 seconds each. Are you worthy of being human?'}</p>
         ${bonusLocked ? `<p class="mono note">Day ${pad2(BONUS_DAY)} unlocks after a ${BONUS_STREAK}-day streak.</p>` : ''}
       </div>
       ${plateHTML({ cap: locked ? 'FIG. 00 | Subject, verified' : 'FIG. 00 | Subject, 2,400-point scan', cls: 'gate-plate' })}
