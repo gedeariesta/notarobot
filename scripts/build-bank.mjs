@@ -1,7 +1,6 @@
 // Builds the game's data from the question bank.
 //
 //   node scripts/build-bank.mjs          check bank/*.json and write prompts.json + bank/QUESTION_BANK.md
-//   node scripts/build-bank.mjs --words  also rebuild words.txt (needs /usr/share/dict/web2, standard on macOS)
 //
 // The bank files are the source of truth. Each prompt lists:
 //   ai        the sealed AI answer (its run count is whatever is left of the 300)
@@ -208,33 +207,9 @@ for (const d of days) {
 }
 fs.writeFileSync(path.join(bankDir, 'QUESTION_BANK.md'), `${md.join('\n')}\n`);
 
-// ---------------------------------------------------------------- words.txt
-
-if (process.argv.includes('--words')) {
-  const web2 = '/usr/share/dict/web2';
-  if (!fs.existsSync(web2)) {
-    console.error('words.txt needs /usr/share/dict/web2 (macOS). Skipped.');
-  } else {
-    const set = new Set();
-    for (const w of fs.readFileSync(web2, 'utf8').split('\n')) if (/^[a-z]{2,15}$/.test(w)) set.add(w);
-    // First names, so a real name bounces ("not on the list") instead of reading as a keyboard smash.
-    const names = '/usr/share/dict/propernames';
-    if (fs.existsSync(names)) for (const w of fs.readFileSync(names, 'utf8').split('\n')) if (/^[A-Za-z]{2,15}$/.test(w)) set.add(w.toLowerCase());
-    for (const line of fs.readFileSync(path.join(bankDir, 'extra-words.txt'), 'utf8').split('\n')) {
-      if (line.startsWith('#')) continue;
-      for (const w of line.split(/\s+/)) if (/^[a-z0-9]{1,20}$/.test(w)) set.add(w);
-    }
-    for (const w of ['a', 'i']) set.add(w);
-    const words = [...set].sort();
-    fs.writeFileSync(path.join(root, 'words.txt'), `${words.join('\n')}\n`);
-    console.log(`words.txt: ${words.length} words`);
-  }
-}
-
 const totals = days.flatMap((d) => d.prompts).reduce(
   (s, p) => ({ answers: s.answers + p.answers.length, aliases: s.aliases + p.answers.reduce((x, a) => x + (a.aliases?.length || 0), 0) }),
   { answers: 0, aliases: 0 },
 );
-// Every list word is accepted by the Keyboard Smash check even when the dictionary misses it.
 const listWords = new Set(days.flatMap((d) => d.prompts).flatMap((p) => p.answers.flatMap((a) => [a.a, ...(a.aliases || [])].flatMap(plainWords))));
 console.log(`prompts.json: ${days.length} days, ${totals.answers} answers, ${totals.aliases} aliases, ${listWords.size} distinct list words`);

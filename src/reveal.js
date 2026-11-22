@@ -12,6 +12,9 @@ import { ICONS, esc, pad2, wordLines, fitText } from './ui.js';
 const gsap = window.gsap;
 
 const LAYER_NAMES = ['Prompt Zombie', 'Slopper', 'Decision Delegator', 'First-Hand Thinker'];
+// The deeper the answer falls, the darker the water: surface blue down to the abyss.
+const DEPTH = ['#1F3CFF', '#1A33E2', '#1428BC', '#0E1D92', '#081469', '#030A3B'];
+const ABYSS = [0, 0.18, 0.36, 0.56, 0.78, 1];
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=<>/';
 const HUMAN_TIERS = new Set(['firsthand', 'reserved']);
 const N = 420;
@@ -63,22 +66,27 @@ function clearWave(node) {
   node.style.webkitClipPath = '';
 }
 
-/** A porous blob that scales from a point until it covers the screen: flying into the scan. */
-export function floodBlob(color, origin) {
+/**
+ * A porous blob that grows from a point until it covers the screen: flying into the scan. It is
+ * redrawn as vectors every frame (an SVG transform, not a scaled bitmap), so it stays sharp.
+ */
+export function floodBlob(color, origin, holeColor = color === '#FFFFFF' ? '#1F3CFF' : '#FFFFFF') {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   const node = document.createElement('div');
   node.className = 'flood';
-  node.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="${FLOOD_BLOB.d}" fill="${color}"/>
-    <g class="flood-holes">${FLOOD_BLOB.holes.map(([cx, cy, rx, ry]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${color === '#FFFFFF' ? '#1F3CFF' : '#FFFFFF'}"/>`).join('')}</g></svg>`;
-  const svg = node.firstElementChild;
-  const base = 60;
-  Object.assign(svg.style, { width: `${base}px`, height: `${base}px`, left: `${origin.x - base / 2}px`, top: `${origin.y - base / 2}px` });
+  node.innerHTML = `<svg width="${vw}" height="${vh}" viewBox="0 0 ${vw} ${vh}" aria-hidden="true"><g>
+    <path d="${FLOOD_BLOB.d}" fill="${color}"/>
+    <g class="flood-holes">${FLOOD_BLOB.holes.map(([cx, cy, rx, ry]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${holeColor}"/>`).join('')}</g>
+  </g></svg>`;
+  const g = node.querySelector('svg > g');
   document.body.appendChild(node);
-  // Far enough that the blob's smallest radius clears the furthest corner.
+  // Far enough that the blob's smallest radius (about 38 units) clears the furthest corner.
   const far = Math.hypot(Math.max(origin.x, vw - origin.x), Math.max(origin.y, vh - origin.y));
-  const maxScale = (far / (base * 0.38)) * 1.15;
-  return { node, svg, holes: svg.querySelector('.flood-holes'), maxScale };
+  const state = { s: 0.6, r: 0 };
+  const apply = () => g.setAttribute('transform', `translate(${origin.x} ${origin.y}) rotate(${state.r}) scale(${state.s}) translate(-50 -50)`);
+  apply();
+  return { node, state, apply, holes: node.querySelector('.flood-holes'), maxScale: (far / 38) * 1.15 };
 }
 
 /**
@@ -104,7 +112,9 @@ export function playScreening(opts) {
   const verdictTitle = stampTitle(result);
   const human = HUMAN_TIERS.has(result.tier);
   const line = resultLine(result);
-  const calloutText = isNone ? '' : `( ${esc(result.input)} )`;
+  // Non-breaking spaces keep the brackets on the same line as the words they hold.
+  const calloutText = isNone ? '' : `(&nbsp;${esc(result.input)}&nbsp;)`;
+  const human75 = target >= 4; // First-Hand Thinker or deeper: too organic for the machine
   const origin = opts.origin || { x: window.innerWidth / 2, y: window.innerHeight * 0.6 };
 
   // ---------------------------------------------------------------- DOM
@@ -138,6 +148,9 @@ export function playScreening(opts) {
       </div>
     </div>` : ''}
     <div class="scr-blue on-blue">
+      <div class="abyss" aria-hidden="true"></div>
+      <div class="snow" aria-hidden="true">${snowDots(`${result.input}|${index}`)}</div>
+      <div class="flash" aria-hidden="true"></div>
       <div class="scr-inner">
         ${headerHTML(`Screening ${nn}/07`)}
         <div class="scr-col" data-cap="descending" aria-hidden="true">
@@ -170,6 +183,7 @@ export function playScreening(opts) {
           <div class="debris"></div>
           <svg class="dims" aria-hidden="true"></svg>
           <div class="sq-text"></div>
+          ${human75 ? '<div class="organic mono">( Organic matter | Unclassifiable )</div>' : ''}
           ${isNone ? '' : `<div class="callout"><svg width="58" height="16"><path d="M0 12 L44 12 L56 2"/><circle cx="0" cy="12" r="3.5"/></svg><span class="callout-text">${result.hinted ? ICONS.lock : ''}${calloutText}</span></div>`}
         </div>
         <div class="scr-bottom">
@@ -228,6 +242,15 @@ export function playScreening(opts) {
   const foot = $('.scr-foot');
   const hdrRight = $('.hdr-right');
   const nextBtn = root.querySelector(isObjector ? '.paper-next' : '.blue-next');
+  const inner = $('.scr-inner');
+  const abyss = $('.abyss');
+  const snow = $('.snow');
+  const flash = $('.flash');
+  const organic = $('.organic');
+  const tearShift = document.getElementById('tear-shift');
+  const tearNoise = document.getElementById('tear-noise');
+  gsap.set(blue, { '--depth': DEPTH[0] });
+  gsap.set(abyss, { opacity: 0 });
 
   // ---------------------------------------------------------------- geometry
   const W = col.clientWidth;
@@ -243,7 +266,7 @@ export function playScreening(opts) {
   const startY = restCenter(1);
 
   gates.forEach((node, i) => (node.style.top = `${g[i]}px`));
-  notReached.style.top = `${g[0] - 14}px`;
+  notReached.style.top = `${g[0] + 7}px`;
   floor.style.height = `${floorH}px`;
   if (callout) callout.querySelector('.callout-text').style.maxWidth = `${Math.max(80, W - (cx + size / 2 - 3) - 60)}px`;
   Object.entries(ghosts).forEach(([k, node]) => {
@@ -288,34 +311,42 @@ export function playScreening(opts) {
   const paperVerdict = root.querySelector('.scr-paper .verdict-name');
   if (paperVerdict) fitText(paperVerdict, 76, 28);
   if (stampEl) {
+    // The stamp stays inside its own stage, clear of the floor label above it.
     const nameEl = stampEl.querySelector('.stamp-name');
-    let fs = 56;
+    const stageH = stampEl.parentElement.clientHeight;
+    let fs = 52;
     nameEl.style.fontSize = `${fs}px`;
-    while (stampEl.offsetWidth > W - 24 && fs > 28) nameEl.style.fontSize = `${(fs -= 2)}px`;
+    while ((stampEl.offsetWidth > W - 30 || stampEl.offsetHeight > stageH - 30) && fs > 26) nameEl.style.fontSize = `${(fs -= 2)}px`;
   }
 
-  // Meat Proxy: the answer snaps to the machine's grid, measured, in the middle of the column.
-  const Q = Math.round(Math.min(108, H * 0.28));
-  const sqX = Math.round(W / 2 - Q / 2);
-  const sqY = Math.round((g[0] + g[2]) / 2 - Q / 2);
+  // Meat Proxy: caught at the model check. The answer snaps to the machine's grid beside the AI's
+  // own box, measured, and never reaches the gates.
+  const Q = Math.round(Math.max(60, Math.min(80, S * 0.95)));
+  const sqX = Math.round(W - Q - 34);
+  const sqY = Math.round(Math.max(18, 54 - Q / 2));
   if (isMeat) {
     sqText.textContent = result.input;
-    Object.assign(sqText.style, { left: `${sqX}px`, top: `${sqY}px`, width: `${Q}px`, height: `${Q}px` });
+    // Small enough that the longest word fits the square whole.
+    const longest = Math.max(...String(result.input).split(/\s+/).map((w) => w.length), 1);
+    const fs = Math.max(8, Math.min(13, (Q - 12) / (longest * 0.62)));
+    Object.assign(sqText.style, { left: `${sqX}px`, top: `${sqY}px`, width: `${Q}px`, height: `${Q}px`, fontSize: `${fs.toFixed(1)}px` });
+    aiRow.style.right = `${W - sqX + 10}px`;
     const wasX = cx + size * 0.35;
     const wasY = startY - size * 0.35;
+    const by = sqY + Q + 12;
     dims.setAttribute('width', W);
     dims.setAttribute('height', H);
     dims.innerHTML = `
       <g class="f-line">
-        <line x1="${sqX}" y1="${sqY - 12}" x2="${sqX + Q}" y2="${sqY - 12}"/><line x1="${sqX}" y1="${sqY - 16}" x2="${sqX}" y2="${sqY - 8}"/><line x1="${sqX + Q}" y1="${sqY - 16}" x2="${sqX + Q}" y2="${sqY - 8}"/>
+        <line x1="${sqX}" y1="${by}" x2="${sqX + Q}" y2="${by}"/><line x1="${sqX}" y1="${by - 4}" x2="${sqX}" y2="${by + 4}"/><line x1="${sqX + Q}" y1="${by - 4}" x2="${sqX + Q}" y2="${by + 4}"/>
         <line x1="${sqX + Q + 12}" y1="${sqY}" x2="${sqX + Q + 12}" y2="${sqY + Q}"/><line x1="${sqX + Q + 8}" y1="${sqY}" x2="${sqX + Q + 16}" y2="${sqY}"/><line x1="${sqX + Q + 8}" y1="${sqY + Q}" x2="${sqX + Q + 16}" y2="${sqY + Q}"/>
-        <path d="M${sqX} ${sqY + Q} L${sqX - 36} ${sqY + Q + 30} L${sqX - 56} ${sqY + Q + 30}"/>
+        <path d="M${sqX} ${sqY + Q * 0.82} L${sqX - 22} ${AI_BOTTOM + 16} L${sqX - 38} ${AI_BOTTOM + 16}"/>
         <path d="M${wasX} ${wasY} L${wasX + 18} ${wasY - 8}"/>
       </g>
       <g class="f-text" font-size="9">
-        <text x="${sqX + Q / 2}" y="${sqY - 18}" text-anchor="middle">${Q} px</text>
-        <text x="${sqX + Q + 20}" y="${sqY + Q / 2 + 3}">${Q} px</text>
-        <text x="${Math.max(0, sqX - 96)}" y="${sqY + Q + 33}" font-size="10">( IS )</text>
+        <text x="${sqX + Q / 2}" y="${by + 14}" text-anchor="middle">${Q} px</text>
+        <text x="${sqX + Q + 18}" y="${sqY + Q / 2 + 3}" text-anchor="start" transform="rotate(90 ${sqX + Q + 18} ${sqY + Q / 2})">${Q} px</text>
+        <text x="${sqX - 42}" y="${AI_BOTTOM + 19}" font-size="10" text-anchor="end">( CAUGHT )</text>
         <text x="${wasX + 22}" y="${wasY - 6}">( WAS )</text>
       </g>`;
   }
@@ -351,7 +382,52 @@ export function playScreening(opts) {
     tl.to($$('.g-half, .g-dot'), { opacity: 0.25, duration: 0.2 }, at);
     tl.to(gNames, { opacity: 0, duration: 0.2 }, at);
     tl.to(notReached, { opacity: 1, duration: 0.2 }, at + 0.1);
-    tl.to(floor, { opacity: 0.4, duration: 0.2 }, at);
+    tl.to(floor, { opacity: 0.12, duration: 0.2 }, at);
+    tl.to(floorLabel, { opacity: 0, duration: 0.2 }, at);
+  };
+  /** The camera shakes: px is the size of the jolt. */
+  const shake = (at, px, times = 3) => {
+    if (reduced) return;
+    tl.to(inner, { x: px, y: px * 0.5, duration: 0.035, yoyo: true, repeat: times, ease: 'none' }, at);
+    tl.set(inner, { x: 0, y: 0 }, at + 0.035 * (times + 1));
+  };
+  /** Sinks the screen one layer deeper: darker water, a heavier vignette, particles rushing up. */
+  const sink = (layer, at, dur) => {
+    tl.to(blue, { '--depth': DEPTH[layer], duration: dur, ease: 'none' }, at);
+    tl.to(abyss, { opacity: ABYSS[layer], duration: dur, ease: 'none' }, at);
+    tl.to(snow, { yPercent: -layer * 9, duration: dur, ease: 'power1.in' }, at);
+  };
+  /**
+   * The machine glitches on organic matter: the screen tears sideways, labels scramble, the scan
+   * flickers toward the grid and back. strength 1 for First-Hand Thinker, more for Human Reserved.
+   */
+  const glitch = (at, strength = 1) => {
+    if (reduced) return;
+    const hdrText = hdrRight?.textContent || '';
+    const names = gNames.map((n) => n.textContent);
+    tl.call(sfx(sound.glitch), null, at);
+    tl.call(() => { if (!skipping) vibrate(strength > 1 ? [30, 40, 60] : [20, 30, 20]); }, null, at);
+    tl.set(inner, { filter: 'url(#tear)' }, at);
+    const steps = [26, 6, 34, 12, 40, 0].map((v) => v * strength);
+    steps.forEach((v, i) => {
+      tl.set(tearShift, { attr: { scale: v } }, at + i * 0.07);
+      tl.set(tearNoise, { attr: { seed: 3 + i * 7 } }, at + i * 0.07);
+      tl.set(inner, { x: i % 2 ? -3 * strength : 4 * strength }, at + i * 0.07);
+      tl.set(st, { lattice: i % 2 ? 0 : 0.75, grid: 0.11 }, at + i * 0.07);
+      tl.call(() => {
+        if (hdrRight) hdrRight.textContent = i === steps.length - 1 ? hdrText : scramble(hdrText, 0.2);
+        gNames.forEach((n, k) => { n.textContent = i === steps.length - 1 ? names[k] : scramble(names[k], 0.3); });
+      }, null, at + i * 0.07);
+    });
+    const end = at + steps.length * 0.07;
+    tl.set(inner, { x: 0, filter: 'none' }, end);
+    tl.set(st, { lattice: 0 }, end);
+    tl.fromTo(flash, { opacity: 0 }, { opacity: 0.32 * strength, duration: 0.05, yoyo: true, repeat: 3, ease: 'steps(1)' }, at);
+    if (organic) {
+      tl.set(organic, { visibility: 'visible' }, at);
+      tl.fromTo(organic, { opacity: 0 }, { opacity: 1, duration: 0.05, yoyo: true, repeat: 5, ease: 'steps(1)' }, at);
+      tl.to(organic, { opacity: 0.7, duration: 0.1 }, end);
+    }
   };
 
   // 0. The camera flies into the answer until the screen is blue.
@@ -361,7 +437,7 @@ export function playScreening(opts) {
     flood = floodBlob('#1F3CFF', origin);
     gsap.set(blue, { opacity: 0 });
     tl.call(sfx(sound.flood), null, 0);
-    tl.fromTo(flood.svg, { scale: 0.05, rotation: -12 }, { scale: flood.maxScale, rotation: 18, duration: 0.42, ease: 'power3.in' }, 0);
+    tl.fromTo(flood.state, { s: 0.6, r: -12 }, { s: flood.maxScale, r: 18, duration: 0.42, ease: 'power3.in', onUpdate: flood.apply }, 0);
     tl.to(flood.holes, { opacity: 0, duration: 0.12 }, 0.3);
     tl.set(blue, { opacity: 1 }, 0.4);
     tl.set(flood.node, { display: 'none' }, 0.42);
@@ -438,6 +514,7 @@ export function playScreening(opts) {
     tl.to(xPaths, { strokeDashoffset: 0, duration: 0.12, stagger: 0.05 }, T3 + 0.06);
     tl.call(sfx(sound.tick), null, T3);
     morph(shp.subject, shp.circle, T3 + 0.05, 0.3, 0.08);
+    if (!isObjector) sink(1, T3, 0.3);
 
     if (isObjector) {
       // The answer refuses to drop. Then the blue drains back to white.
@@ -466,6 +543,9 @@ export function playScreening(opts) {
           tl.call(sfx(sound.tick), null, t + 0.1);
           tl.call(sfx(sound.tick), null, t + 0.28);
           t += 0.5;
+          // The floor gate breaks, and the machine glitches harder on what falls through.
+          glitch(t, 1.6);
+          shake(t, 6, 5);
           tl.set(gates[i], { attr: { 'data-broken': '1' } }, t);
           tl.to(halves[0], { rotation: 9, duration: 0.15, ease: 'power2.out' }, t);
           tl.to(halves[1], { rotation: -9, duration: 0.15, ease: 'power2.out' }, t);
@@ -478,6 +558,13 @@ export function playScreening(opts) {
         }
         tl.to(st, { y: restCenter(i + 2), duration: d, ease: 'power1.in' }, t);
         morph(shp[LAYER_SHAPE[i + 1]], shp[LAYER_SHAPE[i + 2]], t + d * 0.1, Math.max(0.3, d * 0.9));
+        // Deeper water, a smeared fall, a jolt at the gate.
+        sink(i + 2, t, d);
+        tl.to(st, { blur: Math.min(30, size * 0.5), duration: d * 0.45, ease: 'power2.in' }, t);
+        tl.to(st, { blur: 0, duration: d * 0.4, ease: 'power2.out' }, t + d * 0.6);
+        shake(t + d * 0.2, 1 + i * 0.8);
+        // Past 1/300 (75 points and deeper) the machine can't classify what's falling.
+        if (human75 && i === 2) glitch(t + d * 0.25, 1);
         tl.to(ghosts[i + 1], { opacity: 0.22 + i * 0.07, duration: 0.2 }, t + d * 0.3);
         tl.to(gauge, { v: Math.max(0, GATES[i].runs - 1), duration: d, ease: 'none', onUpdate: renderGauge }, t);
         // Each gate it passes flashes, ticks a check and plays a soft tick.
@@ -509,7 +596,7 @@ export function playScreening(opts) {
   const L = LAND + 0.005;
   tl.call(() => land(), null, LAND + 0.01);
   if (!isObjector) {
-    tl.to(col, { x: 2, duration: 0.03, yoyo: true, repeat: 3, ease: 'none' }, LAND);
+    shake(LAND, 2 + Math.max(0, target) * 1.2);
     tl.set(col, { attr: { 'data-cap': isMeat ? 'normalised' : isSmash ? 'unreadable' : isNone ? 'none' : 'landed' } }, L);
     if (target >= 1) {
       tl.fromTo(st, { size: size * 1.12 }, { size, duration: 0.32, ease: 'elastic.out(1, 0.45)' }, LAND);
@@ -595,9 +682,9 @@ export function playScreening(opts) {
       }
       sound.flood();
       const b = nextBtn.getBoundingClientRect();
-      const back = floodBlob('#FFFFFF', { x: b.left + b.width / 2, y: b.top + b.height / 2 });
+      const back = floodBlob('#FFFFFF', { x: b.left + b.width / 2, y: b.top + b.height / 2 }, getComputedStyle(blue).getPropertyValue('--depth').trim() || DEPTH[0]);
       gsap.timeline({ onComplete: () => { back.node.remove(); } })
-        .fromTo(back.svg, { scale: 0.05, rotation: 10 }, { scale: back.maxScale, rotation: -14, duration: 0.42, ease: 'power3.in' }, 0)
+        .fromTo(back.state, { s: 0.6, r: 10 }, { s: back.maxScale, r: -14, duration: 0.42, ease: 'power3.in', onUpdate: back.apply }, 0)
         .to(back.holes, { opacity: 0, duration: 0.12 }, 0.3)
         .call(finish, null, 0.42)
         .to(back.node, { opacity: 0, duration: 0.2 }, 0.42);
@@ -618,6 +705,17 @@ export function playScreening(opts) {
     tl.play(0);
   }
   return ctrl;
+}
+
+/** Loose particles in the water, rising past as the answer sinks (seeded, so a skip matches). */
+function snowDots(seed) {
+  const r = seeded(seed);
+  let out = '';
+  for (let i = 0; i < 46; i++) {
+    const s = 1 + r() * 2.4;
+    out += `<i style="left:${(r() * 100).toFixed(1)}%;top:${(r() * 100).toFixed(1)}%;width:${s.toFixed(1)}px;height:${s.toFixed(1)}px;opacity:${(0.12 + r() * 0.4).toFixed(2)}"></i>`;
+  }
+  return out;
 }
 
 function gridRects(n) {

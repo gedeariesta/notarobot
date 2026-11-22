@@ -102,7 +102,7 @@ export class Plate {
   setCallouts(name, list) {
     this.calloutFor = name;
     this.callouts = list;
-    this.labelsEl.innerHTML = list.map((c, i) => `<span class="callout-l mono" data-i="${i}">( ${esc(c.text)} )</span>`).join('');
+    this.labelsEl.innerHTML = list.map((c, i) => `<span class="callout-l mono" data-i="${i}">(&nbsp;${esc(c.text)}&nbsp;)</span>`).join('');
     this.drawCallouts();
   }
 

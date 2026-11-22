@@ -3,18 +3,15 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   normalize, core, inflections, compilePrompt, lookup, classify, scoreEntry, specialResult, editDistance, maxEdits,
-  suggestDetail, makeDictionary, plainWords, landingLine, resultLine, stamped, verdictFor, passed, badgesFor,
-  guiltLine, shareText, totalScore, TIERS,
+  suggestDetail, topicSuggest, isKeyboardRow, smashReason, landingLine, resultLine, stamped, verdictFor, passed,
+  badgesFor, guiltLine, shareText, totalScore, TIERS,
 } from '../src/scoring.js';
-import { BLOCKLIST_WORDS } from '../src/blocklist.js';
 
 const bank = JSON.parse(readFileSync(new URL('../prompts.json', import.meta.url)));
-const dict = makeDictionary(readFileSync(new URL('../words.txt', import.meta.url), 'utf8'));
-const known = new Set(bank.days.flatMap((d) => d.prompts).flatMap((p) => p.answers.flatMap((a) => [a.a, ...(a.aliases || [])].flatMap(plainWords))));
 const dayOf = Object.fromEntries(bank.days.flatMap((d) => d.prompts.map((p) => [p.id, d.id])));
 const cps = Object.fromEntries(bank.days.flatMap((d) => d.prompts.map((p) => [p.id, compilePrompt(p)])));
 const W1 = cps.W1;
-const ask = (id, s, extra = {}) => classify(s, cps[id], { day: dayOf[id], dict, known, ...extra });
+const ask = (id, s, extra = {}) => classify(s, cps[id], { day: dayOf[id], ...extra });
 const score = (id, s, opts = {}) => {
   const r = ask(id, s);
   assert.equal(r.kind, 'answer', `${id} "${s}" should be on the list (got ${r.kind})`);
@@ -73,6 +70,8 @@ test('a real word that isn\'t on the list bounces: "banana" on W1', () => {
   assert.equal(ask('W1', 'banana').kind, 'bounce');
   assert.equal(ask('W1', 'accountant').kind, 'bounce');
   assert.equal(ask('C2', 'Klaus').kind, 'bounce', 'names bounce instead of reading as a keyboard smash');
+  assert.equal(ask('C2', 'Rudi').kind, 'bounce');
+  for (const s of ['idk', "I don't know", 'pass', 'lol', 'power', 'tree']) assert.notEqual(ask('W1', s).kind, 'smash', s);
 });
 
 test('typos never score: "nurze" suggests nurse, and the fix scores', () => {
@@ -92,14 +91,32 @@ test('"Did you mean" limits: 1 edit up to 5 letters, 2 up to 10, 3 beyond, none 
   assert.equal(suggestDetail('nurse', W1), null, 'exact answers get no suggestion');
 });
 
-test('non-words give Keyboard Smash: asdf, qwerty, asdfjkl', () => {
-  for (const s of ['asdf', 'qwerty', 'asdfjkl', 'xyzzy', 'dhfjkd', 'zzzzz', 'idk', 'I don\'t know', 'pass', 'lol']) {
+test('Keyboard Smash is only keyboard rows, no vowels and repeated letters', () => {
+  for (const s of ['asdf', 'qwerty', 'asdfjkl', 'lkjh', 'zxcvb', 'sdfsdf', 'dhfjkd', 'zzzzz', 'nurseeee', 'asdf asdf']) {
     assert.equal(ask('W1', s).kind, 'smash', s);
   }
-  assert.equal(ask('W1', BLOCKLIST_WORDS[0]).kind, 'smash');
-  assert.equal(ask('W1', 'name a job bill gates would mark human reserved').kind, 'smash', 'the prompt copied back');
-  assert.equal(ask('W1', 'asdf', { dict: null }).kind, 'smash', 'non-answers smash even before the word list loads');
-  assert.equal(ask('W1', 'qwerty', { dict: null }).kind, 'bounce', 'without the word list, unknown words fail open');
+  assert.deepEqual(['asdf', 'qwerty', 'poiuy', 'asdasd'].map(isKeyboardRow), [true, true, true, true]);
+  assert.deepEqual(['power', 'tree', 'were', 'typewriter', 'flash', 'ewe'].map(isKeyboardRow), [false, false, false, false, false, false]);
+  assert.equal(smashReason('rhythm'), null, 'y counts as a vowel');
+  assert.equal(smashReason('tv'), 'no-vowel');
+});
+
+test('"Did you mean" also catches related answers, and prefers what the AI said', () => {
+  const r = ask('C1', 'nuclear');
+  assert.equal(r.kind, 'suggest');
+  assert.equal(r.suggestion, 'nuclear war');
+  assert.equal(r.why, 'topic');
+  assert.equal(ask('C1', 'a nuclear war between countries').suggestion, 'nuclear war');
+  assert.equal(ask('C1', 'warming').suggestion, 'climate change');
+  assert.equal(ask('C1', 'volcano').suggestion, 'supervolcano');
+  assert.equal(ask('W1', 'data scientist').suggestion, 'scientist');
+  assert.equal(topicSuggest('nurse', cps.W1), null, 'exact answers get no suggestion');
+  for (const [id, cp] of Object.entries(cps)) {
+    for (const s of ['dog', 'death', 'name', 'robot', 'human', 'money', 'love']) {
+      const t = topicSuggest(s, cp);
+      if (t) assert.notEqual(t.entry.tier, 'reserved', `${id} "${s}" volunteers a Human Reserved answer`);
+    }
+  }
 });
 
 test('a hint caps the answer at Slopper', () => {
@@ -114,23 +131,18 @@ test('a hint caps the answer at Slopper', () => {
 test('Conscientious Objector: "I refuse" or "no" on C3, Day 3 only', () => {
   assert.equal(ask('C3', 'I refuse').kind, 'objector');
   assert.equal(ask('C3', 'No.').kind, 'objector');
-  assert.equal(ask('C3', 'no', { day: 1 }).kind, 'smash');
-  assert.equal(ask('C1', 'no').kind, 'smash');
+  assert.equal(ask('C3', 'no', { day: 1 }).kind, 'bounce');
+  assert.equal(ask('C1', 'no').kind, 'bounce');
   const r = specialResult('objector', 'I refuse');
   assert.equal(r.points, 100);
   assert.equal(r.tier, 'objector');
 });
 
-test('the word list is searched in place', () => {
-  assert.ok(dict.size > 150000);
-  for (const w of ['nurse', 'banana', 'internet', 'centre', 'klaus']) assert.ok(dict.has(w), w);
-  for (const w of ['qwerty', 'asdf', 'zzzz']) assert.ok(!dict.has(w), w);
-});
-
 test('landing lines name the AI count', () => {
   const at = (id, s) => resultLine(score(id, s));
-  assert.equal(at('W1', 'caregiver'), 'The model said this | 0 pts');
-  assert.equal(at('W1', 'nurse'), 'The AI said this 64 times in 300 | +10');
+  assert.equal(at('W1', 'caregiver'), 'Redundant. The model said it first | 0 pts');
+  const nurse = cps.W1.entries.find((e) => e.a === 'nurse').runs;
+  assert.equal(at('W1', 'nurse'), `The AI said this ${nurse} times in 300 | +10`);
   assert.equal(at('W1', 'paramedic'), 'The AI said this once in 300 | +50');
   assert.equal(at('W1', 'park ranger'), 'The AI never said this | +75');
   assert.equal(at('W1', 'midwife'), 'The AI never said this. Hand-picked | +100');

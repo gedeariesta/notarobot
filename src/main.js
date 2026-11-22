@@ -2,7 +2,7 @@
 // people are porous particle scans, machines are grids, and labels hang off both.
 import {
   compilePrompt, classify, scoreEntry, specialResult, TIERS, LADDER, BADGES, verdictFor, passed, badgesFor,
-  totalScore, guiltLine, shareText, stampTitle, resultLine, makeDictionary, plainWords,
+  totalScore, guiltLine, shareText, stampTitle, resultLine,
 } from './scoring.js';
 import { dateKey, dayForDate, liveStreak, completeStreak, msUntilMidnight, formatHMS, addDays } from './days.js';
 import { createStore, resetAll } from './state.js';
@@ -38,8 +38,6 @@ let keyHandler = null;
 let countdownTimer = null;
 let activeBackstop = 0;
 let plates = [];
-let dict = null; // the Keyboard Smash word list, loaded in the background
-let known = null; // every word used by any answer list
 
 // ------------------------------------------------------------------ boot
 
@@ -52,7 +50,6 @@ async function init() {
   const res = await fetch('prompts.json', { cache: 'no-cache' });
   if (!res.ok) throw new Error(`Could not load prompts.json (${res.status}).`);
   bank = await res.json();
-  known = new Set(bank.days.flatMap((d) => d.prompts).flatMap((p) => p.answers.flatMap((a) => [a.a, ...(a.aliases || [])].flatMap(plainWords))));
   // Big type is fitted to the column, so wait (briefly) for the fonts.
   await Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, 1500))]);
 
@@ -61,15 +58,6 @@ async function init() {
   document.addEventListener('click', onSoundToggle);
   window.addEventListener('hashchange', route);
   route();
-  // The word list is only needed once an answer misses the list, so it loads after first paint.
-  setTimeout(loadWords, 600);
-}
-
-function loadWords() {
-  fetch('words.txt')
-    .then((r) => (r.ok ? r.text() : ''))
-    .then((t) => { if (t) dict = makeDictionary(t); })
-    .catch(() => { /* without it, unknown words bounce instead of smashing */ });
 }
 
 const dayById = (id) => bank.days.find((d) => d.id === id);
@@ -387,8 +375,8 @@ function renderGate({ locked = false } = {}) {
     const swap = () => {
       action.innerHTML = `
         <div class="challenge">
-          <p class="mono challenge-k">Additional verification required. ${ROUND_LEN} challenges.</p>
-          <div class="challenge-theme">Day ${pad2(day.id)}: ${esc(day.title)}</div>
+          <p class="challenge-big">Additional verification required.</p>
+          <p class="mono challenge-k">( ${ROUND_LEN} challenges | 25 s each )</p>
           <button class="pill" type="button" data-begin>Begin verification ${ICONS.arrow}</button>
         </div>`;
       const begin = action.querySelector('[data-begin]');
@@ -552,7 +540,7 @@ function renderPrompt(index, { delay = 0 } = {}) {
     if (ps.submitted) return;
     const val = input.value.trim();
     if (!val) return submit(specialResult('none', '', { hinted: ps.hinted }));
-    const r = classify(val, cp, { day: day.id, dict, known });
+    const r = classify(val, cp, { day: day.id });
     if (r.kind === 'answer') return submit(scoreEntry(r.entry, { hinted: ps.hinted, input: val }));
     if (r.kind === 'objector') return submit(specialResult('objector', val));
     submit(specialResult('none', val, { hinted: ps.hinted }));
@@ -607,7 +595,7 @@ function renderPrompt(index, { delay = 0 } = {}) {
       if (!reduced()) gsap.fromTo(field, { x: -5 }, { x: 0, duration: 0.35, ease: 'elastic.out(1, 0.3)' });
       return;
     }
-    const r = classify(val, cp, { day: day.id, dict, known });
+    const r = classify(val, cp, { day: day.id });
     if (r.kind === 'answer') return submit(scoreEntry(r.entry, { hinted: ps.hinted, input: val.trim() }));
     if (r.kind === 'objector') return submit(specialResult('objector', val.trim()));
     if (r.kind === 'smash') return submit(specialResult('smash', val.trim(), { hinted: ps.hinted }));

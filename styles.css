@@ -175,8 +175,8 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-line { min-height: 15px; margin-top: 10px; }
 .challenge { display: flex; flex-direction: column; gap: 12px; }
-.challenge-k { margin: 0; font-size: 11px; }
-.challenge-theme { font: 700 34px/1.04 var(--sans); letter-spacing: -1px; }
+.challenge-big { margin: 0; font: 700 32px/1.02 var(--sans); letter-spacing: -1px; }
+.challenge-k { margin: -4px 0 2px; font-size: 10px; }
 .locked-msg { margin: 0; font-size: 11px; line-height: 1.6; }
 .gate-title { margin: 14px 0 0; font: 900 96px/0.82 var(--sans); letter-spacing: -5px; }
 .gate-title > span { display: block; }
@@ -258,13 +258,28 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 
 /* ------------------------------------------------------------ transitions */
 .flood { position: fixed; inset: 0; z-index: 45; pointer-events: none; overflow: hidden; }
-.flood svg { position: absolute; transform-origin: 50% 50%; overflow: visible; will-change: transform; }
+.flood svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
 /* ------------------------------------------------------------ 3. the Screening */
 .scr { position: fixed; left: 0; right: 0; top: var(--demo-h); bottom: 0; z-index: 30; outline: none; }
 .scr-paper, .scr-blue { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
 .scr-paper { background: var(--white); color: var(--blue); }
-.scr-inner { max-width: var(--col); min-height: 100%; margin: 0 auto; padding: var(--pad) var(--pad) 22px; display: flex; flex-direction: column; }
+/* The water darkens with depth: --depth is tweened as the answer sinks. */
+.scr-blue.on-blue { --paper: var(--depth, var(--blue)); background: var(--paper); }
+.scr-inner { position: relative; z-index: 1; max-width: var(--col); min-height: 100%; margin: 0 auto; padding: var(--pad) var(--pad) 22px; display: flex; flex-direction: column; }
+.abyss {
+  position: fixed; inset: 0; pointer-events: none; opacity: 0;
+  background:
+    radial-gradient(120% 80% at 50% 28%, transparent 35%, rgba(1, 3, 24, 0.6) 100%),
+    linear-gradient(to bottom, transparent 25%, rgba(1, 3, 22, 0.5) 100%);
+}
+.snow { position: fixed; left: 0; right: 0; top: 0; height: 300%; pointer-events: none; }
+.snow i { position: absolute; border-radius: 50%; background: var(--white); }
+.flash { position: fixed; inset: 0; pointer-events: none; opacity: 0; background: var(--white); z-index: 2; }
+.organic {
+  position: absolute; right: 0; top: 46%; z-index: 3; visibility: hidden;
+  padding: 3px 7px; background: var(--ink); color: var(--paper); font-size: 9.5px; letter-spacing: 0.6px;
+}
 .scr-col { position: relative; margin-top: 14px; flex: 1 1 auto; min-height: 320px; max-height: 470px; }
 .scr-bottom { flex: none; position: relative; }
 .scr-stage { position: relative; height: 182px; }
@@ -324,7 +339,7 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 .callout svg { flex: none; overflow: visible; }
 .callout svg path { fill: none; stroke: var(--ink); stroke-width: 1; }
 .callout svg circle { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
-.callout-text { margin-top: -1px; font: 400 10px/1.3 var(--mono); max-width: 9.5em; overflow-wrap: anywhere; }
+.callout-text { margin-top: -1px; font: 400 10px/1.3 var(--mono); max-width: 9.5em; overflow-wrap: break-word; text-wrap: balance; }
 .callout-text .icon { width: 9px; height: 9px; margin-right: 4px; vertical-align: -1px; }
 .callout.static { position: static; margin-top: 20px; }
 .paper-spec { display: flex; align-items: flex-start; justify-content: center; padding-top: 70px; }
@@ -346,13 +361,13 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 .verdict-line { margin-top: 12px; }
 .verdict.shown { opacity: 1; visibility: visible; }
 .stamp {
-  position: absolute; left: 10px; bottom: 12px; opacity: 0; visibility: hidden;
+  position: absolute; left: 12px; bottom: 8px; opacity: 0; visibility: hidden;
   padding: 10px 18px 12px; display: flex; flex-direction: column; gap: 6px;
   border: 4px solid var(--ink); outline: 1.5px solid var(--ink); outline-offset: 4px;
   filter: url(#stamp-wear);
 }
 .stamp-top, .stamp-line { font: 700 11px/1.2 var(--mono); letter-spacing: 1px; text-transform: uppercase; }
-.stamp-line { letter-spacing: 0.6px; }
+.stamp-line { letter-spacing: 0.6px; max-width: 24em; }
 .stamp-name { font: 900 56px/0.86 var(--sans); letter-spacing: -2px; text-transform: uppercase; }
 .stamp-name > span { display: block; white-space: nowrap; }
 .scr-foot { position: absolute; left: 0; right: 0; top: 0; font-size: 9px; letter-spacing: 0.4px; }
@@ -410,7 +425,7 @@ svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 @media (max-height: 720px) {
   .gate-title { font-size: 80px; letter-spacing: -4px; }
   .intro-p { font-size: 16px; }
-  .challenge-theme { font-size: 28px; }
+  .challenge-big { font-size: 27px; }
   .prompt-text { font-size: 30px; }
   .vlabel { margin-top: 20px; }
   .answer-block { margin-top: 22px; }

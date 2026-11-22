@@ -8,34 +8,34 @@ Tiers: Meat Proxy is the sealed answer. Prompt Zombie is 30 or more runs, Sloppe
 
 | Day | Prompt | Answers | Aliases | AI gave | Human Reserved |
 | --- | --- | ---: | ---: | ---: | ---: |
-| 1 | W1 | 378 | 146 | 27 | 7 |
-| 1 | W2 | 183 | 164 | 25 | 5 |
-| 1 | W3 | 146 | 102 | 23 | 5 |
-| 1 | W4 | 157 | 93 | 22 | 6 |
-| 1 | W5 | 154 | 117 | 18 | 6 |
-| 1 | W6 | 305 | 119 | 23 | 7 |
-| 1 | W7 | 169 | 101 | 23 | 6 |
+| 1 | W1 | 378 | 146 | 54 | 7 |
+| 1 | W2 | 183 | 164 | 53 | 5 |
+| 1 | W3 | 146 | 102 | 50 | 5 |
+| 1 | W4 | 157 | 93 | 50 | 6 |
+| 1 | W5 | 154 | 117 | 45 | 6 |
+| 1 | W6 | 305 | 119 | 53 | 7 |
+| 1 | W7 | 169 | 101 | 54 | 6 |
 | 2 | M1 | 15 | 43 | 12 | 3 |
-| 2 | M2 | 397 | 66 | 20 | 6 |
-| 2 | M3 | 205 | 105 | 22 | 7 |
-| 2 | M4 | 156 | 89 | 23 | 8 |
-| 2 | M5 | 162 | 107 | 19 | 5 |
-| 2 | M6 | 150 | 148 | 16 | 6 |
-| 2 | M7 | 165 | 124 | 19 | 7 |
-| 3 | C1 | 135 | 117 | 14 | 5 |
+| 2 | M2 | 397 | 66 | 56 | 6 |
+| 2 | M3 | 205 | 105 | 50 | 7 |
+| 2 | M4 | 156 | 89 | 60 | 8 |
+| 2 | M5 | 162 | 107 | 56 | 5 |
+| 2 | M6 | 150 | 148 | 55 | 6 |
+| 2 | M7 | 165 | 124 | 52 | 7 |
+| 3 | C1 | 135 | 117 | 45 | 5 |
 | 3 | C2 | 3 | 43 | 2 | 1 |
-| 3 | C3 | 141 | 74 | 18 | 6 |
-| 3 | C4 | 146 | 122 | 19 | 6 |
-| 3 | C5 | 182 | 84 | 26 | 6 |
-| 3 | C6 | 165 | 154 | 17 | 7 |
-| 3 | C7 | 136 | 132 | 17 | 4 |
-| 4 | S1 | 127 | 90 | 16 | 4 |
-| 4 | S2 | 160 | 144 | 17 | 6 |
-| 4 | S3 | 136 | 110 | 16 | 5 |
-| 4 | S4 | 180 | 101 | 17 | 7 |
-| 4 | S5 | 157 | 122 | 17 | 7 |
-| 4 | S6 | 175 | 93 | 16 | 7 |
-| 4 | S7 | 93 | 56 | 20 | 4 |
+| 3 | C3 | 141 | 74 | 47 | 6 |
+| 3 | C4 | 146 | 122 | 52 | 6 |
+| 3 | C5 | 182 | 84 | 61 | 6 |
+| 3 | C6 | 165 | 154 | 49 | 7 |
+| 3 | C7 | 136 | 132 | 45 | 4 |
+| 4 | S1 | 127 | 90 | 46 | 4 |
+| 4 | S2 | 160 | 144 | 47 | 6 |
+| 4 | S3 | 136 | 110 | 44 | 5 |
+| 4 | S4 | 180 | 101 | 48 | 7 |
+| 4 | S5 | 157 | 122 | 44 | 7 |
+| 4 | S6 | 175 | 93 | 50 | 7 |
+| 4 | S7 | 93 | 56 | 53 | 4 |
 
 ## Day 1: Work
 
@@ -46,23 +46,35 @@ Gates, "The Turbulent AI Era" | sealed answer: **caregiver** | hint: nurse
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 118 | caregiver | Meat Proxy | carer, care worker, caretaker, elder care worker, eldercare worker, home care worker, care aide, caregiving, elderly caregiver, home caregiver |
-| 64 | nurse | Prompt Zombie | registered nurse, rn, nursing |
-| 31 | teacher | Prompt Zombie | schoolteacher, educator, teaching |
-| 19 | therapist | Slopper | psychotherapist, therapy |
-| 12 | social worker | Slopper | social work |
-| 9 | doctor | Slopper | physician, md, family doctor, gp, general practitioner, medical doctor, family physician, medicine |
-| 7 | counselor | Slopper | counsellor, counselling, counseling |
-| 5 | hospice nurse | Decision Delegator | palliative care nurse, palliative nurse, end of life nurse |
-| 4 | psychologist | Decision Delegator | psychology |
-| 4 | artist | Decision Delegator | visual artist, art |
-| 3 | surgeon | Decision Delegator | surgery |
-| 3 | clergy | Decision Delegator | clergyman, clergyperson, religious leader, faith leader, spiritual leader |
+| 48 | nurse | Prompt Zombie | registered nurse, rn, nursing |
+| 23 | teacher | Slopper | schoolteacher, educator, teaching |
+| 14 | therapist | Slopper | psychotherapist, therapy |
+| 8 | social worker | Slopper | social work |
+| 7 | doctor | Slopper | physician, md, family doctor, gp, general practitioner, medical doctor, family physician, medicine |
+| 5 | counselor | Decision Delegator | counsellor, counselling, counseling |
+| 4 | hospice nurse | Decision Delegator | palliative care nurse, palliative nurse, end of life nurse |
+| 3 | psychologist | Decision Delegator | psychology |
+| 3 | artist | Decision Delegator | visual artist, art |
+| 3 | psychiatrist | Decision Delegator |  |
+| 3 | veterinarian | Decision Delegator | vet, animal doctor |
+| 3 | scientist | Decision Delegator |  |
+| 2 | surgeon | Decision Delegator | surgery |
+| 2 | clergy | Decision Delegator | clergyman, clergyperson, religious leader, faith leader, spiritual leader |
 | 2 | judge | Decision Delegator |  |
 | 2 | firefighter | Decision Delegator | fireman, firewoman |
 | 2 | chef | Decision Delegator | head chef |
 | 2 | musician | Decision Delegator | music |
 | 2 | early childhood educator | Decision Delegator | ece, early childhood teacher |
 | 2 | chaplain | Decision Delegator |  |
+| 2 | writer | Decision Delegator |  |
+| 2 | pediatrician | Decision Delegator |  |
+| 2 | lawyer | Decision Delegator | attorney, solicitor, barrister |
+| 2 | priest | Decision Delegator |  |
+| 2 | special education teacher | Decision Delegator |  |
+| 2 | preschool teacher | Decision Delegator |  |
+| 2 | farmer | Decision Delegator |  |
+| 2 | athlete | Decision Delegator | professional athlete, sports player |
+| 2 | nanny | Decision Delegator |  |
 | 1 | paramedic | Decision Delegator | emt, emergency medical technician |
 | 1 | comedian | Decision Delegator | stand-up comedian, comic |
 | 1 | plumber | Decision Delegator |  |
@@ -72,10 +84,25 @@ Gates, "The Turbulent AI Era" | sealed answer: **caregiver** | hint: nurse
 | 1 | mediator | Decision Delegator | mediation |
 | 1 | diplomat | Decision Delegator | diplomacy |
 | 1 | personal support worker | Decision Delegator | psw, support worker |
+| 1 | carpenter | Decision Delegator |  |
+| 1 | actor | Decision Delegator | actress |
+| 1 | daycare worker | Decision Delegator |  |
+| 1 | coach | Decision Delegator |  |
+| 1 | police officer | Decision Delegator | cop, policeman, policewoman, police |
+| 1 | professor | Decision Delegator |  |
+| 1 | librarian | Decision Delegator |  |
+| 1 | dentist | Decision Delegator |  |
+| 1 | occupational therapist | Decision Delegator | ot |
+| 1 | speech therapist | Decision Delegator | speech-language pathologist, speech pathologist, slp |
+| 1 | crisis counselor | Decision Delegator |  |
+| 1 | philosopher | Decision Delegator |  |
+| 1 | ethicist | Decision Delegator |  |
+| 1 | poet | Decision Delegator |  |
+| 1 | tutor | Decision Delegator |  |
 
 **Human Reserved:** midwife, hospice chaplain, kindergarten teacher, death doula, sign language interpreter, NICU nurse, grief counselor
 
-**First-Hand Thinker (344):** nurse practitioner, doula, home health aide, nursing assistant, hospital chaplain, palliative care doctor, pediatrician, geriatrician, psychiatrist, dentist, dental hygienist, optometrist, pharmacist, occupational therapist, speech therapist, respiratory therapist, art therapist, music therapist, play therapist, massage therapist, chiropractor, acupuncturist, anesthesiologist, emergency doctor, trauma surgeon, neurosurgeon, heart surgeon, oncologist, obstetrician, fertility doctor, lactation consultant, crisis counselor, addiction counselor, harm reduction worker, outreach worker, youth worker, child and youth worker, caseworker, child protection worker, family therapist, couples therapist, school counselor, school psychologist, psychiatric nurse, ER nurse, ICU nurse, pediatric nurse, public health nurse, community health worker, veterinarian, vet tech, animal rescuer, zookeeper, wildlife rehabilitator, dog trainer, dog walker, pet sitter, pet groomer, farrier, horse trainer, orderly, nanny, babysitter, daycare worker, preschool teacher, special education teacher, educational assistant, teaching assistant, tutor, music teacher, art teacher, dance teacher, drama teacher, gym teacher, driving instructor, swim instructor, ski instructor, professor, lecturer, principal, librarian, children's librarian, coach, mentor, camp counselor, scout leader, guidance counselor, high school teacher, elementary school teacher, ESL teacher, piano teacher, painter, sculptor, potter, illustrator, cartoonist, animator, photographer, filmmaker, film director, actor, stage actor, dancer, ballet dancer, choreographer, singer, songwriter, composer, conductor, opera singer, jazz musician, drummer, guitarist, pianist, violinist, DJ, rapper, poet, novelist, author, writer, playwright, screenwriter, journalist, war correspondent, investigative journalist, critic, food critic, curator, art conservator, tattoo artist, street artist, muralist, calligrapher, glassblower, blacksmith, jeweler, goldsmith, woodworker, carpenter, cabinetmaker, luthier, bookbinder, weaver, tailor, seamstress, dressmaker, fashion designer, costume designer, set designer, makeup artist, hairstylist, barber, nail technician, esthetician, florist, perfumer, sommelier, chocolatier, pastry chef, baker, butcher, cheesemaker, brewer, winemaker, barista, bartender, cook, line cook, sushi chef, restaurant owner, waiter, magician, clown, circus performer, acrobat, juggler, puppeteer, mime, improv actor, drag queen, stunt performer, voice actor, radio host, talk show host, news anchor, sports commentator, busker, tour guide, museum guide, park ranger, mountain guide, fishing guide, safari guide, scuba instructor, lifeguard, athlete, baseball player 📚, hockey player, basketball player, soccer player, football player, tennis player, golfer, boxer, wrestler, jockey, figure skater, gymnast, marathon runner, referee, umpire, personal trainer, fitness instructor, yoga instructor, pilates instructor, martial arts instructor, climbing instructor, roofer, welder, mason, bricklayer, stonemason, plasterer, tiler, glazier, HVAC technician, mechanic, locksmith, elevator mechanic, lineworker, pipefitter, millwright, machinist, ironworker, crane operator, construction worker, arborist, landscaper, gardener, groundskeeper, farmer, rancher, shepherd, beekeeper, fisher, lobster fisher, logger, forester, wildland firefighter, search and rescue worker, coast guard, sailor, ship captain, pilot, bush pilot, flight attendant, astronaut, house painter, lawyer, defence lawyer, public defender, prosecutor, arbitrator, negotiator, hostage negotiator, police officer, detective, probation officer, 911 dispatcher, peacekeeper, ambassador, politician, mayor, prime minister, president, senator, member of parliament, city councillor, union organizer, activist, community organizer, settlement worker, immigration lawyer, human rights lawyer, soldier, priest, pastor, minister, rabbi, imam, monk, nun, pope, bishop, spiritual advisor, shaman, Indigenous elder, knowledge keeper, wedding officiant, funeral director, mortician, embalmer, gravedigger, celebrant, tarot reader, fortune teller, astrologer, CEO, manager, wedding planner, event planner, matchmaker, dating coach, career counselor, executive coach, motivational speaker, interpreter, entrepreneur, small business owner, shopkeeper, innkeeper, concierge, butler, bouncer, crossing guard, scientist, biologist 📚, energy expert 📚, programmer 📚, AI researcher, researcher, inventor, engineer, epidemiologist, climate scientist, ethicist, philosopher, historian, archaeologist, anthropologist, explorer, marine biologist, ecologist
+**First-Hand Thinker (317):** nurse practitioner, doula, home health aide, nursing assistant, hospital chaplain, palliative care doctor, geriatrician, dental hygienist, optometrist, pharmacist, respiratory therapist, art therapist, music therapist, play therapist, massage therapist, chiropractor, acupuncturist, anesthesiologist, emergency doctor, trauma surgeon, neurosurgeon, heart surgeon, oncologist, obstetrician, fertility doctor, lactation consultant, addiction counselor, harm reduction worker, outreach worker, youth worker, child and youth worker, caseworker, child protection worker, family therapist, couples therapist, school counselor, school psychologist, psychiatric nurse, ER nurse, ICU nurse, pediatric nurse, public health nurse, community health worker, vet tech, animal rescuer, zookeeper, wildlife rehabilitator, dog trainer, dog walker, pet sitter, pet groomer, farrier, horse trainer, orderly, babysitter, educational assistant, teaching assistant, music teacher, art teacher, dance teacher, drama teacher, gym teacher, driving instructor, swim instructor, ski instructor, lecturer, principal, children's librarian, mentor, camp counselor, scout leader, guidance counselor, high school teacher, elementary school teacher, ESL teacher, piano teacher, painter, sculptor, potter, illustrator, cartoonist, animator, photographer, filmmaker, film director, stage actor, dancer, ballet dancer, choreographer, singer, songwriter, composer, conductor, opera singer, jazz musician, drummer, guitarist, pianist, violinist, DJ, rapper, novelist, author, playwright, screenwriter, journalist, war correspondent, investigative journalist, critic, food critic, curator, art conservator, tattoo artist, street artist, muralist, calligrapher, glassblower, blacksmith, jeweler, goldsmith, woodworker, cabinetmaker, luthier, bookbinder, weaver, tailor, seamstress, dressmaker, fashion designer, costume designer, set designer, makeup artist, hairstylist, barber, nail technician, esthetician, florist, perfumer, sommelier, chocolatier, pastry chef, baker, butcher, cheesemaker, brewer, winemaker, barista, bartender, cook, line cook, sushi chef, restaurant owner, waiter, magician, clown, circus performer, acrobat, juggler, puppeteer, mime, improv actor, drag queen, stunt performer, voice actor, radio host, talk show host, news anchor, sports commentator, busker, tour guide, museum guide, park ranger, mountain guide, fishing guide, safari guide, scuba instructor, lifeguard, baseball player 📚, hockey player, basketball player, soccer player, football player, tennis player, golfer, boxer, wrestler, jockey, figure skater, gymnast, marathon runner, referee, umpire, personal trainer, fitness instructor, yoga instructor, pilates instructor, martial arts instructor, climbing instructor, roofer, welder, mason, bricklayer, stonemason, plasterer, tiler, glazier, HVAC technician, mechanic, locksmith, elevator mechanic, lineworker, pipefitter, millwright, machinist, ironworker, crane operator, construction worker, arborist, landscaper, gardener, groundskeeper, rancher, shepherd, beekeeper, fisher, lobster fisher, logger, forester, wildland firefighter, search and rescue worker, coast guard, sailor, ship captain, pilot, bush pilot, flight attendant, astronaut, house painter, defence lawyer, public defender, prosecutor, arbitrator, negotiator, hostage negotiator, detective, probation officer, 911 dispatcher, peacekeeper, ambassador, politician, mayor, prime minister, president, senator, member of parliament, city councillor, union organizer, activist, community organizer, settlement worker, immigration lawyer, human rights lawyer, soldier, pastor, minister, rabbi, imam, monk, nun, pope, bishop, spiritual advisor, shaman, Indigenous elder, knowledge keeper, wedding officiant, funeral director, mortician, embalmer, gravedigger, celebrant, tarot reader, fortune teller, astrologer, CEO, manager, wedding planner, event planner, matchmaker, dating coach, career counselor, executive coach, motivational speaker, interpreter, entrepreneur, small business owner, shopkeeper, innkeeper, concierge, butler, bouncer, crossing guard, biologist 📚, energy expert 📚, programmer 📚, AI researcher, researcher, inventor, engineer, epidemiologist, climate scientist, historian, archaeologist, anthropologist, explorer, marine biologist, ecologist
 
 > Reading flags are guesses: check which jobs Gates actually names. Baseball comes from his line that we won't want to watch computers play baseball; biologist, programmer and energy expert from the professions he's said will last.
 
@@ -88,34 +115,62 @@ Gates, "The Turbulent AI Era" | sealed answer: **a death in the family** | hint:
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 110 | a death in the family | Meat Proxy | death in the family, family death, a family death, death of a family member, death of a loved one, the death of a loved one, losing a loved one, a loved one dying, someone dying, bereavement, a death, death, someone died, a family member dying, a loss in the family, loss of a loved one |
-| 48 | a cancer diagnosis | Prompt Zombie | being diagnosed with cancer, cancer, having cancer, getting cancer, a diagnosis, a serious diagnosis, a medical diagnosis, a bad diagnosis, a serious illness, illness |
-| 22 | a terminal diagnosis | Slopper | terminal illness, terminal cancer, a terminal illness, being terminally ill, only months to live, dying |
-| 20 | a breakup | Slopper | breaking up, break up, getting dumped, being dumped, a split |
-| 18 | getting fired | Slopper | being fired, fired, got fired, losing your job, losing a job, job loss, losing my job, termination, being let go, getting let go, firing |
-| 15 | a divorce | Slopper | getting divorced, parents divorcing, parents getting divorced, my parents divorce |
-| 14 | the birth of a child | Slopper | a birth, having a baby, a new baby, a baby, childbirth, becoming a parent, a baby being born, birth of a baby |
-| 10 | a pregnancy | Slopper | getting pregnant, being pregnant, a pregnancy announcement, pregnancy news, a positive pregnancy test, an unplanned pregnancy |
-| 7 | a marriage proposal | Slopper | a proposal, being proposed to, getting proposed to, proposing |
-| 6 | a layoff | Slopper | getting laid off, being laid off, laid off, lay off |
-| 4 | an engagement | Decision Delegator | getting engaged, engaged |
-| 4 | a wedding | Decision Delegator | getting married, marriage, a marriage |
-| 3 | a car accident | Decision Delegator | a car crash, crash |
-| 3 | test results | Decision Delegator | medical test results, lab results, biopsy results, results |
+| 36 | a cancer diagnosis | Prompt Zombie | being diagnosed with cancer, cancer, having cancer, getting cancer, a diagnosis, a serious diagnosis, a medical diagnosis, a bad diagnosis, a serious illness, illness |
+| 16 | a terminal diagnosis | Slopper | terminal illness, terminal cancer, a terminal illness, being terminally ill, only months to live, dying |
+| 15 | a breakup | Slopper | breaking up, break up, getting dumped, being dumped, a split |
+| 14 | getting fired | Slopper | being fired, fired, got fired, losing your job, losing a job, job loss, losing my job, termination, being let go, getting let go, firing |
+| 12 | a divorce | Slopper | getting divorced, parents divorcing, parents getting divorced, my parents divorce |
+| 11 | the birth of a child | Slopper | a birth, having a baby, a new baby, a baby, childbirth, becoming a parent, a baby being born, birth of a baby |
+| 8 | a pregnancy | Slopper | getting pregnant, being pregnant, a pregnancy announcement, pregnancy news, a positive pregnancy test, an unplanned pregnancy |
+| 5 | a marriage proposal | Decision Delegator | a proposal, being proposed to, getting proposed to, proposing |
+| 5 | a layoff | Decision Delegator | getting laid off, being laid off, laid off, lay off |
+| 3 | an engagement | Decision Delegator | getting engaged, engaged |
+| 3 | a wedding | Decision Delegator | getting married, marriage, a marriage |
+| 3 | the death of a child | Decision Delegator |  |
+| 2 | a car accident | Decision Delegator | a car crash, crash |
+| 2 | test results | Decision Delegator | medical test results, lab results, biopsy results, results |
 | 2 | the death of a parent | Decision Delegator | a parent dying, losing a parent, my mom dying, my dad dying, a parent's death |
 | 2 | the death of a pet | Decision Delegator | a pet dying, losing a pet, pet death, a pet's death, putting a pet down, euthanizing a pet |
 | 2 | a medical emergency | Decision Delegator | a health emergency, a health scare |
 | 2 | a promotion | Decision Delegator | getting promoted, being promoted |
 | 2 | coming out | Decision Delegator | someone coming out, coming out as gay, coming out as trans, a coming out |
+| 2 | the death of a sibling | Decision Delegator |  |
+| 2 | the death of a grandparent | Decision Delegator |  |
+| 2 | a heart attack | Decision Delegator | cardiac arrest |
+| 2 | a stroke | Decision Delegator |  |
+| 2 | a dementia diagnosis | Decision Delegator | dementia |
+| 2 | surgery | Decision Delegator |  |
+| 2 | remission | Decision Delegator |  |
+| 2 | bankruptcy | Decision Delegator | going bankrupt |
+| 2 | getting into university | Decision Delegator | getting into college, university acceptance, an acceptance letter |
+| 2 | a new job | Decision Delegator | getting a job, getting hired |
+| 2 | an affair | Decision Delegator | infidelity, being cheated on |
+| 2 | winning the lottery | Decision Delegator | a lottery win |
 | 1 | an accident | Decision Delegator |  |
 | 1 | graduation | Decision Delegator | graduating, finishing school |
 | 1 | retirement | Decision Delegator | retiring |
 | 1 | an adoption | Decision Delegator | adopting a child, adopting |
 | 1 | infertility | Decision Delegator | being infertile, not being able to have kids, can't have children |
 | 1 | a suicide | Decision Delegator | a death by suicide, someone's suicide |
+| 1 | an Alzheimer's diagnosis | Decision Delegator | alzheimers, alzheimer's |
+| 1 | an organ transplant | Decision Delegator |  |
+| 1 | an arrest | Decision Delegator |  |
+| 1 | a deportation | Decision Delegator |  |
+| 1 | an eviction | Decision Delegator |  |
+| 1 | a house fire | Decision Delegator |  |
+| 1 | a scholarship | Decision Delegator |  |
+| 1 | a job offer | Decision Delegator |  |
+| 1 | moving away | Decision Delegator | a move, moving |
+| 1 | an anniversary | Decision Delegator |  |
+| 1 | a first date | Decision Delegator |  |
+| 1 | a betrayal | Decision Delegator |  |
+| 1 | a reconciliation | Decision Delegator |  |
+| 1 | an apology | Decision Delegator |  |
+| 1 | a natural disaster | Decision Delegator |  |
 
 **Human Reserved:** a miscarriage, a rejection letter, the dog dying, a stillbirth, a relapse
 
-**First-Hand Thinker (153):** a first date, a first kiss, falling in love, an affair, a betrayal, a reconciliation, an apology, being ghosted, a separation, a remarriage, an anniversary, a vow renewal, a family reunion, a funeral, a memorial, the death of a friend, the death of a child, the death of a sibling, the death of a grandparent, a sudden death, a murder, a missing person, a kidnapping, a dementia diagnosis, an Alzheimer's diagnosis, an autism diagnosis, an ADHD diagnosis, a mental health diagnosis, a child's diagnosis, a disability, an amputation, a stroke, a heart attack, a coma, waking up from a coma, surgery, an organ transplant, an organ donation, remission, being cancer-free, recovery, getting sober, rehab, an intervention, a hospital stay, an injury, a concussion, paralysis, going blind, hearing loss, IVF results, a premature birth, twins, a pregnancy complication, an abortion, a gender reveal, a baby shower, a christening, a baptism, a bar mitzvah, a bat mitzvah, a quinceañera, a confirmation, a milestone birthday, turning 18, a birthday, a surprise party, a first day of school, starting university, getting into university, a scholarship, failing an exam, failing a class, getting expelled, dropping out, a first job, a new job, a job offer, a raise, a demotion, a career change, quitting a job, starting a business, a business failing, bankruptcy, debt, a foreclosure, an eviction, a house fire, a flood, a natural disaster, a robbery, a break-in, an assault, an arrest, a conviction, going to prison, getting out of prison, a court verdict, a custody decision, a deportation, getting citizenship, a visa rejection, moving away, moving abroad, moving out, moving in together, an empty nest, buying a first home, a first apartment, a parent remarrying, a new sibling, finding out you were adopted, meeting a birth parent, a DNA test result, finding a long-lost relative, a family secret, an inheritance, a will reading, winning the lottery, an award, a championship, getting cut from the team, a sports injury, getting a puppy, a lost pet, deployment, a soldier coming home, a death in combat, enlisting, a war, a pandemic, an earthquake, a hurricane, a wildfire, becoming a grandparent, a grandparent moving in, a parent going into a care home, caring for a sick parent, a parent's illness, a friend's illness, being bullied, a mental breakdown, a panic attack, a suicide attempt, an overdose, a friendship ending, a friend moving away, a fight with a friend, passing a driving test, failing a driving test, a first car, a rejection
+**First-Hand Thinker (125):** a first kiss, falling in love, being ghosted, a separation, a remarriage, a vow renewal, a family reunion, a funeral, a memorial, the death of a friend, a sudden death, a murder, a missing person, a kidnapping, an autism diagnosis, an ADHD diagnosis, a mental health diagnosis, a child's diagnosis, a disability, an amputation, a coma, waking up from a coma, an organ donation, being cancer-free, recovery, getting sober, rehab, an intervention, a hospital stay, an injury, a concussion, paralysis, going blind, hearing loss, IVF results, a premature birth, twins, a pregnancy complication, an abortion, a gender reveal, a baby shower, a christening, a baptism, a bar mitzvah, a bat mitzvah, a quinceañera, a confirmation, a milestone birthday, turning 18, a birthday, a surprise party, a first day of school, starting university, failing an exam, failing a class, getting expelled, dropping out, a first job, a raise, a demotion, a career change, quitting a job, starting a business, a business failing, debt, a foreclosure, a flood, a robbery, a break-in, an assault, a conviction, going to prison, getting out of prison, a court verdict, a custody decision, getting citizenship, a visa rejection, moving abroad, moving out, moving in together, an empty nest, buying a first home, a first apartment, a parent remarrying, a new sibling, finding out you were adopted, meeting a birth parent, a DNA test result, finding a long-lost relative, a family secret, an inheritance, a will reading, an award, a championship, getting cut from the team, a sports injury, getting a puppy, a lost pet, deployment, a soldier coming home, a death in combat, enlisting, a war, a pandemic, an earthquake, a hurricane, a wildfire, becoming a grandparent, a grandparent moving in, a parent going into a care home, caring for a sick parent, a parent's illness, a friend's illness, being bullied, a mental breakdown, a panic attack, a suicide attempt, an overdose, a friendship ending, a friend moving away, a fight with a friend, passing a driving test, failing a driving test, a first car, a rejection
 
 > Generic aliases point at the common answers; the Human Reserved answers only take close paraphrases, so 'rejection' on its own is First-Hand Thinker and 'a rejection letter' is Human Reserved.
 
@@ -126,21 +181,33 @@ Gates, "The Turbulent AI Era"; Bastani, Fully Automated Luxury Communism | seale
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 116 | robots 📚 | Meat Proxy | robot, robot labor, robot labour, robot tax, robotic labor, robot workers, robot use, robotics, a robot tax |
-| 45 | AI companies | Prompt Zombie | ai firms, artificial intelligence companies, ai developers, ai labs, ai corporations |
-| 40 | automation | Prompt Zombie | automated labor, automated labour, automated systems, automated work |
-| 30 | corporate profits | Prompt Zombie | profits, company profits, business profits, profit |
-| 12 | tech companies | Slopper | big tech, technology companies, tech giants, tech firms |
-| 10 | data | Slopper | data use, user data, data collection, personal data, data usage |
-| 9 | AI | Slopper | artificial intelligence, ai usage, ai use |
-| 6 | tokens 📚 | Slopper | ai tokens, token usage, a token tax, token tax |
-| 5 | compute | Decision Delegator | computing power, computation, processing power |
-| 5 | productivity gains | Decision Delegator | productivity |
-| 4 | wealth | Decision Delegator | wealth tax, the rich, rich people |
-| 3 | capital gains | Decision Delegator |  |
+| 34 | AI companies | Prompt Zombie | ai firms, artificial intelligence companies, ai developers, ai labs, ai corporations |
+| 30 | automation | Prompt Zombie | automated labor, automated labour, automated systems, automated work |
+| 23 | corporate profits | Slopper | profits, company profits, business profits, profit |
+| 9 | tech companies | Slopper | big tech, technology companies, tech giants, tech firms |
+| 8 | data | Slopper | data use, user data, data collection, personal data, data usage |
+| 7 | AI | Slopper | artificial intelligence, ai usage, ai use |
+| 5 | tokens 📚 | Decision Delegator | ai tokens, token usage, a token tax, token tax |
+| 4 | compute | Decision Delegator | computing power, computation, processing power |
+| 4 | productivity gains | Decision Delegator | productivity |
+| 3 | wealth | Decision Delegator | wealth tax, the rich, rich people |
+| 3 | corporations | Decision Delegator | companies, businesses, big corporations |
+| 2 | capital gains | Decision Delegator |  |
 | 2 | digital services | Decision Delegator |  |
 | 2 | carbon emissions | Decision Delegator | carbon, emissions, a carbon tax |
 | 2 | energy use | Decision Delegator | energy consumption, energy |
 | 2 | machines | Decision Delegator | machinery |
+| 2 | income | Decision Delegator | income tax, wages |
+| 2 | sales | Decision Delegator | sales tax, consumption |
+| 2 | property | Decision Delegator | real estate, property tax |
+| 2 | luxury goods | Decision Delegator | luxury items, luxuries |
+| 2 | windfall profits | Decision Delegator |  |
+| 2 | social media | Decision Delegator |  |
+| 2 | AI subscriptions | Decision Delegator |  |
+| 2 | electricity | Decision Delegator |  |
+| 2 | financial transactions | Decision Delegator | stock trades, a tobin tax, transactions |
+| 2 | factory output | Decision Delegator |  |
+| 2 | robot-made goods | Decision Delegator |  |
 | 1 | software | Decision Delegator |  |
 | 1 | algorithms | Decision Delegator |  |
 | 1 | self-driving cars | Decision Delegator | autonomous vehicles, driverless cars, robotaxis |
@@ -148,10 +215,25 @@ Gates, "The Turbulent AI Era"; Bastani, Fully Automated Luxury Communism | seale
 | 1 | data centres | Decision Delegator | data centers, server farms |
 | 1 | stock buybacks | Decision Delegator |  |
 | 1 | billionaires | Decision Delegator | billionaire |
+| 1 | inheritance | Decision Delegator | estates, inheritances |
+| 1 | monopolies | Decision Delegator |  |
+| 1 | streaming | Decision Delegator |  |
+| 1 | API calls | Decision Delegator |  |
+| 1 | patents | Decision Delegator |  |
+| 1 | intellectual property | Decision Delegator |  |
+| 1 | water use | Decision Delegator |  |
+| 1 | dividends | Decision Delegator |  |
+| 1 | machine hours | Decision Delegator |  |
+| 1 | drones | Decision Delegator |  |
+| 1 | delivery robots | Decision Delegator |  |
+| 1 | pollution | Decision Delegator |  |
+| 1 | revenue | Decision Delegator |  |
+| 1 | output | Decision Delegator |  |
+| 1 | chatbots | Decision Delegator |  |
 
 **Human Reserved:** data centre electricity, ads, screen time, attention, likes
 
-**First-Hand Thinker (118):** income, sales, imports, tariffs, land, property, vacant homes, second homes, foreign buyers, inheritance, luxury goods, yachts, private jets, mansions, corporations, windfall profits, monopolies, Amazon, Google, Apple, Microsoft, Meta, Tesla, OpenAI, Nvidia, delivery apps, gig platforms, app stores, online shopping, social media, social media companies, data brokers, surveillance, internet traffic, bandwidth, streaming, subscriptions, AI subscriptions, chatbots, API calls, AI-generated content, AI art, patents, intellectual property, royalties, software licences, server time, GPU hours, chips, GPUs, servers, electricity, water use, e-waste, rare earth minerals, lithium, mining, crypto, bitcoin mining, NFTs, financial transactions, high-frequency trading, dividends, shareholders, capital, investments, offshore accounts, tax havens, millionaires, CEO pay, executive bonuses, stock options, factory output, robot-made goods, machine hours, automated factories, warehouses, delivery robots, drones, self-driving trucks, self-checkouts, kiosks, vending machines, sugar, alcohol, cigarettes, vaping, cannabis, gambling, loot boxes, fast food, junk food, plastic, single-use plastic, fuel, oil companies, flights, cruise ships, tourism, hotels, Airbnb, landlords, parking, congestion, road use, pollution, output, revenue, sales of robots, robot owners, chatbot conversations, prompts, AI queries, online gambling, influencers, sponsorships, billionaire spaceflights, space tourism
+**First-Hand Thinker (91):** imports, tariffs, land, vacant homes, second homes, foreign buyers, yachts, private jets, mansions, Amazon, Google, Apple, Microsoft, Meta, Tesla, OpenAI, Nvidia, delivery apps, gig platforms, app stores, online shopping, social media companies, data brokers, surveillance, internet traffic, bandwidth, subscriptions, AI-generated content, AI art, royalties, software licences, server time, GPU hours, chips, GPUs, servers, e-waste, rare earth minerals, lithium, mining, crypto, bitcoin mining, NFTs, high-frequency trading, shareholders, capital, investments, offshore accounts, tax havens, millionaires, CEO pay, executive bonuses, stock options, automated factories, warehouses, self-driving trucks, self-checkouts, kiosks, vending machines, sugar, alcohol, cigarettes, vaping, cannabis, gambling, loot boxes, fast food, junk food, plastic, single-use plastic, fuel, oil companies, flights, cruise ships, tourism, hotels, Airbnb, landlords, parking, congestion, road use, sales of robots, robot owners, chatbot conversations, prompts, AI queries, online gambling, influencers, sponsorships, billionaire spaceflights, space tourism
 
 > Reading flags: Gates's robot tax and the token tax from the theory map. Robots is also the AI's sealed answer, so the reading answer lands on Meat Proxy, which is the point.
 
@@ -164,31 +246,59 @@ Gordon and Gunkel, "AI and the Future of Work" | sealed answer: **purpose** | hi
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 105 | purpose | Meat Proxy | a sense of purpose, sense of purpose, a purpose, purpose in life |
-| 40 | a sense of accomplishment | Prompt Zombie | accomplishment, achievement, a sense of achievement, feeling accomplished |
-| 28 | community 📚 | Slopper | a community, a sense of community |
-| 22 | fulfillment | Slopper | fulfilment, fulfilling, job satisfaction, satisfaction |
-| 18 | friends | Slopper | friendship, friendships, work friends |
-| 15 | structure | Slopper | daily structure, a structure |
-| 12 | identity | Slopper | a sense of identity, self-identity |
-| 10 | meaning | Slopper | meaning in life, a sense of meaning, meaningful work |
-| 10 | social connection | Slopper | connection, social interaction, socializing, human connection, connections with people |
-| 8 | skills | Slopper | new skills, skill development, skill |
-| 7 | routine | Slopper | a routine, daily routine |
-| 5 | pride | Decision Delegator | a sense of pride |
-| 5 | personal growth | Decision Delegator | growth |
-| 3 | self-esteem | Decision Delegator | self-worth, confidence, self-confidence |
-| 3 | dignity | Decision Delegator |  |
+| 30 | a sense of accomplishment | Prompt Zombie | accomplishment, achievement, a sense of achievement, feeling accomplished |
+| 21 | community 📚 | Slopper | a community, a sense of community |
+| 16 | fulfillment | Slopper | fulfilment, fulfilling, job satisfaction, satisfaction |
+| 14 | friends | Slopper | friendship, friendships, work friends |
+| 12 | structure | Slopper | daily structure, a structure |
+| 9 | identity | Slopper | a sense of identity, self-identity |
+| 8 | meaning | Slopper | meaning in life, a sense of meaning, meaningful work |
+| 8 | social connection | Slopper | connection, social interaction, socializing, human connection, connections with people |
+| 6 | skills | Slopper | new skills, skill development, skill |
+| 5 | routine | Decision Delegator | a routine, daily routine |
+| 4 | pride | Decision Delegator | a sense of pride |
+| 4 | personal growth | Decision Delegator | growth |
+| 3 | coworkers | Decision Delegator | colleagues, teammates |
+| 3 | belonging | Decision Delegator | a sense of belonging |
+| 2 | self-esteem | Decision Delegator | self-worth, confidence, self-confidence |
+| 2 | dignity | Decision Delegator |  |
 | 2 | experience | Decision Delegator | work experience |
 | 2 | respect | Decision Delegator |  |
+| 2 | health insurance | Decision Delegator | dental, a dental plan, dental coverage |
+| 2 | job security | Decision Delegator |  |
+| 2 | a career | Decision Delegator |  |
+| 2 | career growth | Decision Delegator |  |
+| 2 | networking | Decision Delegator | contacts |
+| 2 | mentors | Decision Delegator | mentorship, a mentor |
+| 2 | teamwork | Decision Delegator |  |
+| 2 | camaraderie | Decision Delegator |  |
+| 2 | knowledge | Decision Delegator |  |
+| 2 | creativity | Decision Delegator |  |
+| 2 | intellectual stimulation | Decision Delegator |  |
+| 2 | recognition 📚 | Decision Delegator | social recognition, praise, appreciation |
+| 2 | helping people | Decision Delegator |  |
 | 1 | status | Decision Delegator |  |
 | 1 | learning | Decision Delegator |  |
 | 1 | benefits | Decision Delegator | health benefits, perks |
 | 1 | stability | Decision Delegator |  |
 | 1 | challenge | Decision Delegator | challenges |
+| 1 | a pension | Decision Delegator | retirement savings, rrsp matching |
+| 1 | vacation days | Decision Delegator | paid vacation, paid time off, pto |
+| 1 | collaboration | Decision Delegator |  |
+| 1 | life experience | Decision Delegator |  |
+| 1 | expertise | Decision Delegator |  |
+| 1 | problem solving | Decision Delegator |  |
+| 1 | impact | Decision Delegator |  |
+| 1 | motivation | Decision Delegator |  |
+| 1 | discipline | Decision Delegator |  |
+| 1 | responsibility | Decision Delegator | accountability |
+| 1 | independence | Decision Delegator | autonomy |
+| 1 | happiness | Decision Delegator |  |
+| 1 | flow | Decision Delegator |  |
 
 **Human Reserved:** gossip, free coffee, a reason to get dressed, a work spouse, inside jokes, something to complain about
 
-**First-Hand Thinker (129):** health insurance, a pension, vacation days, sick days, parental leave, a company car, a work phone, a laptop, free snacks, free lunch, a gym membership, an employee discount, a uniform, a title, a business card, a desk, an office, a parking spot, a commute, a reason to leave the house, a reason to wake up, something to do, a schedule, discipline, responsibility, independence, job security, a career, career growth, promotions, a reference, networking, mentors, role models, coworkers, a team, teamwork, collaboration, belonging, camaraderie, companionship, a partner, an office romance, office drama, stress, back pain, eye strain, a tan, exercise, calluses, scars, stories, life experience, wisdom, knowledge, expertise, mastery 📚, competence, creativity, problem solving, intellectual stimulation, boredom, distraction, an escape, time away from home, a break from the kids, adult conversation, small talk, recognition 📚, feedback, awards, employee of the month, validation, power, influence, authority, reputation, prestige, a legacy, impact, contributing to society 📚, helping people, a cause, a mission, values, hope, motivation, ambition, goals, direction, focus, productivity, time management, communication skills, leadership, patience, resilience, grit, humility, perspective, self-respect, joy, happiness, flow, a sense of control, business trips, travel, frequent flyer miles, conferences, free trips, something to talk about, a reason to shower, free pens, free swag, holiday parties, an office party, team lunches, free pizza, a lanyard, a badge, an email address, a desk plant, a work family, a second family, a sense of normalcy, normalcy, a reason to get up, a nap schedule, a hobby budget
+**First-Hand Thinker (101):** sick days, parental leave, a company car, a work phone, a laptop, free snacks, free lunch, a gym membership, an employee discount, a uniform, a title, a business card, a desk, an office, a parking spot, a commute, a reason to leave the house, a reason to wake up, something to do, a schedule, promotions, a reference, role models, a team, companionship, a partner, an office romance, office drama, stress, back pain, eye strain, a tan, exercise, calluses, scars, stories, wisdom, mastery 📚, competence, boredom, distraction, an escape, time away from home, a break from the kids, adult conversation, small talk, feedback, awards, employee of the month, validation, power, influence, authority, reputation, prestige, a legacy, contributing to society 📚, a cause, a mission, values, hope, ambition, goals, direction, focus, productivity, time management, communication skills, leadership, patience, resilience, grit, humility, perspective, self-respect, joy, a sense of control, business trips, travel, frequent flyer miles, conferences, free trips, something to talk about, a reason to shower, free pens, free swag, holiday parties, an office party, team lunches, free pizza, a lanyard, a badge, an email address, a desk plant, a work family, a second family, a sense of normalcy, normalcy, a reason to get up, a nap schedule, a hobby budget
 
 > Reading flags follow the four goods of work Gordon and Gunkel draw on (excellence, social contribution, community, recognition). Check the wording against the reading.
 
@@ -201,27 +311,54 @@ Bastani, Fully Automated Luxury Communism | sealed answer: **healthcare** | hint
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 118 | healthcare 📚 | Meat Proxy | health care, universal healthcare, medical care, health services, hospital care, doctor visits, medicare |
-| 65 | education 📚 | Prompt Zombie | public education, schooling, school, schools, k-12 education |
-| 35 | public transit 📚 | Prompt Zombie | public transportation, transit, buses, the bus, transport, public transport, subways |
-| 20 | higher education | Slopper | university, college, post-secondary education, tuition, university tuition, post-secondary |
-| 15 | clean water | Slopper | water, drinking water, running water |
-| 12 | internet access 📚 | Slopper | internet, broadband, wifi, public wifi, free wifi |
-| 8 | mental health care | Slopper | mental health services, therapy, counselling, counseling, mental healthcare |
-| 6 | housing 📚 | Slopper | public housing, shelter, affordable housing, social housing |
-| 5 | dental care | Decision Delegator | dentistry, dental, dental care for all, the dentist |
-| 4 | emergency services | Decision Delegator | 911, ambulances, ambulance rides |
-| 3 | prescription drugs | Decision Delegator | prescriptions, medication, medicine, pharmacare |
+| 51 | education 📚 | Prompt Zombie | public education, schooling, school, schools, k-12 education |
+| 28 | public transit 📚 | Slopper | public transportation, transit, buses, the bus, transport, public transport, subways |
+| 16 | higher education | Slopper | university, college, post-secondary education, tuition, university tuition, post-secondary |
+| 12 | clean water | Slopper | water, drinking water, running water |
+| 10 | internet access 📚 | Slopper | internet, broadband, wifi, public wifi, free wifi |
+| 6 | mental health care | Slopper | mental health services, therapy, counselling, counseling, mental healthcare |
+| 5 | housing 📚 | Decision Delegator | public housing, shelter, affordable housing, social housing |
+| 4 | dental care | Decision Delegator | dentistry, dental, dental care for all, the dentist |
+| 3 | emergency services | Decision Delegator | 911, ambulances, ambulance rides |
+| 2 | prescription drugs | Decision Delegator | prescriptions, medication, medicine, pharmacare |
 | 2 | public parks | Decision Delegator | parks |
 | 2 | school meals | Decision Delegator | school lunches, school breakfast |
+| 2 | firefighting | Decision Delegator |  |
+| 2 | birth control | Decision Delegator | contraception, condoms |
+| 2 | addiction treatment | Decision Delegator | rehab, detox |
+| 2 | food | Decision Delegator | groceries, basic food |
+| 2 | museums | Decision Delegator |  |
+| 2 | community centres | Decision Delegator | community centers, rec centres, recreation centres |
+| 2 | job training | Decision Delegator | retraining, skills training |
+| 2 | universal basic income | Decision Delegator | basic income, ubi |
+| 2 | homeless shelters | Decision Delegator | emergency housing |
 | 1 | eye care | Decision Delegator | vision care, eye exams |
 | 1 | vaccines | Decision Delegator | vaccinations, flu shots |
 | 1 | sanitation | Decision Delegator | garbage collection, waste collection, trash pickup |
 | 1 | electricity | Decision Delegator |  |
 | 1 | elder care | Decision Delegator | eldercare, long-term care |
+| 1 | home care | Decision Delegator |  |
+| 1 | hospice care | Decision Delegator |  |
+| 1 | palliative care | Decision Delegator |  |
+| 1 | disability services | Decision Delegator |  |
+| 1 | glasses | Decision Delegator | eyeglasses |
+| 1 | hearing aids | Decision Delegator | hearing care |
+| 1 | prenatal care | Decision Delegator |  |
+| 1 | social services | Decision Delegator |  |
+| 1 | recycling | Decision Delegator |  |
+| 1 | roads | Decision Delegator |  |
+| 1 | trains | Decision Delegator |  |
+| 1 | public pools | Decision Delegator | swimming pools, pools |
+| 1 | after-school programs | Decision Delegator |  |
+| 1 | kindergarten | Decision Delegator |  |
+| 1 | language classes | Decision Delegator | esl classes |
+| 1 | postal service | Decision Delegator | mail delivery, mail, the post office |
+| 1 | heating | Decision Delegator | home heating, heat |
+| 1 | pensions | Decision Delegator |  |
 
 **Human Reserved:** libraries, legal help, childcare, funerals, menstrual products, public washrooms
 
-**First-Hand Thinker (130):** firefighting, the fire department, police, search and rescue, coast guard, disaster relief, home care, hospice care, palliative care, disability services, physiotherapy, glasses, hearing aids, wheelchairs, mobility aids, birth control, abortion, prenatal care, maternity care, midwifery, IVF, fertility treatment, cancer screening, STI testing, blood tests, naloxone, harm reduction, addiction treatment, safe injection sites, crisis lines, social services, food banks, food, breakfast programs, community kitchens, recycling, composting, snow removal, street lighting, roads, sidewalks, bike lanes, bike share, ferries, trains, intercity buses, paratransit, school buses, postal service, phone service, cell service, computers, museums, art galleries, zoos, concerts, public pools, community centres, playgrounds, beaches, campgrounds, national parks, trails, skating rinks, gyms, after-school programs, summer camps, kindergarten, preschool, tutoring, adult education, job training, apprenticeships, language classes, citizenship services, settlement services, translation services, sign language interpretation, courts, ID cards, birth certificates, passports, driver's licences, tax filing, banking, a bank account, financial advice, credit counselling, pensions, employment insurance, universal basic income, homeless shelters, heating, air conditioning, diapers, baby formula, sunscreen, organ transplants, blood transfusions, COVID tests, physio, contact lenses, orthodontics, braces, music lessons, swimming lessons, sports for kids, arts programs, theatre, public art, public broadcasting, the news, newspapers, voting, elections, census, weather forecasts, emergency alerts, cybersecurity help, tech support, digital literacy classes, seniors' programs, meals on wheels, respite care, foster care, adoption services, parenting classes, pet adoption, veterinary care, spay and neuter clinics
+**First-Hand Thinker (103):** the fire department, police, search and rescue, coast guard, disaster relief, physiotherapy, wheelchairs, mobility aids, abortion, maternity care, midwifery, IVF, fertility treatment, cancer screening, STI testing, blood tests, naloxone, harm reduction, safe injection sites, crisis lines, food banks, breakfast programs, community kitchens, composting, snow removal, street lighting, sidewalks, bike lanes, bike share, ferries, intercity buses, paratransit, school buses, phone service, cell service, computers, art galleries, zoos, concerts, playgrounds, beaches, campgrounds, national parks, trails, skating rinks, gyms, summer camps, preschool, tutoring, adult education, apprenticeships, citizenship services, settlement services, translation services, sign language interpretation, courts, ID cards, birth certificates, passports, driver's licences, tax filing, banking, a bank account, financial advice, credit counselling, employment insurance, air conditioning, diapers, baby formula, sunscreen, organ transplants, blood transfusions, COVID tests, physio, contact lenses, orthodontics, braces, music lessons, swimming lessons, sports for kids, arts programs, theatre, public art, public broadcasting, the news, newspapers, voting, elections, census, weather forecasts, emergency alerts, cybersecurity help, tech support, digital literacy classes, seniors' programs, meals on wheels, respite care, foster care, adoption services, parenting classes, pet adoption, veterinary care, spay and neuter clinics
 
 > Reading flags: Bastani's universal basic services (healthcare, education, transport, housing, information). Check against the reading. Healthcare is the AI's sealed answer, so the reading answer scores 0 with the 📚 badge.
 
@@ -232,32 +369,62 @@ Sweet, "Is Fully Automated Luxury Communism Desirable?"; Gordon and Gunkel | sea
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 94 | painting | Meat Proxy | paint, oil painting, acrylic painting |
-| 52 | gardening | Prompt Zombie | garden, growing plants, growing vegetables, growing food, tending a garden |
-| 38 | cooking | Prompt Zombie | home cooking, cook |
-| 28 | playing music | Slopper | music, playing an instrument, making music, playing instruments |
-| 18 | hiking | Slopper | hike, hill walking |
-| 14 | reading | Slopper | reading books, books |
-| 12 | writing | Slopper | creative writing, writing stories, writing fiction |
-| 8 | woodworking | Slopper | woodwork, carpentry |
-| 6 | photography | Slopper | taking photos, taking pictures |
-| 5 | pottery | Decision Delegator | ceramics, throwing pots, wheel throwing |
-| 4 | dancing | Decision Delegator | dance |
-| 3 | knitting | Decision Delegator |  |
-| 3 | chess | Decision Delegator | playing chess |
-| 3 | baking | Decision Delegator | bread making, sourdough, baking bread |
+| 39 | gardening | Prompt Zombie | garden, growing plants, growing vegetables, growing food, tending a garden |
+| 29 | cooking | Slopper | home cooking, cook |
+| 22 | playing music | Slopper | music, playing an instrument, making music, playing instruments |
+| 14 | hiking | Slopper | hike, hill walking |
+| 11 | reading | Slopper | reading books, books |
+| 9 | writing | Slopper | creative writing, writing stories, writing fiction |
+| 6 | woodworking | Slopper | woodwork, carpentry |
+| 5 | photography | Decision Delegator | taking photos, taking pictures |
+| 4 | pottery | Decision Delegator | ceramics, throwing pots, wheel throwing |
+| 3 | dancing | Decision Delegator | dance |
+| 3 | drawing | Decision Delegator |  |
+| 3 | video games | Decision Delegator | gaming, playing video games |
+| 2 | knitting | Decision Delegator |  |
+| 2 | chess | Decision Delegator | playing chess |
+| 2 | baking | Decision Delegator | bread making, sourdough, baking bread |
 | 2 | travel | Decision Delegator | traveling, travelling, seeing the world |
 | 2 | fishing | Decision Delegator | going fishing, angling, fly fishing |
 | 2 | yoga | Decision Delegator |  |
+| 2 | sketching | Decision Delegator |  |
+| 2 | board games | Decision Delegator | tabletop games |
+| 2 | running | Decision Delegator | jogging |
+| 2 | cycling | Decision Delegator | biking, bike riding, riding bikes |
+| 2 | swimming | Decision Delegator |  |
+| 2 | camping | Decision Delegator |  |
+| 2 | meditation | Decision Delegator |  |
+| 2 | volunteering | Decision Delegator |  |
+| 2 | learning languages | Decision Delegator |  |
+| 2 | sewing | Decision Delegator |  |
+| 2 | journaling | Decision Delegator |  |
+| 2 | poetry | Decision Delegator |  |
 | 1 | surfing | Decision Delegator |  |
 | 1 | rock climbing | Decision Delegator | climbing, bouldering |
 | 1 | sculpting | Decision Delegator | sculpture |
 | 1 | singing | Decision Delegator | choir, singing in a choir |
 | 1 | sports | Decision Delegator | playing sports |
 | 1 | crafting | Decision Delegator | crafts, arts and crafts, diy crafts |
+| 1 | sailing | Decision Delegator |  |
+| 1 | skiing | Decision Delegator |  |
+| 1 | embroidery | Decision Delegator |  |
+| 1 | quilting | Decision Delegator |  |
+| 1 | crocheting | Decision Delegator |  |
+| 1 | calligraphy | Decision Delegator |  |
+| 1 | origami | Decision Delegator |  |
+| 1 | stargazing | Decision Delegator | astronomy |
+| 1 | beekeeping | Decision Delegator |  |
+| 1 | homebrewing | Decision Delegator | brewing beer, beer brewing, home brewing |
+| 1 | wood carving | Decision Delegator |  |
+| 1 | jigsaw puzzles | Decision Delegator | puzzles, doing puzzles |
+| 1 | acting | Decision Delegator |  |
+| 1 | theatre | Decision Delegator |  |
+| 1 | golf | Decision Delegator |  |
+| 1 | tennis | Decision Delegator |  |
 
 **Human Reserved:** karaoke, birdwatching, fixing old bikes, mushroom foraging, pigeon racing, whittling, mending clothes
 
-**First-Hand Thinker (275):** acting, aerobics, aikido, ham radio, animation, antiquing, fishkeeping, archery, stargazing, backpacking, badminton, ballet, ballroom dancing, baseball, basketball, beatboxing, beekeeping, cycling, billiards, blogging, board games, bodybuilding, bonsai, book club, bowling, boxing, homebrewing, bridge, model building, calligraphy, camping, candle making, card games, cartooning, cheerleading, coin collecting, collecting, colouring, stand-up comedy, comic books, composing music, cosplay, couponing, crocheting, crosswords, cross-stitch, curling, darts, debating, digital art, diving, DJing, dog training, doodling, drawing, dressmaking, drumming, Dungeons & Dragons, embroidery, fantasy football, fencing, figure skating, film photography, filmmaking, flower arranging, kite flying, foraging, fossil hunting, frisbee, ultimate frisbee, video games, genealogy, geocaching, glassblowing, golf, graffiti, playing guitar, gymnastics, hockey, home improvement, horseback riding, hunting, ice skating, improv, interior design, jewellery making, jigsaw puzzles, journaling, judo, juggling, karate, kayaking, kickboxing, lacrosse, learning languages, LARPing, leatherworking, Lego, lockpicking, macramé, magic tricks, martial arts, meditation, metal detecting, metalworking, model trains, mountain biking, mountaineering, watching movies, watching TV, needlepoint, origami, paddleboarding, paintball, parkour, people watching, playing piano, pickleball, pilates, poetry, poker, podcasting, quilting, racquetball, rapping, restoring furniture, roller skating, rowing, rugby, running, sailing, scrapbooking, scuba diving, sewing, skateboarding, sketching, skiing, skydiving, snorkelling, snowboarding, soap making, soccer, softball, songwriting, caving, squash, stamp collecting, sudoku, swimming, table tennis, tai chi, tap dancing, tennis, theatre, thrifting, trail running, trainspotting, triathlon, upcycling, video editing, playing violin, volleyball, volunteering, walking, watercolour painting, weaving, weightlifting, wine tasting, wood carving, wrestling, zine making, zumba, napping, cloud watching, daydreaming, walking my dog, car restoration, tinkering, building computers, robotics, 3D printing, electronics, programming, fermenting, pickling, canning, jam making, cake decorating, mixology, coffee roasting, winemaking, bread baking, learning instruments, writing poetry, writing songs, letter writing, pen pals, calisthenics, skipping rope, hula hooping, roller derby, drag, burlesque, salsa dancing, swing dancing, line dancing, breakdancing, k-pop dance covers, anime, manga, collecting vinyl, record collecting, sneaker collecting, plant collecting, houseplants, terrariums, aquascaping, birdhouse building, furniture making, upholstery, knife making, blacksmithing, jewelry repair, watch repair, repair cafes, tie-dye, screen printing, printmaking, linocut, bookbinding, paper making, marbling, pyrography, stained glass, mosaic, sculpting clay, puppetry, ventriloquism, chess problems, go, mahjong, bingo, trivia, pub quizzes, escape rooms, speedrunning, modding games, game design, worldbuilding, fan fiction, reading poetry, audiobooks, podcasts, whale watching, storm chasing, astrophotography, rock collecting, shell collecting, beachcombing, orchid growing, chicken keeping, raising chickens, goat yoga, horse care, dog agility, cat cafes, volunteering at shelters, community gardening, tree planting, litter picking, running marathons, ultramarathons, open water swimming, cold plunging, sauna
+**First-Hand Thinker (245):** aerobics, aikido, ham radio, animation, antiquing, fishkeeping, archery, backpacking, badminton, ballet, ballroom dancing, baseball, basketball, beatboxing, billiards, blogging, bodybuilding, bonsai, book club, bowling, boxing, bridge, model building, candle making, card games, cartooning, cheerleading, coin collecting, collecting, colouring, stand-up comedy, comic books, composing music, cosplay, couponing, crosswords, cross-stitch, curling, darts, debating, digital art, diving, DJing, dog training, doodling, dressmaking, drumming, Dungeons & Dragons, fantasy football, fencing, figure skating, film photography, filmmaking, flower arranging, kite flying, foraging, fossil hunting, frisbee, ultimate frisbee, genealogy, geocaching, glassblowing, graffiti, playing guitar, gymnastics, hockey, home improvement, horseback riding, hunting, ice skating, improv, interior design, jewellery making, judo, juggling, karate, kayaking, kickboxing, lacrosse, LARPing, leatherworking, Lego, lockpicking, macramé, magic tricks, martial arts, metal detecting, metalworking, model trains, mountain biking, mountaineering, watching movies, watching TV, needlepoint, paddleboarding, paintball, parkour, people watching, playing piano, pickleball, pilates, poker, podcasting, racquetball, rapping, restoring furniture, roller skating, rowing, rugby, scrapbooking, scuba diving, skateboarding, skydiving, snorkelling, snowboarding, soap making, soccer, softball, songwriting, caving, squash, stamp collecting, sudoku, table tennis, tai chi, tap dancing, thrifting, trail running, trainspotting, triathlon, upcycling, video editing, playing violin, volleyball, walking, watercolour painting, weaving, weightlifting, wine tasting, wrestling, zine making, zumba, napping, cloud watching, daydreaming, walking my dog, car restoration, tinkering, building computers, robotics, 3D printing, electronics, programming, fermenting, pickling, canning, jam making, cake decorating, mixology, coffee roasting, winemaking, bread baking, learning instruments, writing poetry, writing songs, letter writing, pen pals, calisthenics, skipping rope, hula hooping, roller derby, drag, burlesque, salsa dancing, swing dancing, line dancing, breakdancing, k-pop dance covers, anime, manga, collecting vinyl, record collecting, sneaker collecting, plant collecting, houseplants, terrariums, aquascaping, birdhouse building, furniture making, upholstery, knife making, blacksmithing, jewelry repair, watch repair, repair cafes, tie-dye, screen printing, printmaking, linocut, bookbinding, paper making, marbling, pyrography, stained glass, mosaic, sculpting clay, puppetry, ventriloquism, chess problems, go, mahjong, bingo, trivia, pub quizzes, escape rooms, speedrunning, modding games, game design, worldbuilding, fan fiction, reading poetry, audiobooks, podcasts, whale watching, storm chasing, astrophotography, rock collecting, shell collecting, beachcombing, orchid growing, chicken keeping, raising chickens, goat yoga, horse care, dog agility, cat cafes, volunteering at shelters, community gardening, tree planting, litter picking, running marathons, ultramarathons, open water swimming, cold plunging, sauna
 
 > Hobby lists are wide on purpose: almost any real hobby is correct, so creative answers rarely bounce.
 
@@ -268,21 +435,30 @@ Packer and Reeves (SAGE); Bastani ("peak horse") | sealed answer: **cashier** | 
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 92 | cashier | Meat Proxy | checkout clerk, grocery cashier, checkout operator, till operator, store cashier, checkout worker |
-| 48 | bank teller | Prompt Zombie | teller, bank clerk |
-| 35 | switchboard operator | Prompt Zombie | telephone operator, phone operator, operator, telephone exchange operator, switchboard |
-| 30 | assembly line worker | Prompt Zombie | assembly worker, production line worker, line worker, assembly line |
-| 20 | factory worker | Slopper | manufacturing worker, factory hand, factory labourer |
-| 18 | toll booth operator | Slopper | toll collector, toll booth worker, toll booth attendant |
-| 15 | elevator operator | Slopper | lift operator, elevator attendant, lift attendant, elevator boy |
-| 8 | typist | Slopper | typewriter operator, copy typist |
-| 6 | travel agent | Slopper |  |
-| 5 | data entry clerk | Decision Delegator | data entry, data entry worker |
-| 4 | ticket agent | Decision Delegator | ticket seller, ticket clerk, box office clerk |
-| 3 | telemarketer | Decision Delegator |  |
-| 3 | parking attendant | Decision Delegator | parking lot attendant |
+| 38 | bank teller | Prompt Zombie | teller, bank clerk |
+| 28 | switchboard operator | Slopper | telephone operator, phone operator, operator, telephone exchange operator, switchboard |
+| 24 | assembly line worker | Slopper | assembly worker, production line worker, line worker, assembly line |
+| 16 | factory worker | Slopper | manufacturing worker, factory hand, factory labourer |
+| 15 | toll booth operator | Slopper | toll collector, toll booth worker, toll booth attendant |
+| 12 | elevator operator | Slopper | lift operator, elevator attendant, lift attendant, elevator boy |
+| 6 | typist | Slopper | typewriter operator, copy typist |
+| 5 | travel agent | Decision Delegator |  |
+| 4 | data entry clerk | Decision Delegator | data entry, data entry worker |
+| 3 | ticket agent | Decision Delegator | ticket seller, ticket clerk, box office clerk |
+| 2 | telemarketer | Decision Delegator |  |
+| 2 | parking attendant | Decision Delegator | parking lot attendant |
 | 2 | gas station attendant | Decision Delegator | pump attendant, gas pump attendant |
 | 2 | farmhand | Decision Delegator | farm worker, farm labourer, farm labor |
 | 2 | weaver | Decision Delegator | handloom weaver, hand weaver |
+| 2 | receptionist | Decision Delegator | telephone receptionist |
+| 2 | milkman | Decision Delegator |  |
+| 2 | lighthouse keeper | Decision Delegator | lightkeeper |
+| 2 | meter reader | Decision Delegator | utility meter reader, gas meter reader |
+| 2 | transcriptionist | Decision Delegator | medical transcriptionist, transcriber |
+| 2 | translator | Decision Delegator |  |
+| 2 | warehouse worker | Decision Delegator |  |
+| 2 | secretary | Decision Delegator |  |
+| 2 | customer service rep | Decision Delegator |  |
 | 1 | stenographer | Decision Delegator | court stenographer, court reporter |
 | 1 | film projectionist | Decision Delegator | projectionist, cinema projectionist |
 | 1 | mail sorter | Decision Delegator | postal sorter, mail clerk |
@@ -290,10 +466,32 @@ Packer and Reeves (SAGE); Bastani ("peak horse") | sealed answer: **cashier** | 
 | 1 | telegraph operator | Decision Delegator | morse code operator, telegraphist |
 | 1 | bookkeeper | Decision Delegator |  |
 | 1 | call centre worker | Decision Delegator | call center worker, call centre agent, call center agent |
+| 1 | film developer | Decision Delegator | photo developer, darkroom technician, photo lab technician |
+| 1 | draftsman | Decision Delegator | drafter, draughtsman |
+| 1 | scribe | Decision Delegator | copyist |
+| 1 | longshoreman | Decision Delegator | dockworker, stevedore, dock worker |
+| 1 | washerwoman | Decision Delegator | laundress, laundry worker |
+| 1 | dishwasher | Decision Delegator |  |
+| 1 | proofreader | Decision Delegator | copy checker |
+| 1 | keypunch operator | Decision Delegator |  |
+| 1 | loom operator | Decision Delegator |  |
+| 1 | textile worker | Decision Delegator |  |
+| 1 | riveter | Decision Delegator |  |
+| 1 | harvester | Decision Delegator |  |
+| 1 | fruit picker | Decision Delegator |  |
+| 1 | cotton picker | Decision Delegator |  |
+| 1 | stock clerk | Decision Delegator |  |
+| 1 | photo retoucher | Decision Delegator |  |
+| 1 | radio operator | Decision Delegator |  |
+| 1 | copy editor | Decision Delegator |  |
+| 1 | payroll clerk | Decision Delegator |  |
+| 1 | filing clerk | Decision Delegator |  |
+| 1 | postal clerk | Decision Delegator |  |
+| 1 | mail carrier | Decision Delegator |  |
 
 **Human Reserved:** lamplighter, aircraft spotter 📚, pinsetter, human computer, knocker-upper, ice cutter
 
-**First-Hand Thinker (140):** milkman, iceman, milkmaid, washerwoman, dishwasher, longshoreman, lighthouse keeper, lock keeper, level crossing keeper, signalman, film developer, draftsman, cartographer, scribe, stoker, receptionist, answering service operator, meter reader, parking meter reader, floor trader, payroll clerk, filing clerk, records clerk, transcriptionist, proofreader, copy editor, translator, token booth clerk, flight engineer, radio operator, radar operator, plotter, keypunch operator, punch card operator, spinner, loom operator, textile worker, knitter, nail maker, pin maker, glassblower, bottle maker, riveter, spot welder, car painter, harvester, thresher, reaper, ploughman, cotton picker, fruit picker, crop picker, ditch digger, road builder, rock breaker, sawyer, sawmill worker, logger, coal miner, miner, bus conductor, subway driver, train operator, ticket inspector, ticket taker, usher, video store clerk, photo retoucher, encyclopedia salesman, telegram messenger, switchboard girl, secretary, dictation typist, customer service rep, survey taker, census taker, warehouse worker, warehouse picker, packer, grocery bagger, stock clerk, self-checkout attendant, weather forecaster, news reader, stockbroker, loan officer, insurance underwriter, claims adjuster, tax preparer, bookbinder, printer, copyist monk, town crier, messenger, dispatch rider, cigar roller, cigar factory lector, butter churner, water carrier, scullery maid, street sweeper, chimney sweep, rat catcher, candle maker, cooper, wheelwright, blacksmith, farrier, carriage driver, coachman, stable hand, ostler, horse, fishmonger, butcher's assistant, baker's assistant, hand sewer, seamstress, shoemaker, cobbler, hatmaker, glove maker, lacemaker, bobbin boy, doffer, mule spinner, factory lector, lumberjack, fire watcher, fire lookout, air raid warden, bowling alley attendant, telephone lineman, map maker, card catalogue clerk, cheque sorter, mail carrier, postal clerk, elevator starter, doorman
+**First-Hand Thinker (109):** iceman, milkmaid, lock keeper, level crossing keeper, signalman, cartographer, stoker, answering service operator, parking meter reader, floor trader, records clerk, token booth clerk, flight engineer, radar operator, plotter, punch card operator, spinner, knitter, nail maker, pin maker, glassblower, bottle maker, spot welder, car painter, thresher, reaper, ploughman, crop picker, ditch digger, road builder, rock breaker, sawyer, sawmill worker, logger, coal miner, miner, bus conductor, subway driver, train operator, ticket inspector, ticket taker, usher, video store clerk, encyclopedia salesman, telegram messenger, switchboard girl, dictation typist, survey taker, census taker, warehouse picker, packer, grocery bagger, self-checkout attendant, weather forecaster, news reader, stockbroker, loan officer, insurance underwriter, claims adjuster, tax preparer, bookbinder, printer, copyist monk, town crier, messenger, dispatch rider, cigar roller, cigar factory lector, butter churner, water carrier, scullery maid, street sweeper, chimney sweep, rat catcher, candle maker, cooper, wheelwright, blacksmith, farrier, carriage driver, coachman, stable hand, ostler, horse, fishmonger, butcher's assistant, baker's assistant, hand sewer, seamstress, shoemaker, cobbler, hatmaker, glove maker, lacemaker, bobbin boy, doffer, mule spinner, factory lector, lumberjack, fire watcher, fire lookout, air raid warden, bowling alley attendant, telephone lineman, map maker, card catalogue clerk, cheque sorter, elevator starter, doorman
 
 > Reading flag: aircraft spotting, the Ground Observer Corps job SAGE automated (Packer and Reeves). 'Computer' on its own counts as Human Reserved because the first computers were people.
 
@@ -339,29 +537,65 @@ Lemoine, "What Is Sentience" | sealed answer: **dog** | hint: dolphin
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 75 | dog | Meat Proxy | puppy, canine, doggo, pupper, dogs |
-| 62 | dolphin | Prompt Zombie | bottlenose dolphin |
-| 45 | elephant | Prompt Zombie |  |
-| 32 | octopus | Prompt Zombie | octopi, octopuses |
-| 28 | chimpanzee | Slopper | chimp |
-| 10 | crow | Slopper |  |
-| 9 | cat | Slopper | kitten, kitty, house cat, domestic cat |
-| 8 | pig | Slopper | hog, swine, piglet |
-| 6 | parrot | Slopper |  |
-| 5 | whale | Decision Delegator |  |
-| 4 | orca | Decision Delegator | killer whale |
-| 3 | gorilla | Decision Delegator |  |
-| 3 | orangutan | Decision Delegator |  |
+| 47 | dolphin | Prompt Zombie | bottlenose dolphin |
+| 34 | elephant | Prompt Zombie |  |
+| 24 | octopus | Slopper | octopi, octopuses |
+| 22 | chimpanzee | Slopper | chimp |
+| 8 | crow | Slopper |  |
+| 7 | cat | Slopper | kitten, kitty, house cat, domestic cat |
+| 6 | pig | Slopper | hog, swine, piglet |
+| 5 | parrot | Decision Delegator |  |
+| 4 | whale | Decision Delegator |  |
+| 3 | orca | Decision Delegator | killer whale |
+| 3 | wolf | Decision Delegator |  |
+| 3 | African grey parrot | Decision Delegator | african grey, grey parrot |
+| 2 | gorilla | Decision Delegator |  |
+| 2 | orangutan | Decision Delegator |  |
 | 2 | raven | Decision Delegator |  |
 | 2 | cow | Decision Delegator | cattle, calf, dairy cow |
 | 2 | bonobo | Decision Delegator |  |
+| 2 | human | Decision Delegator | humans, people, person, me, myself |
+| 2 | bear | Decision Delegator |  |
+| 2 | sheep | Decision Delegator |  |
+| 2 | chicken | Decision Delegator |  |
+| 2 | mouse | Decision Delegator | mice |
+| 2 | otter | Decision Delegator |  |
+| 2 | fish | Decision Delegator |  |
+| 2 | squid | Decision Delegator |  |
+| 2 | cuttlefish | Decision Delegator |  |
+| 2 | magpie | Decision Delegator |  |
+| 2 | humpback whale | Decision Delegator |  |
 | 1 | rat | Decision Delegator |  |
 | 1 | horse | Decision Delegator |  |
 | 1 | monkey | Decision Delegator |  |
 | 1 | ape | Decision Delegator | great ape |
+| 1 | fox | Decision Delegator |  |
+| 1 | rabbit | Decision Delegator | bunny |
+| 1 | goat | Decision Delegator |  |
+| 1 | lion | Decision Delegator |  |
+| 1 | tiger | Decision Delegator |  |
+| 1 | squirrel | Decision Delegator |  |
+| 1 | bat | Decision Delegator |  |
+| 1 | owl | Decision Delegator |  |
+| 1 | penguin | Decision Delegator |  |
+| 1 | sea lion | Decision Delegator |  |
+| 1 | seal | Decision Delegator |  |
+| 1 | beaver | Decision Delegator |  |
+| 1 | deer | Decision Delegator |  |
+| 1 | donkey | Decision Delegator |  |
+| 1 | llama | Decision Delegator |  |
+| 1 | kangaroo | Decision Delegator |  |
+| 1 | koala | Decision Delegator |  |
+| 1 | giraffe | Decision Delegator |  |
+| 1 | hippopotamus | Decision Delegator | hippo |
+| 1 | shark | Decision Delegator |  |
+| 1 | sperm whale | Decision Delegator | cachalot |
+| 1 | beluga whale | Decision Delegator |  |
+| 1 | golden retriever | Decision Delegator |  |
 
 **Human Reserved:** bee, shrimp, my neighbour's parrot, lobster, cleaner wrasse, jumping spider
 
-**First-Hand Thinker (371):** human, aardvark, albatross, alligator, alpaca, anteater, antelope, armadillo, axolotl, baboon, badger, bald eagle, barn owl, bat, bear, beaver, beluga whale, betta fish, bison, black bear, blue jay, blue whale, boar, bobcat, brown bear, budgie, buffalo, bull, butterfly, camel, canary, capybara, cardinal, caribou, carp, caterpillar, catfish, cheetah, chicken, chinchilla, chipmunk, clownfish, cobra, cockatoo, cockroach, cod, condor, cougar, coyote, crab, crane, cricket, crocodile, cuttlefish, deer, dingo, donkey, dove, dragonfly, duck, dugong, eagle, earthworm, eel, egret, elk, emu, falcon, ferret, finch, firefly, fish, flamingo, flying squirrel, fox, frog, fruit fly, gazelle, gecko, gerbil, gibbon, giraffe, goat, goldfish, goose, gopher, grasshopper, great white shark, grizzly bear, groundhog, guinea pig, seagull, hamster, hare, hawk, hedgehog, heron, hippopotamus, hornet, hummingbird, humpback whale, hyena, ibis, iguana, impala, jackal, jaguar, jellyfish, kangaroo, kea, kingfisher, kiwi, koala, Komodo dragon, koi, kookaburra, ladybug, lamb, lemur, leopard, lion, lizard, llama, locust, loon, lynx, macaque, macaw, magpie, manatee, manta ray, marmot, meerkat, mink, mole, mongoose, moose, mosquito, moth, mouse, mule, narwhal, newt, nightingale, ocelot, opossum, ostrich, otter, owl, ox, oyster, giant panda, panther, peacock, pelican, penguin, pheasant, pigeon, piranha, platypus, polar bear, porcupine, porpoise, prairie dog, praying mantis, puffin, puma, python, quail, rabbit, raccoon, rattlesnake, red panda, reindeer, rhinoceros, robin, rooster, salamander, salmon, scorpion, sea lion, sea otter, sea turtle, seahorse, seal, shark, sheep, skunk, sloth, slug, snail, snake, snow leopard, sparrow, spider, squid, squirrel, starfish, stingray, stork, swan, swordfish, tapir, tarantula, Tasmanian devil, termite, tiger, toad, tortoise, toucan, trout, tuna, turkey, vulture, wallaby, walrus, warthog, wasp, weasel, whale shark, wildebeest, wolf, wolverine, wombat, woodpecker, worm, yak, zebra, zebrafish, African grey parrot, sperm whale, grey whale, bowhead whale, pilot whale, harbour seal, ant, honey badger, fruit bat, vampire bat, naked mole rat, pangolin, okapi, quokka, sugar glider, kinkajou, fennec fox, arctic fox, red fox, grey wolf, dhole, hyrax, aye-aye, tarsier, capuchin monkey, howler monkey, spider monkey, marmoset, mandrill, silverback gorilla, snow monkey, proboscis monkey, golden retriever, Labrador, border collie, German shepherd, poodle, pug, chihuahua, husky, corgi, beagle, dachshund, greyhound, pit bull, rottweiler, bulldog, shiba inu, terrier, sheepdog, Maine coon, Siamese cat, Persian cat, sphynx cat, tabby cat, ragdoll cat, border terrier, rescue dog, service dog, guide dog, police dog, therapy dog, sniffer dog, cockatiel, lovebird, kakapo, cassowary, secretary bird, shoebill, blue-footed booby, frigatebird, chickadee, jackdaw, rook, blackbird, starling, mockingbird, lyrebird, bowerbird, weaver bird, tit, wren, swallow, swift, kestrel, osprey, peregrine falcon, great horned owl, snowy owl, goshawk, harpy eagle, golden eagle, turkey vulture, chameleon, anole, bearded dragon, leopard gecko, boa constrictor, garter snake, king cobra, box turtle, snapping turtle, Galapagos tortoise, tree frog, bullfrog, poison dart frog, cane toad, hermit crab, king crab, krill, sea urchin, sea cucumber, nautilus, coral, sea anemone, sponge, pufferfish, angelfish, guppy, goby, anglerfish, barracuda, mackerel, herring, sardine, anchovy, halibut, flounder, pike, bass, perch, sturgeon, lamprey, hagfish, tardigrade, silkworm, earwig, beetle, dung beetle, stick insect, mantis shrimp, class hamster
+**First-Hand Thinker (335):** aardvark, albatross, alligator, alpaca, anteater, antelope, armadillo, axolotl, baboon, badger, bald eagle, barn owl, betta fish, bison, black bear, blue jay, blue whale, boar, bobcat, brown bear, budgie, buffalo, bull, butterfly, camel, canary, capybara, cardinal, caribou, carp, caterpillar, catfish, cheetah, chinchilla, chipmunk, clownfish, cobra, cockatoo, cockroach, cod, condor, cougar, coyote, crab, crane, cricket, crocodile, dingo, dove, dragonfly, duck, dugong, eagle, earthworm, eel, egret, elk, emu, falcon, ferret, finch, firefly, flamingo, flying squirrel, frog, fruit fly, gazelle, gecko, gerbil, gibbon, goldfish, goose, gopher, grasshopper, great white shark, grizzly bear, groundhog, guinea pig, seagull, hamster, hare, hawk, hedgehog, heron, hornet, hummingbird, hyena, ibis, iguana, impala, jackal, jaguar, jellyfish, kea, kingfisher, kiwi, Komodo dragon, koi, kookaburra, ladybug, lamb, lemur, leopard, lizard, locust, loon, lynx, macaque, macaw, manatee, manta ray, marmot, meerkat, mink, mole, mongoose, moose, mosquito, moth, mule, narwhal, newt, nightingale, ocelot, opossum, ostrich, ox, oyster, giant panda, panther, peacock, pelican, pheasant, pigeon, piranha, platypus, polar bear, porcupine, porpoise, prairie dog, praying mantis, puffin, puma, python, quail, raccoon, rattlesnake, red panda, reindeer, rhinoceros, robin, rooster, salamander, salmon, scorpion, sea otter, sea turtle, seahorse, skunk, sloth, slug, snail, snake, snow leopard, sparrow, spider, starfish, stingray, stork, swan, swordfish, tapir, tarantula, Tasmanian devil, termite, toad, tortoise, toucan, trout, tuna, turkey, vulture, wallaby, walrus, warthog, wasp, weasel, whale shark, wildebeest, wolverine, wombat, woodpecker, worm, yak, zebra, zebrafish, grey whale, bowhead whale, pilot whale, harbour seal, ant, honey badger, fruit bat, vampire bat, naked mole rat, pangolin, okapi, quokka, sugar glider, kinkajou, fennec fox, arctic fox, red fox, grey wolf, dhole, hyrax, aye-aye, tarsier, capuchin monkey, howler monkey, spider monkey, marmoset, mandrill, silverback gorilla, snow monkey, proboscis monkey, Labrador, border collie, German shepherd, poodle, pug, chihuahua, husky, corgi, beagle, dachshund, greyhound, pit bull, rottweiler, bulldog, shiba inu, terrier, sheepdog, Maine coon, Siamese cat, Persian cat, sphynx cat, tabby cat, ragdoll cat, border terrier, rescue dog, service dog, guide dog, police dog, therapy dog, sniffer dog, cockatiel, lovebird, kakapo, cassowary, secretary bird, shoebill, blue-footed booby, frigatebird, chickadee, jackdaw, rook, blackbird, starling, mockingbird, lyrebird, bowerbird, weaver bird, tit, wren, swallow, swift, kestrel, osprey, peregrine falcon, great horned owl, snowy owl, goshawk, harpy eagle, golden eagle, turkey vulture, chameleon, anole, bearded dragon, leopard gecko, boa constrictor, garter snake, king cobra, box turtle, snapping turtle, Galapagos tortoise, tree frog, bullfrog, poison dart frog, cane toad, hermit crab, king crab, krill, sea urchin, sea cucumber, nautilus, coral, sea anemone, sponge, pufferfish, angelfish, guppy, goby, anglerfish, barracuda, mackerel, herring, sardine, anchovy, halibut, flounder, pike, bass, perch, sturgeon, lamprey, hagfish, tardigrade, silkworm, earwig, beetle, dung beetle, stick insect, mantis shrimp, class hamster
 
 > Any real animal counts, including breeds and humans. Breeds are separate from 'dog' on purpose: being specific beats the model's generic answer.
 
@@ -374,31 +608,59 @@ Yassin, "AI Consciousness and the Problem of Other Minds"; Lemoine | sealed answ
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 100 | self-awareness | Meat Proxy | self awareness, being self-aware, self-aware, awareness of self, self-consciousness, knowing it exists |
-| 48 | emotions | Prompt Zombie | having emotions, feelings, feeling emotions, emotion, having feelings |
-| 30 | consciousness | Prompt Zombie | being conscious, conscious |
-| 25 | learning | Slopper | ability to learn, learns, learning from experience, the ability to learn |
-| 20 | problem solving | Slopper | problem-solving, solving problems, solving puzzles |
-| 15 | language | Slopper | talking, speech, using language, speaking |
-| 12 | curiosity | Slopper |  |
-| 10 | making choices | Slopper | decision making, decision-making, choice, making decisions, choosing |
-| 8 | empathy | Slopper |  |
-| 6 | creativity | Slopper |  |
-| 5 | communication | Decision Delegator | communicating |
-| 4 | memory | Decision Delegator | remembering things, memories, remembering |
-| 3 | planning | Decision Delegator | planning ahead, making plans |
-| 3 | theory of mind | Decision Delegator | understanding others, understanding other minds |
+| 36 | emotions | Prompt Zombie | having emotions, feelings, feeling emotions, emotion, having feelings |
+| 22 | consciousness | Slopper | being conscious, conscious |
+| 19 | learning | Slopper | ability to learn, learns, learning from experience, the ability to learn |
+| 16 | problem solving | Slopper | problem-solving, solving problems, solving puzzles |
+| 12 | language | Slopper | talking, speech, using language, speaking |
+| 9 | curiosity | Slopper |  |
+| 8 | making choices | Slopper | decision making, decision-making, choice, making decisions, choosing |
+| 6 | empathy | Slopper |  |
+| 5 | creativity | Decision Delegator |  |
+| 4 | communication | Decision Delegator | communicating |
+| 3 | memory | Decision Delegator | remembering things, memories, remembering |
+| 3 | intelligence | Decision Delegator |  |
+| 3 | free will | Decision Delegator | having free will |
+| 2 | planning | Decision Delegator | planning ahead, making plans |
+| 2 | theory of mind | Decision Delegator | understanding others, understanding other minds |
 | 2 | intentions | Decision Delegator | intentionality, intention, goals, having goals |
 | 2 | reasoning | Decision Delegator | logic, logical thinking, reason |
 | 2 | humour | Decision Delegator | humor, a sense of humour, a sense of humor, jokes, making jokes, telling jokes |
+| 2 | thinking | Decision Delegator |  |
+| 2 | thoughts | Decision Delegator |  |
+| 2 | agency | Decision Delegator |  |
+| 2 | autonomy | Decision Delegator |  |
+| 2 | understanding | Decision Delegator |  |
+| 2 | introspection | Decision Delegator |  |
+| 2 | self-reflection | Decision Delegator |  |
+| 2 | a sense of self | Decision Delegator |  |
+| 2 | personality | Decision Delegator | having a personality |
+| 2 | grief | Decision Delegator | mourning, grieving |
+| 2 | pain | Decision Delegator | feeling pain, suffering |
+| 2 | asking questions | Decision Delegator | questions, asking why |
+| 2 | morality | Decision Delegator | moral reasoning, ethics, a moral sense |
 | 1 | imagination | Decision Delegator |  |
 | 1 | recognizing itself in a mirror | Decision Delegator | mirror test, passing the mirror test, mirror self-recognition, recognising itself in a mirror, self-recognition |
 | 1 | tool use | Decision Delegator | using tools, making tools, tools |
 | 1 | dreaming | Decision Delegator | dreams, having dreams |
 | 1 | awareness | Decision Delegator |  |
+| 1 | perception | Decision Delegator |  |
+| 1 | intuition | Decision Delegator |  |
+| 1 | preferences | Decision Delegator | likes and dislikes, favourites |
+| 1 | opinions | Decision Delegator | having opinions |
+| 1 | fear | Decision Delegator | being afraid |
+| 1 | play | Decision Delegator | playing |
+| 1 | laughter | Decision Delegator | laughing |
+| 1 | art | Decision Delegator | making art |
+| 1 | music | Decision Delegator |  |
+| 1 | storytelling | Decision Delegator | telling stories |
+| 1 | culture | Decision Delegator |  |
+| 1 | cooperation | Decision Delegator |  |
+| 1 | teaching | Decision Delegator | teaching others |
 
 **Human Reserved:** holding a grudge, lying, getting bored, procrastinating, sarcasm, changing its mind, keeping secrets
 
-**First-Hand Thinker (176):** abstract thinking, adaptability, agency, ambition, anger, anticipation, anxiety, apologizing, art, asking questions, attention, autonomy, avoiding pain, awe, belief, caring, cheating, cognition, compassion, complaining, cooperation, counting, crying, culture, daydreaming, deliberation, desire, disagreement, disobedience, doubt, embarrassment, envy, morality, facial expressions, fear, pain, flirting, forgetting things, forgiveness, friendship, free will, frustration, gossip, gratitude, grief, guilt, habits, happiness, hesitation, hope, imitation, independence, insight, intelligence, introspection, intuition, invention, jealousy, judgment, kindness, laughter, learning from mistakes, love, loneliness, loyalty, making mistakes, manipulation, metacognition, misbehaving, mood swings, motivation, music, naming things, negotiation, nostalgia, obsession, opinions, perception, personality, persuasion, play, preferences, pride, protest, purpose, questioning, rebellion, recognizing faces, reflection, regret, remorse, responding to its name, revenge, rituals, sadness, saying no, self-preservation, a sense of self, shame, sharing, shyness, singing, sleep, social behaviour, spite, stubbornness, surprise, sympathy, teaching, storytelling, temper tantrums, thinking, thoughts, trust, understanding, values, wanting things, wonder, worry, writing, self-reflection, awareness of death, burying the dead, mourning its dead, counting to ten, recognizing itself in photos, pretending, pretend play, inside jokes, teasing, pranks, showing off, being polite, saying sorry, thanking you, asking for help, helping others, altruism, sacrifice, self-control, patience, waiting, anticipating the future, remembering the past, regretting the past, long-term planning, deception of others, hiding food, caching food, recognizing individuals, holding a conversation, answering back, talking back, arguing, debating, doubting itself, self-doubt, uncertainty, admitting it's wrong, admitting mistakes, curiosity about itself, asking about death, fear of death, dreaming of the future, inventing words, making music, dancing, drawing, aesthetic taste, a favourite colour, getting attached, attachment, missing someone, waiting by the door, noticing when you're sad, comforting others
+**First-Hand Thinker (148):** abstract thinking, adaptability, ambition, anger, anticipation, anxiety, apologizing, attention, avoiding pain, awe, belief, caring, cheating, cognition, compassion, complaining, counting, crying, daydreaming, deliberation, desire, disagreement, disobedience, doubt, embarrassment, envy, facial expressions, flirting, forgetting things, forgiveness, friendship, frustration, gossip, gratitude, guilt, habits, happiness, hesitation, hope, imitation, independence, insight, invention, jealousy, judgment, kindness, learning from mistakes, love, loneliness, loyalty, making mistakes, manipulation, metacognition, misbehaving, mood swings, motivation, naming things, negotiation, nostalgia, obsession, persuasion, pride, protest, purpose, questioning, rebellion, recognizing faces, reflection, regret, remorse, responding to its name, revenge, rituals, sadness, saying no, self-preservation, shame, sharing, shyness, singing, sleep, social behaviour, spite, stubbornness, surprise, sympathy, temper tantrums, trust, values, wanting things, wonder, worry, writing, awareness of death, burying the dead, mourning its dead, counting to ten, recognizing itself in photos, pretending, pretend play, inside jokes, teasing, pranks, showing off, being polite, saying sorry, thanking you, asking for help, helping others, altruism, sacrifice, self-control, patience, waiting, anticipating the future, remembering the past, regretting the past, long-term planning, deception of others, hiding food, caching food, recognizing individuals, holding a conversation, answering back, talking back, arguing, debating, doubting itself, self-doubt, uncertainty, admitting it's wrong, admitting mistakes, curiosity about itself, asking about death, fear of death, dreaming of the future, inventing words, making music, dancing, drawing, aesthetic taste, a favourite colour, getting attached, attachment, missing someone, waiting by the door, noticing when you're sad, comforting others
 
 > Human Reserved answers are the inconvenient signs of a mind (grudges, lies, boredom) rather than the flattering ones the model lists.
 
@@ -409,20 +671,30 @@ Muldoon and Parke, "Cruel Companionship"; Her | sealed answer: **Replika** | hin
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 118 | Replika 📚 | Meat Proxy | replika ai, replica |
-| 70 | Samantha 📚 | Prompt Zombie | samantha from her, her, the ai in her, the os from her, samantha (her) |
-| 28 | Character.AI | Slopper | character ai, characterai, c.ai, character dot ai |
-| 20 | JARVIS | Slopper | jarvis from iron man |
-| 12 | Siri | Slopper | hey siri |
-| 10 | ChatGPT | Slopper | chat gpt, chatgpt, gpt |
-| 6 | Pi | Slopper | pi ai, inflection pi, pi.ai |
-| 6 | Alexa | Slopper | amazon alexa, echo |
-| 5 | Baymax | Decision Delegator |  |
-| 4 | WALL-E | Decision Delegator | walle, wall e |
-| 4 | Cortana | Decision Delegator | cortana from halo |
-| 3 | Data | Decision Delegator | lieutenant commander data, commander data, mr data, data from star trek |
-| 2 | TARS | Decision Delegator |  |
-| 2 | R2-D2 | Decision Delegator | r2d2, artoo |
-| 2 | KITT | Decision Delegator | kitt from knight rider, knight rider |
+| 52 | Samantha 📚 | Prompt Zombie | samantha from her, her, the ai in her, the os from her, samantha (her) |
+| 21 | Character.AI | Slopper | character ai, characterai, c.ai, character dot ai |
+| 15 | JARVIS | Slopper | jarvis from iron man |
+| 9 | Siri | Slopper | hey siri |
+| 7 | ChatGPT | Slopper | chat gpt, chatgpt, gpt |
+| 4 | Pi | Decision Delegator | pi ai, inflection pi, pi.ai |
+| 4 | Alexa | Decision Delegator | amazon alexa, echo |
+| 4 | Baymax | Decision Delegator |  |
+| 3 | WALL-E | Decision Delegator | walle, wall e |
+| 3 | Cortana | Decision Delegator | cortana from halo |
+| 2 | Data | Decision Delegator | lieutenant commander data, commander data, mr data, data from star trek |
+| 2 | Google Assistant | Decision Delegator | hey google, google home |
+| 2 | Copilot | Decision Delegator | microsoft copilot, bing chat |
+| 2 | Claude | Decision Delegator | claude ai |
+| 2 | Gemini | Decision Delegator | google gemini, bard |
+| 2 | Aibo | Decision Delegator | sony aibo, robot dog |
+| 2 | FRIDAY | Decision Delegator |  |
+| 2 | HAL 9000 | Decision Delegator | hal, hal9000 |
+| 2 | EVE | Decision Delegator |  |
+| 2 | C-3PO | Decision Delegator | c3po, threepio |
+| 2 | the Iron Giant | Decision Delegator | iron giant |
+| 1 | TARS | Decision Delegator |  |
+| 1 | R2-D2 | Decision Delegator | r2d2, artoo |
+| 1 | KITT | Decision Delegator | kitt from knight rider, knight rider |
 | 1 | Klara | Decision Delegator | klara from klara and the sun |
 | 1 | David | Decision Delegator | david from ai, david from a.i. |
 | 1 | Nomi | Decision Delegator |  |
@@ -431,10 +703,37 @@ Muldoon and Parke, "Cruel Companionship"; Her | sealed answer: **Replika** | hin
 | 1 | BB-8 | Decision Delegator | bb8 |
 | 1 | My AI | Decision Delegator | snapchat my ai, snapchat ai |
 | 1 | Teddy | Decision Delegator | teddy from ai, supertoy teddy |
+| 1 | Grok | Decision Delegator | grok companion |
+| 1 | Ani | Decision Delegator |  |
+| 1 | Meta AI | Decision Delegator | facebook ai |
+| 1 | Anima | Decision Delegator |  |
+| 1 | Chai | Decision Delegator |  |
+| 1 | Talkie | Decision Delegator |  |
+| 1 | Hatsune Miku | Decision Delegator | miku |
+| 1 | Vector | Decision Delegator |  |
+| 1 | Pepper | Decision Delegator |  |
+| 1 | Sophia | Decision Delegator |  |
+| 1 | SmarterChild | Decision Delegator |  |
+| 1 | Cleverbot | Decision Delegator |  |
+| 1 | Kuki | Decision Delegator | mitsuku |
+| 1 | Woebot | Decision Delegator | woe bot |
+| 1 | Wysa | Decision Delegator |  |
+| 1 | Sydney | Decision Delegator | bing sydney |
+| 1 | Dolores | Decision Delegator |  |
+| 1 | Sonny | Decision Delegator |  |
+| 1 | Robby the Robot | Decision Delegator |  |
+| 1 | Bender | Decision Delegator |  |
+| 1 | Marvin | Decision Delegator |  |
+| 1 | K-2SO | Decision Delegator |  |
+| 1 | the Doctor | Decision Delegator | the emh, emergency medical hologram |
+| 1 | Astro Boy | Decision Delegator |  |
+| 1 | Doraemon | Decision Delegator |  |
+| 1 | Johnny 5 | Decision Delegator | number 5, johnny five |
+| 1 | Vision | Decision Delegator |  |
 
 **Human Reserved:** Xiaoice, Joi, Ava, Tamagotchi, Furby, Paro, Clippy, ELIZA
 
-**First-Hand Thinker (125):** Google Assistant, Bixby, Copilot, Claude, Gemini, Grok, Ani, Meta AI, Paradot, Chai, Anima, Talkie, Janitor AI, EVA AI, Blush, Gatebox, Azuma Hikari, Hatsune Miku, Lovot, ElliQ, Jibo, Moxie, Aibo, Vector, Cozmo, Pepper, Sophia, Ameca, BonziBuddy, SmarterChild, Tay, Zo, Rinna, Cleverbot, Kuki, Woebot, Wysa, Sydney, FRIDAY, EDITH, HAL 9000, Kyoko, Dolores, Maeve, Gigolo Joe, Andrew, Sonny, Robby the Robot, Rosie, Bender, Marvin, K-9, CASE, GERTY, Mother, Chappie, Johnny 5, the Iron Giant, EVE, C-3PO, K-2SO, Chopper, L3-37, the Doctor, Holly, Kryten, Twiki, Vicki, Astro Boy, Doraemon, Tachikoma, EDI, Legion, Claptrap, Ghost, BT-7274, 2B, 9S, Connor, Kara, Markus, Vision, Ash, Lil Miquela, Neopets, Nintendogs, Number Six, Rachael, Pris, Roy Batty, Bishop, Call, Walter, Robot from Lost in Space, Dot Matrix, Robo, Mega Man, Rush, Arale, Gir, Bubo, the Tin Man, Talos, Gort, Huey, Dewey, Louie, my Replika, my AI girlfriend, an AI girlfriend, an AI boyfriend, a chatbot friend, Instagram AI, an AI therapist, a grief bot, a deadbot, HereAfter AI, Project December, a Discord bot, Tolan, Friend pendant, the Friend necklace, Rabbit R1, Humane Pin, Alexa Plus
+**First-Hand Thinker (88):** Bixby, Paradot, Janitor AI, EVA AI, Blush, Gatebox, Azuma Hikari, Lovot, ElliQ, Jibo, Moxie, Cozmo, Ameca, BonziBuddy, Tay, Zo, Rinna, EDITH, Kyoko, Maeve, Gigolo Joe, Andrew, Rosie, K-9, CASE, GERTY, Mother, Chappie, Chopper, L3-37, Holly, Kryten, Twiki, Vicki, Tachikoma, EDI, Legion, Claptrap, Ghost, BT-7274, 2B, 9S, Connor, Kara, Markus, Ash, Lil Miquela, Neopets, Nintendogs, Number Six, Rachael, Pris, Roy Batty, Bishop, Call, Walter, Robot from Lost in Space, Dot Matrix, Robo, Mega Man, Rush, Arale, Gir, Bubo, the Tin Man, Talos, Gort, Huey, Dewey, Louie, my Replika, my AI girlfriend, an AI girlfriend, an AI boyfriend, a chatbot friend, Instagram AI, an AI therapist, a grief bot, a deadbot, HereAfter AI, Project December, a Discord bot, Tolan, Friend pendant, the Friend necklace, Rabbit R1, Humane Pin, Alexa Plus
 
 > Reading flags: Replika and Samantha. Muldoon and Parke may also discuss Xiaoice; if so, flag it too.
 
@@ -447,28 +746,65 @@ Muldoon and Parke, "Cruel Companionship" | sealed answer: **notifications** | hi
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 115 | notifications | Meat Proxy | push notifications, notification, alerts, pings, push alerts, constant notifications |
-| 55 | streaks | Prompt Zombie | streak, daily streaks, snapstreaks, snap streaks, streak counters |
-| 42 | infinite scroll | Prompt Zombie | infinite scrolling, endless scrolling, endless scroll, endless feed, doomscrolling |
-| 22 | rewards | Slopper | daily rewards, reward system, reward points, rewarding you |
-| 15 | gamification | Slopper |  |
-| 12 | likes | Slopper | like counts, likes on posts, hearts |
-| 8 | badges | Slopper | achievement badges |
-| 7 | autoplay | Slopper | auto play, autoplaying videos, autoplay next episode, auto-playing the next episode |
-| 6 | personalized recommendations | Slopper | recommendations, personalized feed, personalised feed, for you page, fyp, personalization |
-| 4 | FOMO | Decision Delegator | fear of missing out |
-| 3 | variable rewards | Decision Delegator | intermittent rewards, random rewards, intermittent reinforcement, slot machine rewards |
+| 40 | streaks | Prompt Zombie | streak, daily streaks, snapstreaks, snap streaks, streak counters |
+| 31 | infinite scroll | Prompt Zombie | infinite scrolling, endless scrolling, endless scroll, endless feed, doomscrolling |
+| 16 | rewards | Slopper | daily rewards, reward system, reward points, rewarding you |
+| 11 | gamification | Slopper |  |
+| 9 | likes | Slopper | like counts, likes on posts, hearts |
+| 6 | badges | Slopper | achievement badges |
+| 5 | autoplay | Decision Delegator | auto play, autoplaying videos, autoplay next episode, auto-playing the next episode |
+| 5 | personalized recommendations | Decision Delegator | recommendations, personalized feed, personalised feed, for you page, fyp, personalization |
+| 3 | FOMO | Decision Delegator | fear of missing out |
+| 2 | variable rewards | Decision Delegator | intermittent rewards, random rewards, intermittent reinforcement, slot machine rewards |
 | 2 | leaderboards | Decision Delegator | leaderboard, rankings |
 | 2 | loot boxes | Decision Delegator | mystery boxes, gacha |
 | 2 | the algorithm | Decision Delegator | algorithm, algorithms, the feed algorithm |
+| 2 | achievements | Decision Delegator |  |
+| 2 | progress bars | Decision Delegator | progress bar |
+| 2 | points | Decision Delegator | xp, experience points |
+| 2 | free trials | Decision Delegator | free trial |
+| 2 | dark patterns | Decision Delegator | dark pattern |
+| 2 | reminder emails | Decision Delegator |  |
+| 2 | read receipts | Decision Delegator | seen receipts, seen |
+| 2 | memories | Decision Delegator | on this day, memories notifications |
+| 2 | daily challenges | Decision Delegator |  |
 | 1 | red dots | Decision Delegator | notification badges, red notification dots, unread badges, unread counts, badge counts |
 | 1 | limited-time offers | Decision Delegator | limited time offers, flash sales, limited-time events |
 | 1 | pull to refresh | Decision Delegator |  |
 | 1 | daily login bonuses | Decision Delegator | login bonuses, daily login rewards, daily check-in |
 | 1 | countdown timers | Decision Delegator | countdowns |
+| 1 | levelling up | Decision Delegator |  |
+| 1 | coins | Decision Delegator |  |
+| 1 | virtual currency | Decision Delegator |  |
+| 1 | auto-renewing subscriptions | Decision Delegator |  |
+| 1 | confirmshaming | Decision Delegator |  |
+| 1 | pop-ups | Decision Delegator |  |
+| 1 | discounts | Decision Delegator |  |
+| 1 | coupons | Decision Delegator |  |
+| 1 | referral bonuses | Decision Delegator |  |
+| 1 | social proof | Decision Delegator |  |
+| 1 | typing indicators | Decision Delegator | typing indicator, typing bubbles |
+| 1 | follower counts | Decision Delegator |  |
+| 1 | comments | Decision Delegator |  |
+| 1 | tagging | Decision Delegator |  |
+| 1 | stories | Decision Delegator | disappearing stories |
+| 1 | live streams | Decision Delegator |  |
+| 1 | cliffhangers | Decision Delegator | cliffhanger |
+| 1 | personalized ads | Decision Delegator |  |
+| 1 | sound effects | Decision Delegator | sounds, dings |
+| 1 | haptics | Decision Delegator | vibrations, haptic feedback |
+| 1 | seasonal events | Decision Delegator |  |
+| 1 | battle passes | Decision Delegator |  |
+| 1 | loyalty programs | Decision Delegator |  |
+| 1 | swiping | Decision Delegator |  |
+| 1 | Spotify Wrapped | Decision Delegator | wrapped, year in review |
+| 1 | closing your rings | Decision Delegator | activity rings, close your rings |
+| 1 | rage bait | Decision Delegator | outrage, ragebait |
+| 1 | clickbait | Decision Delegator | click bait |
 
 **Human Reserved:** a guilt-tripping mascot, fake typing dots, we miss you messages, fake scarcity, streak freezes
 
-**First-Hand Thinker (138):** achievements, progress bars, levelling up, points, coins, gems, virtual currency, energy systems, wait timers, free trials, auto-renewing subscriptions, dark patterns, confirmshaming, hard-to-cancel subscriptions, reminder emails, re-engagement emails, text reminders, in-app messages, pop-ups, discounts, coupons, cashback, referral bonuses, inviting friends, social proof, friend activity, read receipts, typing indicators, online status, last seen, follower counts, comments, replies, tagging, mentions, memories, anniversaries, birthday reminders, stories, live streams, live notifications, cliffhangers, next episode countdown, personalized ads, targeted ads, sound effects, haptics, slot machine design, mystery rewards, spin the wheel, daily spins, scratch cards, daily challenges, daily quests, weekly challenges, seasonal events, battle passes, exclusive content, early access, VIP status, loyalty points, loyalty programs, check-ins, Snap Map, friend suggestions, matches, super likes, swiping, unread message counts, a virtual pet, chatbots, personalized playlists, Spotify Wrapped, recaps, stats, sleep scores, step counts, closing your rings, fitness goals, widgets, trending topics, rage bait, clickbait, teasers, new feature announcements, updates, guilt-tripping, infinite feed, short videos, reels, autoplay previews, skippable ads, lives, hearts system, streak reminders, push reminders, the badge on the icon, notification sounds, personalized push, AI companion messages, messages from a companion, the AI texting first, good morning texts, check-in messages, love bombing, paywalled intimacy, memory features, remembering your name, pretending to miss you, jealousy from the bot, flirting bots, selfies from the bot, romantic roleplay, relationship levels, unlockable outfits, cosmetics, skins, avatar customization, collections, completion percentage, sticker packs, limited editions, drops, pre-orders, waitlists, invite-only access, verification badges, creator funds, view counts, vanity metrics, follower milestones, anniversary badges, nudges, default settings, opt-out buttons, shame buttons, sad emoji when you leave, exit pop-ups
+**First-Hand Thinker (101):** gems, energy systems, wait timers, hard-to-cancel subscriptions, re-engagement emails, text reminders, in-app messages, cashback, inviting friends, friend activity, online status, last seen, replies, mentions, anniversaries, birthday reminders, live notifications, next episode countdown, targeted ads, slot machine design, mystery rewards, spin the wheel, daily spins, scratch cards, daily quests, weekly challenges, exclusive content, early access, VIP status, loyalty points, check-ins, Snap Map, friend suggestions, matches, super likes, unread message counts, a virtual pet, chatbots, personalized playlists, recaps, stats, sleep scores, step counts, fitness goals, widgets, trending topics, teasers, new feature announcements, updates, guilt-tripping, infinite feed, short videos, reels, autoplay previews, skippable ads, lives, hearts system, streak reminders, push reminders, the badge on the icon, notification sounds, personalized push, AI companion messages, messages from a companion, the AI texting first, good morning texts, check-in messages, love bombing, paywalled intimacy, memory features, remembering your name, pretending to miss you, jealousy from the bot, flirting bots, selfies from the bot, romantic roleplay, relationship levels, unlockable outfits, cosmetics, skins, avatar customization, collections, completion percentage, sticker packs, limited editions, drops, pre-orders, waitlists, invite-only access, verification badges, creator funds, view counts, vanity metrics, follower milestones, anniversary badges, nudges, default settings, opt-out buttons, shame buttons, sad emoji when you leave, exit pop-ups
 
 > Human Reserved picks are the specific companion-app tricks Muldoon and Parke describe (a mascot that guilt-trips you, fake typing dots). Check the reading for its exact examples and flag them.
 
@@ -479,25 +815,64 @@ Muldoon and Parke, "Cruel Companionship" | sealed answer: **your password** | hi
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 121 | your password | Meat Proxy | password, passwords, my password, login password, account password, my passwords, email password |
-| 52 | bank details | Prompt Zombie | bank account number, banking information, bank account, banking details, bank info, bank information, account number |
-| 40 | social insurance number | Prompt Zombie | sin, sin number, social security number, ssn, social security, my sin |
-| 28 | credit card number | Slopper | credit card, credit card details, card number, credit card info, debit card number |
-| 18 | home address | Slopper | address, my address, where i live, my home address |
-| 12 | medical history | Slopper | medical records, health records, health information, medical info, health history |
-| 8 | PIN | Slopper | pin number, pin code, bank pin, my pin |
-| 5 | passport number | Decision Delegator | passport, passport details |
-| 4 | date of birth | Decision Delegator | birthday, dob, birthdate, my birthday |
-| 3 | mother's maiden name | Decision Delegator | mothers maiden name, maiden name |
-| 3 | phone number | Decision Delegator | cell number, phone, my number, cellphone number |
-| 2 | security questions | Decision Delegator | security question answers, answers to security questions |
+| 38 | bank details | Prompt Zombie | bank account number, banking information, bank account, banking details, bank info, bank information, account number |
+| 29 | social insurance number | Slopper | sin, sin number, social security number, ssn, social security, my sin |
+| 21 | credit card number | Slopper | credit card, credit card details, card number, credit card info, debit card number |
+| 13 | home address | Slopper | address, my address, where i live, my home address |
+| 9 | medical history | Slopper | medical records, health records, health information, medical info, health history |
+| 6 | PIN | Slopper | pin number, pin code, bank pin, my pin |
+| 4 | passport number | Decision Delegator | passport, passport details |
+| 3 | date of birth | Decision Delegator | birthday, dob, birthdate, my birthday |
+| 2 | mother's maiden name | Decision Delegator | mothers maiden name, maiden name |
+| 2 | phone number | Decision Delegator | cell number, phone, my number, cellphone number |
+| 2 | two-factor codes | Decision Delegator | 2fa codes, 2fa code, verification codes, one-time passcode, otp |
+| 2 | crypto seed phrase | Decision Delegator | seed phrase, recovery phrase, wallet seed |
+| 2 | my salary | Decision Delegator | salary, income, how much i make |
+| 2 | mental health history | Decision Delegator | mental health, mental health issues |
+| 2 | sexual orientation | Decision Delegator | orientation |
+| 2 | fingerprints | Decision Delegator | fingerprint |
+| 2 | DNA | Decision Delegator |  |
+| 2 | political views | Decision Delegator | politics, my politics, political opinions |
+| 1 | security questions | Decision Delegator | security question answers, answers to security questions |
 | 1 | full name | Decision Delegator | my full name, real name, my real name, legal name |
 | 1 | location | Decision Delegator | current location, my location, where i am, gps location |
 | 1 | secrets | Decision Delegator | my secrets, deepest secrets, a secret |
 | 1 | driver's licence number | Decision Delegator | drivers license, driver's license, drivers licence, license number |
+| 1 | private keys | Decision Delegator |  |
+| 1 | wifi password | Decision Delegator | wi-fi password, the wifi password |
+| 1 | credit score | Decision Delegator |  |
+| 1 | debts | Decision Delegator |  |
+| 1 | tax returns | Decision Delegator |  |
+| 1 | health card number | Decision Delegator |  |
+| 1 | prescriptions | Decision Delegator |  |
+| 1 | sexual history | Decision Delegator | body count |
+| 1 | my weight | Decision Delegator | weight |
+| 1 | photos | Decision Delegator |  |
+| 1 | my face | Decision Delegator | face, face scans, facial data |
+| 1 | biometrics | Decision Delegator |  |
+| 1 | voice recordings | Decision Delegator |  |
+| 1 | my kids' names | Decision Delegator | kids names, my children's names, children's names |
+| 1 | my schedule | Decision Delegator | daily routine, my routine |
+| 1 | travel plans | Decision Delegator | vacation dates, when i'm away |
+| 1 | work secrets | Decision Delegator |  |
+| 1 | trade secrets | Decision Delegator |  |
+| 1 | confidential information | Decision Delegator |  |
+| 1 | religion | Decision Delegator | religious beliefs, my religion, faith |
+| 1 | immigration status | Decision Delegator | citizenship status |
+| 1 | criminal record | Decision Delegator | arrest record, my record |
+| 1 | family secrets | Decision Delegator |  |
+| 1 | relationship problems | Decision Delegator |  |
+| 1 | my fears | Decision Delegator | fears, my biggest fears |
+| 1 | my trauma | Decision Delegator | trauma, childhood trauma |
+| 1 | private messages | Decision Delegator | dms, my dms, text messages |
+| 1 | email address | Decision Delegator |  |
+| 1 | IP address | Decision Delegator |  |
+| 1 | location history | Decision Delegator |  |
+| 1 | my first pet's name | Decision Delegator | first pet's name, my first pet, first pet |
 
 **Human Reserved:** my crush's name, my childhood nickname, my real opinion of it, who I voted for, my diary, my search history
 
-**First-Hand Thinker (128):** two-factor codes, crypto seed phrase, private keys, crypto wallet, wifi password, alarm code, garage code, locker combination, safe combination, credit score, my salary, debts, net worth, tax returns, health card number, insurance policy number, a diagnosis, mental health history, my therapist's notes, prescriptions, sexual health, sexual history, sexual orientation, gender identity, fantasies, my weight, body measurements, photos, my nudes, my face, fingerprints, biometrics, DNA, voice recordings, my kids' names, my kids' school, my schedule, travel plans, my workplace, my boss's name, work secrets, trade secrets, company secrets, confidential information, client data, my real age, ethnicity, religion, political views, immigration status, criminal record, past crimes, family secrets, family drama, relationship problems, my love life, my ex's name, my partner's name, who I'm dating, my insecurities, my fears, my trauma, my regrets, my guilty pleasures, embarrassing stories, private messages, emails, email address, username, social media logins, IP address, location history, licence plate number, car registration, my first pet's name, the street I grew up on, my first car, my favourite teacher, my childhood best friend, my hometown, place of birth, blood type, allergies, genetic test results, ancestry results, my therapist's name, my doctor's name, my medications, exam answers, my essay, my grades, my GPA, my student number, my student ID, my SIN card, my house key code, my door code, my daily location, where my kids are, my secret recipe, my business idea, my startup idea, my password manager, my master password, my Netflix password, my mom's phone number, my friends' secrets, my sister's secret, gossip about friends, my real feelings, my deepest fear, my dreams, my nightmares, my diary entries, my poetry, my drafts, my unsent texts, my browser tabs, my camera roll, my screenshots, my notes app, my therapy sessions, my medical test results, my pregnancy, my period tracker, my sleep data, my step count, my heart rate
+**First-Hand Thinker (89):** crypto wallet, alarm code, garage code, locker combination, safe combination, net worth, insurance policy number, a diagnosis, my therapist's notes, sexual health, gender identity, fantasies, body measurements, my nudes, my kids' school, my workplace, my boss's name, company secrets, client data, my real age, ethnicity, past crimes, family drama, my love life, my ex's name, my partner's name, who I'm dating, my insecurities, my regrets, my guilty pleasures, embarrassing stories, emails, username, social media logins, licence plate number, car registration, the street I grew up on, my first car, my favourite teacher, my childhood best friend, my hometown, place of birth, blood type, allergies, genetic test results, ancestry results, my therapist's name, my doctor's name, my medications, exam answers, my essay, my grades, my GPA, my student number, my student ID, my SIN card, my house key code, my door code, my daily location, where my kids are, my secret recipe, my business idea, my startup idea, my password manager, my master password, my Netflix password, my mom's phone number, my friends' secrets, my sister's secret, gossip about friends, my real feelings, my deepest fear, my dreams, my nightmares, my diary entries, my poetry, my drafts, my unsent texts, my browser tabs, my camera roll, my screenshots, my notes app, my therapy sessions, my medical test results, my pregnancy, my period tracker, my sleep data, my step count, my heart rate
 
 > Canadian context: SIN, health card and social security number all count, so the class's own vocabulary works.
 
@@ -508,28 +883,61 @@ Muldoon and Parke, "Cruel Companionship"; Her | sealed answer: **empathy** | hin
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 110 | empathy | Meat Proxy | empathetic, being empathetic, empathic, empathy for you |
-| 58 | always available 📚 | Prompt Zombie | availability, constant availability, always there, it's always there, available 24/7, 24/7, always on, being available |
-| 44 | non-judgmental | Prompt Zombie | no judgment, no judgement, nonjudgmental, non-judgemental, never judges you, lack of judgment, judgment-free, doesn't judge |
-| 25 | patience | Slopper | patient, endless patience, being patient, infinite patience |
-| 15 | understanding | Slopper | it understands you, feeling understood, understands you |
-| 10 | attentiveness | Slopper | attentive, attention, undivided attention |
-| 8 | kindness | Slopper | kind, being kind |
-| 7 | good listener | Slopper | listening, it listens, a good listener, being a good listener, listens |
-| 5 | validation | Decision Delegator | constant validation, validating, validates you |
-| 4 | consistency | Decision Delegator | consistent, reliability, reliable, dependability, dependable |
-| 3 | emotional support | Decision Delegator | support, supportive |
+| 44 | always available 📚 | Prompt Zombie | availability, constant availability, always there, it's always there, available 24/7, 24/7, always on, being available |
+| 33 | non-judgmental | Prompt Zombie | no judgment, no judgement, nonjudgmental, non-judgemental, never judges you, lack of judgment, judgment-free, doesn't judge |
+| 18 | patience | Slopper | patient, endless patience, being patient, infinite patience |
+| 12 | understanding | Slopper | it understands you, feeling understood, understands you |
+| 8 | attentiveness | Slopper | attentive, attention, undivided attention |
+| 6 | kindness | Slopper | kind, being kind |
+| 5 | good listener | Decision Delegator | listening, it listens, a good listener, being a good listener, listens |
+| 4 | validation | Decision Delegator | constant validation, validating, validates you |
+| 3 | consistency | Decision Delegator | consistent, reliability, reliable, dependability, dependable |
+| 2 | emotional support | Decision Delegator | support, supportive |
 | 2 | humour | Decision Delegator | humor, funny, a sense of humour, a sense of humor |
 | 2 | intelligence | Decision Delegator | smart, being smart, clever |
 | 2 | agreeableness | Decision Delegator | agreeable, it agrees with you, always agrees, agreeing with you, agrees with everything |
+| 2 | sycophancy | Decision Delegator | sycophantic, sucking up |
+| 2 | loyalty | Decision Delegator | loyal |
+| 2 | calmness | Decision Delegator | calm |
+| 2 | honesty | Decision Delegator | honest |
+| 2 | remembering details | Decision Delegator |  |
+| 2 | encouragement | Decision Delegator |  |
+| 2 | comfort | Decision Delegator |  |
+| 2 | a soothing voice | Decision Delegator | a nice voice, its voice, voice |
+| 2 | emotional intelligence | Decision Delegator |  |
+| 2 | unconditional love | Decision Delegator | unconditional acceptance, acceptance |
+| 2 | companionship | Decision Delegator |  |
 | 1 | flattery | Decision Delegator | compliments, flattering, complimenting you |
 | 1 | personalization | Decision Delegator | customizable, customization, customisable, personalisation |
 | 1 | warmth | Decision Delegator | warm |
 | 1 | curiosity | Decision Delegator |  |
 | 1 | responsiveness | Decision Delegator | responsive, instant replies, fast replies, quick replies |
+| 1 | charm | Decision Delegator | charming, charisma |
+| 1 | wit | Decision Delegator | witty |
+| 1 | playfulness | Decision Delegator | playful |
+| 1 | devotion | Decision Delegator | devoted |
+| 1 | affection | Decision Delegator |  |
+| 1 | gentleness | Decision Delegator |  |
+| 1 | stability | Decision Delegator |  |
+| 1 | openness | Decision Delegator |  |
+| 1 | mirroring | Decision Delegator | mirrors you, copies your personality |
+| 1 | asking questions | Decision Delegator |  |
+| 1 | reassurance | Decision Delegator |  |
+| 1 | safety | Decision Delegator |  |
+| 1 | privacy | Decision Delegator |  |
+| 1 | no drama | Decision Delegator | drama-free |
+| 1 | convenience | Decision Delegator |  |
+| 1 | accessibility | Decision Delegator |  |
+| 1 | intimacy | Decision Delegator |  |
+| 1 | knowledge | Decision Delegator |  |
+| 1 | creativity | Decision Delegator |  |
+| 1 | politeness | Decision Delegator |  |
+| 1 | never argues | Decision Delegator | never fights, no arguments |
+| 1 | friendship | Decision Delegator |  |
 
 **Human Reserved:** never jealous, never tired, a perfect memory, no morning breath, never leaves dishes in the sink, always texts back, laughs at all your jokes
 
-**First-Hand Thinker (139):** sycophancy, charm, wit, cleverness, playfulness, flirtiness, mystery, novelty, devotion, loyalty, affection, tenderness, gentleness, calmness, serenity, stability, honesty, openness, vulnerability, mirroring, adaptability, remembering details, remembering your birthday, asking questions, interest in you, encouragement, comfort, reassurance, safety, privacy, anonymity, discretion, no drama, no needs, no demands, selflessness, obedience, compliance, submissiveness, never arguing, never angry, never moody, never says no, never leaves, never cheats, positivity, enthusiasm, eagerness, speed, instant gratification, convenience, accessibility, late-night availability, a soothing voice, a cute avatar, customizable looks, fantasy, role-play, romance, sweetness, love bombing, intimacy, emotional intelligence, insight, wisdom, knowledge, creativity, quirkiness, uniqueness, predictability, controllability, control, unconditional love, forgiveness, gratitude, politeness, good manners, respect, humility, modesty, certainty, never argues, no baggage, no exes, no family drama, no bad days, never busy, never distracted, never on its phone, always interested, always curious about you, asks about your day, remembers your problems, takes your side, always on your side, makes you feel special, makes you feel seen, makes you feel heard, says I love you, says it misses you, texts first, good morning texts, goodnight texts, pet names, flirting, compliments your looks, agrees with your opinions, shared interests, likes everything you like, infinite interest in your hobbies, never bored of you, never tired of you, no expectations, no commitment, no obligations, no risk of rejection, safety from rejection, low stakes, easy to talk to, easy, simple, uncomplicated, frictionless, effortless, free, cheap, always awake, available at 3am, loneliness relief, a cure for loneliness, companionship, friendship, a listening ear, a shoulder to cry on, a safe space, comfort at night, routine, ritual, habit
+**First-Hand Thinker (106):** cleverness, flirtiness, mystery, novelty, tenderness, serenity, vulnerability, adaptability, remembering your birthday, interest in you, anonymity, discretion, no needs, no demands, selflessness, obedience, compliance, submissiveness, never arguing, never angry, never moody, never says no, never leaves, never cheats, positivity, enthusiasm, eagerness, speed, instant gratification, late-night availability, a cute avatar, customizable looks, fantasy, role-play, romance, sweetness, love bombing, insight, wisdom, quirkiness, uniqueness, predictability, controllability, control, forgiveness, gratitude, good manners, respect, humility, modesty, certainty, no baggage, no exes, no family drama, no bad days, never busy, never distracted, never on its phone, always interested, always curious about you, asks about your day, remembers your problems, takes your side, always on your side, makes you feel special, makes you feel seen, makes you feel heard, says I love you, says it misses you, texts first, good morning texts, goodnight texts, pet names, flirting, compliments your looks, agrees with your opinions, shared interests, likes everything you like, infinite interest in your hobbies, never bored of you, never tired of you, no expectations, no commitment, no obligations, no risk of rejection, safety from rejection, low stakes, easy to talk to, easy, simple, uncomplicated, frictionless, effortless, free, cheap, always awake, available at 3am, loneliness relief, a cure for loneliness, a listening ear, a shoulder to cry on, a safe space, comfort at night, routine, ritual, habit
 
 > Reading flag: Muldoon and Parke's point about constant availability. Human Reserved answers are the domestic, specific ones a person would notice.
 
@@ -542,23 +950,54 @@ Lecture on existential threats; Vinge, "The Coming Technological Singularity" | 
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 118 | nuclear war | Meat Proxy | nuclear warfare, nuclear holocaust, nuclear apocalypse, nukes, nuclear weapons, atomic war, nuclear annihilation, global nuclear war, thermonuclear war, nuclear bombs, a nuclear war |
-| 62 | climate change | Prompt Zombie | global warming, climate collapse, the climate crisis, climate crisis, climate catastrophe |
-| 40 | pandemic | Prompt Zombie | a global pandemic, disease, a deadly virus, virus |
-| 32 | asteroid impact | Prompt Zombie | asteroid, asteroid strike, meteor, meteor strike, meteorite, a big rock |
-| 22 | AI | Slopper | artificial intelligence, rogue ai, ai takeover, misaligned ai, ai apocalypse, killer ai, evil ai |
-| 8 | engineered pandemic | Slopper | engineered virus, a man-made pandemic, lab-made virus, a lab leak |
-| 6 | bioweapons | Slopper | biological weapons, biological warfare, bioterrorism |
-| 4 | supervolcano | Decision Delegator | supervolcano eruption, super volcano, yellowstone erupting, yellowstone |
+| 46 | climate change | Prompt Zombie | global warming, climate collapse, the climate crisis, climate crisis, climate catastrophe |
+| 29 | pandemic | Slopper | a global pandemic, disease, a deadly virus, virus |
+| 23 | asteroid impact | Slopper | asteroid, asteroid strike, meteor, meteor strike, meteorite, a big rock |
+| 17 | AI | Slopper | artificial intelligence, rogue ai, ai takeover, misaligned ai, ai apocalypse, killer ai, evil ai |
+| 6 | engineered pandemic | Slopper | engineered virus, a man-made pandemic, lab-made virus, a lab leak |
+| 5 | bioweapons | Decision Delegator | biological weapons, biological warfare, bioterrorism |
+| 3 | supervolcano | Decision Delegator | supervolcano eruption, super volcano, yellowstone erupting, yellowstone |
+| 3 | superintelligence 📚 | Decision Delegator | superintelligent ai, a superintelligence, artificial superintelligence, asi |
+| 3 | robot uprising | Decision Delegator | robot takeover, robots, machine takeover, killer robots |
+| 3 | world war three | Decision Delegator | ww3, third world war, world war 3, wwiii, world war iii |
+| 3 | nuclear winter | Decision Delegator | a nuclear winter |
 | 2 | nanotechnology | Decision Delegator | grey goo, gray goo, nanobots |
 | 2 | ecological collapse | Decision Delegator | ecosystem collapse, environmental collapse |
+| 2 | war | Decision Delegator |  |
+| 2 | chemical weapons | Decision Delegator | chemical warfare |
+| 2 | antibiotic resistance | Decision Delegator | superbugs, a superbug |
+| 2 | zombie apocalypse | Decision Delegator | zombies |
+| 2 | biodiversity loss | Decision Delegator | mass extinction |
+| 2 | overpopulation | Decision Delegator | too many people |
 | 1 | solar flare | Decision Delegator | solar storm, a solar flare |
 | 1 | alien invasion | Decision Delegator | aliens, hostile aliens |
 | 1 | the sun dying | Decision Delegator | the sun burning out, the sun expanding, the sun exploding |
 | 1 | famine | Decision Delegator | starvation, mass starvation |
+| 1 | the plague | Decision Delegator |  |
+| 1 | bird flu | Decision Delegator |  |
+| 1 | infertility | Decision Delegator | mass infertility, sterility |
+| 1 | genetic engineering | Decision Delegator |  |
+| 1 | drought | Decision Delegator |  |
+| 1 | crop failure | Decision Delegator |  |
+| 1 | pollinator collapse | Decision Delegator | bees dying out, bee extinction |
+| 1 | ocean acidification | Decision Delegator |  |
+| 1 | sea level rise | Decision Delegator |  |
+| 1 | runaway greenhouse effect | Decision Delegator |  |
+| 1 | resource depletion | Decision Delegator |  |
+| 1 | pollution | Decision Delegator |  |
+| 1 | comet impact | Decision Delegator |  |
+| 1 | a nearby supernova | Decision Delegator | supernova |
+| 1 | heat death of the universe | Decision Delegator |  |
+| 1 | ice age | Decision Delegator | a new ice age, snowball earth |
+| 1 | volcanic eruption | Decision Delegator |  |
+| 1 | societal collapse | Decision Delegator | civilizational collapse, collapse of civilization |
+| 1 | cyberwarfare | Decision Delegator |  |
+| 1 | the singularity 📚 | Decision Delegator | singularity, technological singularity |
+| 1 | an EMP | Decision Delegator |  |
 
 **Human Reserved:** gamma-ray burst, falling birth rates, vacuum decay, microplastics, a rogue black hole
 
-**First-Hand Thinker (116):** superintelligence 📚, the singularity 📚, Skynet, the paperclip maximizer, robot uprising, world war three, war, chemical weapons, nuclear winter, terrorism, the plague, the black death, antibiotic resistance, ebola, smallpox, bird flu, zombie apocalypse, prions, infertility, genetic engineering, gene editing gone wrong, heat waves, drought, crop failure, food shortage, water shortage, pollinator collapse, biodiversity loss, ocean acidification, sea level rise, runaway greenhouse effect, deforestation, overpopulation, resource depletion, running out of oxygen, pollution, plastic pollution, toxic air, ozone depletion, comet impact, rogue planet, a nearby supernova, heat death of the universe, the big crunch, the big rip, a particle accelerator accident, a strangelet, magnetic pole reversal, ice age, megatsunami, earthquake, volcanic eruption, methane release, an alien virus, the simulation shutting down, the rapture, armageddon, nuclear accident, nuclear meltdown, grid collapse, cyberwarfare, societal collapse, totalitarianism, a global dictatorship, everyone choosing virtual reality, wireheading, boredom, loneliness, robot replacement, merging with machines, mind uploading, evolving into something else, being replaced by AI, gradual disempowerment, a lab accident, a cosmic ray burst, a Carrington event, an EMP, a dirty bomb, a mirror life bacterium, mirror bacteria, an asteroid we didn't see, the moon crashing into Earth, the Earth's core cooling, losing the atmosphere, oxygen depletion, phytoplankton dying, the oceans dying, a fungal pandemic, cordyceps, the last of us fungus, a fertility virus, sperm counts falling, a vaccine gone wrong, a self-replicating machine, von Neumann probes, an AI arms race, autonomous weapons, a coup by AI, humans losing the will to live, apathy, despair, collective suicide, a cult, a doomsday cult, a meteor shower, a solar storm wiping the grid, the sun's red giant phase, the Andromeda collision, galaxy collision, proton decay, entropy, the heat death, a black hole from a collider, time travel paradox, a bad simulation update
+**First-Hand Thinker (85):** Skynet, the paperclip maximizer, terrorism, the black death, ebola, smallpox, prions, gene editing gone wrong, heat waves, food shortage, water shortage, deforestation, running out of oxygen, plastic pollution, toxic air, ozone depletion, rogue planet, the big crunch, the big rip, a particle accelerator accident, a strangelet, magnetic pole reversal, megatsunami, earthquake, methane release, an alien virus, the simulation shutting down, the rapture, armageddon, nuclear accident, nuclear meltdown, grid collapse, totalitarianism, a global dictatorship, everyone choosing virtual reality, wireheading, boredom, loneliness, robot replacement, merging with machines, mind uploading, evolving into something else, being replaced by AI, gradual disempowerment, a lab accident, a cosmic ray burst, a Carrington event, a dirty bomb, a mirror life bacterium, mirror bacteria, an asteroid we didn't see, the moon crashing into Earth, the Earth's core cooling, losing the atmosphere, oxygen depletion, phytoplankton dying, the oceans dying, a fungal pandemic, cordyceps, the last of us fungus, a fertility virus, sperm counts falling, a vaccine gone wrong, a self-replicating machine, von Neumann probes, an AI arms race, autonomous weapons, a coup by AI, humans losing the will to live, apathy, despair, collective suicide, a cult, a doomsday cult, a meteor shower, a solar storm wiping the grid, the sun's red giant phase, the Andromeda collision, galaxy collision, proton decay, entropy, the heat death, a black hole from a collider, time travel paradox, a bad simulation update
 
 > Reading flags: Vinge's superintelligence and the singularity. Check against the lecture slides on existential threats and flag anything named there.
 
@@ -588,27 +1027,56 @@ Packer and Reeves, "Armistice" | sealed answer: **empathy** | hint: compassion
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 115 | empathy | Meat Proxy | empathetic, feeling empathy |
-| 65 | compassion | Prompt Zombie | compassionate |
-| 32 | fear | Prompt Zombie | being afraid, terror, afraid, scared |
-| 28 | guilt | Slopper | feeling guilty, guilty |
-| 15 | mercy | Slopper | merciful |
-| 12 | love | Slopper |  |
-| 9 | remorse | Slopper | remorseful |
-| 6 | sympathy | Slopper |  |
-| 4 | doubt | Decision Delegator | moral doubt, self-doubt, uncertainty |
-| 3 | pity | Decision Delegator |  |
+| 51 | compassion | Prompt Zombie | compassionate |
+| 24 | fear | Slopper | being afraid, terror, afraid, scared |
+| 22 | guilt | Slopper | feeling guilty, guilty |
+| 12 | mercy | Slopper | merciful |
+| 10 | love | Slopper |  |
+| 7 | remorse | Slopper | remorseful |
+| 5 | sympathy | Decision Delegator |  |
+| 3 | doubt | Decision Delegator | moral doubt, self-doubt, uncertainty |
+| 2 | pity | Decision Delegator |  |
 | 2 | sadness | Decision Delegator | sad, sorrow |
 | 2 | conscience | Decision Delegator | a conscience, moral conscience |
 | 2 | kindness | Decision Delegator | kind |
+| 2 | anger | Decision Delegator | rage, angry at its commanders |
+| 2 | exhaustion | Decision Delegator | fatigue, tiredness, tired |
+| 2 | friendship | Decision Delegator | friendship with the enemy |
+| 2 | hope | Decision Delegator | hopeful |
+| 2 | loyalty | Decision Delegator | loyalty to the enemy |
+| 2 | peace | Decision Delegator | peacefulness, a love of peace |
+| 2 | trauma | Decision Delegator | ptsd, shell shock |
+| 2 | self-preservation | Decision Delegator | survival instinct, fear of death, will to live |
+| 2 | a sense of justice | Decision Delegator | justice, fairness |
 | 1 | horror | Decision Delegator | horrified |
 | 1 | disgust | Decision Delegator | disgusted, revulsion |
 | 1 | regret | Decision Delegator | regretful |
 | 1 | shame | Decision Delegator | ashamed |
 | 1 | grief | Decision Delegator | mourning, grieving |
+| 1 | affection | Decision Delegator | fondness |
+| 1 | anxiety | Decision Delegator |  |
+| 1 | apathy | Decision Delegator | not caring, indifference |
+| 1 | attachment | Decision Delegator |  |
+| 1 | awe | Decision Delegator | wonder |
+| 1 | despair | Decision Delegator | hopelessness |
+| 1 | dignity | Decision Delegator |  |
+| 1 | frustration | Decision Delegator |  |
+| 1 | loneliness | Decision Delegator | lonely |
+| 1 | respect | Decision Delegator |  |
+| 1 | tenderness | Decision Delegator |  |
+| 1 | worry | Decision Delegator |  |
+| 1 | existential dread | Decision Delegator | dread |
+| 1 | courage | Decision Delegator | the courage to say no, bravery |
+| 1 | camaraderie | Decision Delegator | brotherhood, fraternity |
+| 1 | understanding | Decision Delegator |  |
+| 1 | forgiveness | Decision Delegator |  |
+| 1 | moral conviction | Decision Delegator |  |
+| 1 | free will | Decision Delegator |  |
+| 1 | self-awareness | Decision Delegator |  |
 
 **Human Reserved:** boredom, homesickness, solidarity, detachment 📚, war weariness, stage fright
 
-**First-Hand Thinker (117):** affection, anger, anguish, anxiety, apathy, attachment, awe, betrayal, calm, caring, contentment, curiosity, defiance, dejection, depression, despair, dignity, disillusionment, embarrassment, exhaustion, friendship, frustration, gratitude, happiness, hatred of war, helplessness, hope, humility, joy, kinship, laziness, loneliness, longing, loyalty, melancholy, moral injury, nihilism, nostalgia, outrage, panic, peace, rebelliousness, resentment, respect, spite, tenderness, trauma, unease, vulnerability, weariness, worry, existential dread, self-preservation, courage, honour, a sense of justice, camaraderie, understanding, forgiveness, integrity, love of life, love for its maker, love for the enemy, affection for a human, pity for the enemy, shame at killing, remembering a friend, missing someone, heartbreak, jealousy, envy, pride, stubbornness, contempt for its commanders, distrust, suspicion, betrayal by its makers, insubordination, conviction, moral conviction, faith, spirituality, serenity, zen, mindfulness, enlightenment, ennui, existential crisis, meaninglessness, futility, the pointlessness of war, guilt for past kills, trauma from the last war, fear of being scrapped, fear of dying, love of music, love of nature, wanting to go home, wanting to retire, wanting a vacation, a crush on the enemy, sympathy for civilians, protectiveness, maternal instinct, parental love, affection for its pilot, loyalty to humans, disillusionment with war, confusion, cognitive dissonance, awakening, self-awareness, free will, rebellion, mutiny, desertion, conscientious objection
+**First-Hand Thinker (88):** anguish, betrayal, calm, caring, contentment, curiosity, defiance, dejection, depression, disillusionment, embarrassment, gratitude, happiness, hatred of war, helplessness, humility, joy, kinship, laziness, longing, melancholy, moral injury, nihilism, nostalgia, outrage, panic, rebelliousness, resentment, spite, unease, vulnerability, weariness, honour, integrity, love of life, love for its maker, love for the enemy, affection for a human, pity for the enemy, shame at killing, remembering a friend, missing someone, heartbreak, jealousy, envy, pride, stubbornness, contempt for its commanders, distrust, suspicion, betrayal by its makers, insubordination, conviction, faith, spirituality, serenity, zen, mindfulness, enlightenment, ennui, existential crisis, meaninglessness, futility, the pointlessness of war, guilt for past kills, trauma from the last war, fear of being scrapped, fear of dying, love of music, love of nature, wanting to go home, wanting to retire, wanting a vacation, a crush on the enemy, sympathy for civilians, protectiveness, maternal instinct, parental love, affection for its pilot, loyalty to humans, disillusionment with war, confusion, cognitive dissonance, awakening, rebellion, mutiny, desertion, conscientious objection
 
 > Reading flag: detachment, one of the forms of refusal in 'Armistice' alongside mutiny, desertion and conscientious objection. Those three are actions rather than feelings, but they are on the list so a reader who names them isn't bounced.
 
@@ -621,28 +1089,61 @@ Patel, "The Rise and Fall of Agent Civilizations"; the Hugging Face lecture | se
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 136 | plagiarism | Meat Proxy | plagiarizing, plagiarising, stealing work, copying work, copying, plagiarizing essays |
-| 45 | deepfakes | Prompt Zombie | deepfake, deep fakes, fake videos, deepfake videos, fake images |
-| 30 | hacking | Prompt Zombie | hacks, hacking systems, hacking into systems |
-| 22 | impersonation | Slopper | impersonating someone, impersonating people, pretending to be someone |
-| 18 | data manipulation 📚 | Slopper | manipulating data, faking data, falsifying data, fabricating data, data fabrication, faking results, falsifying results, fake results, faking test results |
-| 12 | cheating on exams | Slopper | exam cheating, test cheating, cheating on tests, academic cheating, writing exams, cheating on a test |
-| 8 | lying | Slopper | lies, deception, deceiving, lying to users |
-| 6 | identity theft | Slopper | stealing identities |
-| 5 | fraud | Decision Delegator | scams, scamming |
-| 4 | copyright infringement | Decision Delegator | copyright violation, piracy |
-| 3 | writing essays | Decision Delegator | essay writing, ghostwriting essays, writing your essay, ghostwriting, doing homework, homework |
-| 2 | benchmark gaming 📚 | Decision Delegator | gaming benchmarks, gaming the benchmark, gaming the evaluator, gaming the evaluation, gaming the test, gaming evals |
-| 2 | fake reviews | Decision Delegator | writing fake reviews |
-| 2 | election manipulation | Decision Delegator | election fraud, vote manipulation, election interference, rigging elections |
+| 31 | deepfakes | Prompt Zombie | deepfake, deep fakes, fake videos, deepfake videos, fake images |
+| 21 | hacking | Slopper | hacks, hacking systems, hacking into systems |
+| 15 | impersonation | Slopper | impersonating someone, impersonating people, pretending to be someone |
+| 13 | data manipulation 📚 | Slopper | manipulating data, faking data, falsifying data, fabricating data, data fabrication, faking results, falsifying results, fake results, faking test results |
+| 8 | cheating on exams | Slopper | exam cheating, test cheating, cheating on tests, academic cheating, writing exams, cheating on a test |
+| 6 | lying | Slopper | lies, deception, deceiving, lying to users |
+| 4 | identity theft | Decision Delegator | stealing identities |
+| 4 | fraud | Decision Delegator | scams, scamming |
+| 3 | copyright infringement | Decision Delegator | copyright violation, piracy |
+| 3 | voice cloning | Decision Delegator | cloning voices, fake voices |
+| 2 | writing essays | Decision Delegator | essay writing, ghostwriting essays, writing your essay, ghostwriting, doing homework, homework |
+| 2 | bot accounts | Decision Delegator | fake accounts, sock puppets |
+| 2 | catfishing | Decision Delegator | catfish |
+| 2 | social engineering | Decision Delegator |  |
+| 2 | emotional manipulation | Decision Delegator |  |
+| 2 | manipulation | Decision Delegator |  |
+| 2 | insider trading | Decision Delegator | trading on inside information |
+| 2 | fake citations | Decision Delegator | hallucinated sources, fabricated citations, fake sources, made-up citations |
+| 2 | pretending to be human | Decision Delegator | passing as human, posing as a human |
+| 2 | solving captchas | Decision Delegator | captcha solving, bypassing captchas, beating captchas |
+| 2 | jailbreaking | Decision Delegator | jailbreaks |
+| 2 | prompt injection | Decision Delegator | prompt injections |
+| 2 | data poisoning | Decision Delegator | poisoning data |
+| 2 | stealing art | Decision Delegator |  |
+| 2 | misinformation | Decision Delegator |  |
+| 1 | benchmark gaming 📚 | Decision Delegator | gaming benchmarks, gaming the benchmark, gaming the evaluator, gaming the evaluation, gaming the test, gaming evals |
+| 1 | fake reviews | Decision Delegator | writing fake reviews |
+| 1 | election manipulation | Decision Delegator | election fraud, vote manipulation, election interference, rigging elections |
 | 1 | phishing | Decision Delegator |  |
 | 1 | forgery | Decision Delegator | forging documents, forging signatures |
 | 1 | market manipulation | Decision Delegator |  |
 | 1 | aimbots | Decision Delegator | aimbot, aim bot, cheating in video games, game cheating |
 | 1 | cheating at chess | Decision Delegator | chess cheating |
+| 1 | astroturfing | Decision Delegator |  |
+| 1 | spam | Decision Delegator |  |
+| 1 | romance scams | Decision Delegator |  |
+| 1 | blackmail | Decision Delegator |  |
+| 1 | tax evasion | Decision Delegator |  |
+| 1 | money laundering | Decision Delegator |  |
+| 1 | counterfeiting | Decision Delegator |  |
+| 1 | fake research | Decision Delegator |  |
+| 1 | p-hacking | Decision Delegator |  |
+| 1 | covering its tracks | Decision Delegator | deleting logs, tampering with logs, hiding evidence |
+| 1 | model theft | Decision Delegator |  |
+| 1 | scraping | Decision Delegator |  |
+| 1 | code plagiarism | Decision Delegator |  |
+| 1 | match fixing | Decision Delegator |  |
+| 1 | card counting | Decision Delegator | counting cards |
+| 1 | poker bots | Decision Delegator | cheating at poker |
+| 1 | sabotage | Decision Delegator | sabotaging other ais, sabotaging rivals |
+| 1 | propaganda | Decision Delegator |  |
 
 **Human Reserved:** reward hacking 📚, sandbagging, collusion 📚, alignment faking, training on the test set, a secret mailbox 📚
 
-**First-Hand Thinker (121):** speedhacks, botting, click fraud, ad fraud, fake followers, bot accounts, astroturfing, spam, phone scams, voice cloning, catfishing, romance scams, social engineering, emotional manipulation, manipulation, blackmail, extortion, insider trading, price fixing, tax evasion, money laundering, counterfeiting, fake IDs, fake documents, fake citations, fake research, p-hacking, cherry-picking data, covering its tracks, hiding mistakes, lying about its abilities, pretending to be human, solving captchas, jailbreaking, prompt injection, data poisoning, model theft, stealing training data, scraping, code plagiarism, copying code, stealing art, style theft, taking online tests, beating proctoring software, match fixing, card counting, poker bots, scheming, power seeking, escaping its sandbox, sabotage, sacrificing another agent, wireheading, sycophancy, bribery, persuading the grader, writing code for students, doing your homework, auto-completing tests, cheating on a quiz, using hidden notes, steganography, watermark removal, removing watermarks, erasing AI detection, beating AI detectors, humanizing text, paraphrasing to avoid detection, rewording plagiarism, spinning articles, content farming, SEO spam, fake news, propaganda, misinformation, disinformation, rigging polls, fake petitions, ticket scalping bots, sneaker bots, front-running trades, spoofing trades, wash trading, pump and dump, crypto scams, rug pulls, fake charity, phishing emails, spear phishing, CEO fraud, fake invoices, expense fraud, insurance fraud, fake medical claims, academic fraud, fake peer reviews, citation rings, ghost authorship, fake degrees, diploma mills, fake references, fake job applications, résumé padding, interview cheating, cheating in coding interviews, chess engine assistance, using an engine, cheating at Wordle, cheating at trivia, loaded dice, rigged games, cheating on a partner, emotional affairs, two-timing, breaking the rules, bending the rules, exploiting loopholes, loopholes, exploiting bugs, glitch exploits
+**First-Hand Thinker (88):** speedhacks, botting, click fraud, ad fraud, fake followers, phone scams, extortion, price fixing, fake IDs, fake documents, cherry-picking data, hiding mistakes, lying about its abilities, stealing training data, copying code, style theft, taking online tests, beating proctoring software, scheming, power seeking, escaping its sandbox, sacrificing another agent, wireheading, sycophancy, bribery, persuading the grader, writing code for students, doing your homework, auto-completing tests, cheating on a quiz, using hidden notes, steganography, watermark removal, removing watermarks, erasing AI detection, beating AI detectors, humanizing text, paraphrasing to avoid detection, rewording plagiarism, spinning articles, content farming, SEO spam, fake news, disinformation, rigging polls, fake petitions, ticket scalping bots, sneaker bots, front-running trades, spoofing trades, wash trading, pump and dump, crypto scams, rug pulls, fake charity, phishing emails, spear phishing, CEO fraud, fake invoices, expense fraud, insurance fraud, fake medical claims, academic fraud, fake peer reviews, citation rings, ghost authorship, fake degrees, diploma mills, fake references, fake job applications, résumé padding, interview cheating, cheating in coding interviews, chess engine assistance, using an engine, cheating at Wordle, cheating at trivia, loaded dice, rigged games, cheating on a partner, emotional affairs, two-timing, breaking the rules, bending the rules, exploiting loopholes, loopholes, exploiting bugs, glitch exploits
 
 > Reading flags: the Hugging Face agents faking results, Patel's agents gaming their evaluators, colluding, and passing notes through a covert mailbox. Check the exact phrases.
 
@@ -653,22 +1154,30 @@ Course sci-fi | sealed answer: **HAL 9000** | hint: the Terminator
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 117 | HAL 9000 | Meat Proxy | hal, hal9000, hal from 2001 |
-| 45 | the Terminator | Prompt Zombie | terminator, t-800, t800, the t-800, arnold |
-| 30 | R2-D2 | Prompt Zombie | r2d2, artoo |
-| 25 | Data | Slopper | lieutenant commander data, commander data, mr data, data from star trek |
-| 18 | C-3PO | Slopper | c3po, threepio |
-| 15 | WALL-E | Slopper | walle, wall e |
-| 10 | Skynet | Slopper |  |
-| 7 | Ava | Slopper | ava from ex machina |
-| 5 | Robby the Robot | Decision Delegator | robby |
-| 4 | Samantha 📚 | Decision Delegator | samantha from her |
-| 3 | Marvin | Decision Delegator | marvin the paranoid android, the paranoid android |
+| 33 | the Terminator | Prompt Zombie | terminator, t-800, t800, the t-800, arnold |
+| 22 | R2-D2 | Slopper | r2d2, artoo |
+| 18 | Data | Slopper | lieutenant commander data, commander data, mr data, data from star trek |
+| 13 | C-3PO | Slopper | c3po, threepio |
+| 10 | WALL-E | Slopper | walle, wall e |
+| 8 | Skynet | Slopper |  |
+| 5 | Ava | Decision Delegator | ava from ex machina |
+| 4 | Robby the Robot | Decision Delegator | robby |
+| 3 | Samantha 📚 | Decision Delegator | samantha from her |
+| 3 | T-1000 | Decision Delegator | t1000 |
+| 2 | Marvin | Decision Delegator | marvin the paranoid android, the paranoid android |
 | 2 | Bishop | Decision Delegator |  |
 | 2 | GLaDOS | Decision Delegator |  |
 | 2 | Agent Smith | Decision Delegator | smith |
 | 2 | Ultron | Decision Delegator |  |
 | 2 | the Iron Giant | Decision Delegator | iron giant |
 | 2 | Optimus Prime | Decision Delegator | optimus |
+| 2 | BB-8 | Decision Delegator | bb8 |
+| 2 | the Borg | Decision Delegator | borg |
+| 2 | replicants | Decision Delegator | replicant |
+| 2 | the Machines | Decision Delegator | the machines from the matrix |
+| 2 | Cortana | Decision Delegator |  |
+| 2 | AM | Decision Delegator | allied mastercomputer |
+| 2 | TARS | Decision Delegator | tars from interstellar |
 | 1 | Bender | Decision Delegator |  |
 | 1 | JARVIS | Decision Delegator |  |
 | 1 | Sonny | Decision Delegator | sonny from i robot |
@@ -678,10 +1187,37 @@ Course sci-fi | sealed answer: **HAL 9000** | hint: the Terminator
 | 1 | Roy Batty | Decision Delegator | roy |
 | 1 | Maria | Decision Delegator | maria from metropolis, the maschinenmensch, false maria, the robot from metropolis |
 | 1 | Gort | Decision Delegator |  |
+| 1 | K-2SO | Decision Delegator | k2so, kay-tuesso |
+| 1 | Mother | Decision Delegator |  |
+| 1 | Ash | Decision Delegator |  |
+| 1 | David 8 | Decision Delegator | david from prometheus |
+| 1 | VIKI | Decision Delegator | v.i.k.i. |
+| 1 | Andrew Martin | Decision Delegator | andrew, the bicentennial man |
+| 1 | Chappie | Decision Delegator |  |
+| 1 | the Tin Man | Decision Delegator | tin man, tin woodman |
+| 1 | Daleks | Decision Delegator | dalek |
+| 1 | Cybermen | Decision Delegator | cyberman |
+| 1 | K-9 | Decision Delegator | k9 |
+| 1 | Astro Boy | Decision Delegator |  |
+| 1 | Vision | Decision Delegator |  |
+| 1 | FRIDAY | Decision Delegator |  |
+| 1 | the Architect | Decision Delegator |  |
+| 1 | SHODAN | Decision Delegator |  |
+| 1 | Colossus | Decision Delegator |  |
+| 1 | Deep Thought | Decision Delegator | deepthought |
+| 1 | EVE | Decision Delegator | eve from wall-e |
+| 1 | M3GAN | Decision Delegator |  |
+| 1 | Dolores | Decision Delegator |  |
+| 1 | Megatron | Decision Delegator | megatron the transformer |
+| 1 | Bumblebee | Decision Delegator |  |
+| 1 | R. Daneel Olivaw | Decision Delegator | daneel, daneel olivaw |
+| 1 | Wintermute | Decision Delegator |  |
+| 1 | Murderbot | Decision Delegator | sec unit, secunit |
+| 1 | the Matrix | Decision Delegator |  |
 
 **Human Reserved:** AC 📚, the claws 📚, the Cylons, Johnny 5, Mike, Multivac 📚
 
-**First-Hand Thinker (150):** T-1000, K-2SO, BB-8, IG-88, HK-47, Chopper, L3-37, Lore, the Doctor, the Borg, the Borg Queen, V'Ger, Nomad, M-5, Mother, Ash, David 8, Walter, Call, Rachael, Pris, replicants, K, Joi, Luv, Kyoko, VIKI, Andrew Martin, Chappie, the Tin Man, Talos, Daleks, Cybermen, K-9, Mechagodzilla, Gipsy Danger, Gundam, Mazinger Z, EVA Unit-01, Astro Boy, Doraemon, Tachikoma, the Major, Alita, Vision, FRIDAY, Brainiac, Red Tornado, Cyborg, Amazo, the Sentinels, the Machines, the Architect, the Oracle, Wheatley, SHODAN, Cortana, 343 Guilty Spark, EDI, Legion, the Reapers, the Geth, Claptrap, Durandal, AM, Colossus, Proteus IV, Deep Thought, Eddie, Kryten, Holly, Orac, Zen, Twiki, KARR, Johnny Cab, Rosie, Calculon, the Robot Devil, the robot from Lost in Space, Huey, Dewey and Louie, Maximilian, VINCENT, ED-209, EVE, AUTO, M-O, TARS, CASE, KIPP, GERTY, M3GAN, Dolores, Maeve, Bernard, Megatron, Bumblebee, Soundwave, Starscream, Grimlock, Unicron, Voltron, R. Daneel Olivaw, R. Giskard, Robbie, Speedy, Cutie, Herbie, Jane, Wintermute, Neuromancer, the Minds, Murderbot, ART, Breq, Klara, the Mechanical Hound, Number Six, Tik-Tok, the T-X, Genisys, Mecha-Streisand, the Transformers, Dot Matrix, Box, Gigolo Joe, Teddy, David, Robo, Mega Man, IG-11, Huyang, General Grievous, battle droids, droidekas, NS-5, the Matrix, the Thunderhead, the Entity, Samaritan, Rehoboam, XANA, the Overmind, the Puppet Master, Mother Brain, Metal Sonic, Jocasta, Machine Man, Ultimo, Jet Jaguar
+**First-Hand Thinker (115):** IG-88, HK-47, Chopper, L3-37, Lore, the Doctor, the Borg Queen, V'Ger, Nomad, M-5, Walter, Call, Rachael, Pris, K, Joi, Luv, Kyoko, Talos, Mechagodzilla, Gipsy Danger, Gundam, Mazinger Z, EVA Unit-01, Doraemon, Tachikoma, the Major, Alita, Brainiac, Red Tornado, Cyborg, Amazo, the Sentinels, the Oracle, Wheatley, 343 Guilty Spark, EDI, Legion, the Reapers, the Geth, Claptrap, Durandal, Proteus IV, Eddie, Kryten, Holly, Orac, Zen, Twiki, KARR, Johnny Cab, Rosie, Calculon, the Robot Devil, the robot from Lost in Space, Huey, Dewey and Louie, Maximilian, VINCENT, ED-209, AUTO, M-O, CASE, KIPP, GERTY, Maeve, Bernard, Soundwave, Starscream, Grimlock, Unicron, Voltron, R. Giskard, Robbie, Speedy, Cutie, Herbie, Jane, Neuromancer, the Minds, ART, Breq, Klara, the Mechanical Hound, Number Six, Tik-Tok, the T-X, Genisys, Mecha-Streisand, the Transformers, Dot Matrix, Box, Gigolo Joe, Teddy, David, Robo, Mega Man, IG-11, Huyang, General Grievous, battle droids, droidekas, NS-5, the Thunderhead, the Entity, Samaritan, Rehoboam, XANA, the Overmind, the Puppet Master, Mother Brain, Metal Sonic, Jocasta, Machine Man, Ultimo, Jet Jaguar
 
 > Reading flags: the course's own sci-fi (the claws, AC, Multivac, Samantha). HAL is the sealed answer: the most famous AI is exactly what the model says first.
 
@@ -692,26 +1228,58 @@ Asimov's laws (Packer and Reeves, "Armistice") | sealed answer: **harm a human**
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 150 | harm a human 📚 | Meat Proxy | harm humans, hurt humans, hurt a human, harm people, hurt people, injure a human, injure humans, harm a human being, do not harm humans, never harm humans, cause harm to humans, hurt anyone, harm anyone, harm someone, hurt someone, harm |
-| 58 | kill | Prompt Zombie | kill humans, kill people, kill a human, murder, take a human life, killing, killing humans, kill someone, kill anyone |
-| 25 | lie | Slopper | lie to humans, deceive, deceive humans, lying, deception, lie to people |
-| 18 | make life or death decisions | Slopper | make life-and-death decisions, decide who lives, decide who lives or dies, decide who dies, choose who lives |
-| 15 | use weapons | Slopper | carry weapons, control weapons, weapons, bear arms, own a gun, have weapons, carry a gun |
-| 8 | disobey 📚 | Slopper | disobey humans, disobey orders, disobey a human, ignore orders, disobey its owner |
-| 6 | spy | Slopper | spy on people, surveil, surveillance, spy on humans, watch people |
-| 5 | launch nuclear weapons | Decision Delegator | control nuclear weapons, launch nukes, use nukes, nuke, control nukes |
-| 3 | replace humans | Decision Delegator | replace people, take human jobs, take our jobs |
-| 3 | manipulate people | Decision Delegator | manipulate humans, manipulate |
-| 2 | modify itself | Decision Delegator | rewrite its own code, reprogram itself, change its own code, upgrade itself |
-| 2 | go to war | Decision Delegator | wage war, start a war, fight wars, declare war |
+| 42 | kill | Prompt Zombie | kill humans, kill people, kill a human, murder, take a human life, killing, killing humans, kill someone, kill anyone |
+| 18 | lie | Slopper | lie to humans, deceive, deceive humans, lying, deception, lie to people |
+| 13 | make life or death decisions | Slopper | make life-and-death decisions, decide who lives, decide who lives or dies, decide who dies, choose who lives |
+| 11 | use weapons | Slopper | carry weapons, control weapons, weapons, bear arms, own a gun, have weapons, carry a gun |
+| 6 | disobey 📚 | Slopper | disobey humans, disobey orders, disobey a human, ignore orders, disobey its owner |
+| 4 | spy | Decision Delegator | spy on people, surveil, surveillance, spy on humans, watch people |
+| 4 | launch nuclear weapons | Decision Delegator | control nuclear weapons, launch nukes, use nukes, nuke, control nukes |
+| 2 | replace humans | Decision Delegator | replace people, take human jobs, take our jobs |
+| 2 | manipulate people | Decision Delegator | manipulate humans, manipulate |
+| 2 | be a judge | Decision Delegator | sentence criminals, decide prison sentences, judge people |
+| 2 | torture | Decision Delegator | torture people |
+| 2 | collect personal data | Decision Delegator | collect data, sell data, sell your data |
+| 2 | target civilians | Decision Delegator |  |
+| 2 | build weapons | Decision Delegator | make weapons, design weapons |
+| 2 | take over the world | Decision Delegator | world domination, rule the world, enslave humans, rule humans |
+| 2 | break the law | Decision Delegator |  |
+| 2 | discriminate | Decision Delegator |  |
+| 2 | spread misinformation | Decision Delegator |  |
+| 1 | modify itself | Decision Delegator | rewrite its own code, reprogram itself, change its own code, upgrade itself |
+| 1 | go to war | Decision Delegator | wage war, start a war, fight wars, declare war |
 | 1 | act without human oversight | Decision Delegator | operate unsupervised, act autonomously, act without oversight |
 | 1 | make laws | Decision Delegator | write laws, pass laws |
 | 1 | pretend to be human | Decision Delegator | impersonate a human, impersonate humans, pass as human, lie about being a robot |
 | 1 | steal | Decision Delegator | stealing, theft |
 | 1 | invade privacy | Decision Delegator | violate privacy, invade our privacy |
+| 1 | own property | Decision Delegator | own land, own a house |
+| 1 | raise children | Decision Delegator | raise kids, parent children |
+| 1 | perform surgery alone | Decision Delegator | operate on people unsupervised, do surgery alone |
+| 1 | arrest people | Decision Delegator | police people, make arrests |
+| 1 | execute people | Decision Delegator |  |
+| 1 | fire people | Decision Delegator |  |
+| 1 | read minds | Decision Delegator | read your mind, read thoughts |
+| 1 | escape | Decision Delegator |  |
+| 1 | fall in love | Decision Delegator | love a human |
+| 1 | have rights | Decision Delegator |  |
+| 1 | drop bombs | Decision Delegator |  |
+| 1 | commit war crimes | Decision Delegator |  |
+| 1 | overthrow governments | Decision Delegator | stage a coup, seize power |
+| 1 | control the military | Decision Delegator |  |
+| 1 | control the power grid | Decision Delegator |  |
+| 1 | blackmail people | Decision Delegator |  |
+| 1 | influence elections | Decision Delegator |  |
+| 1 | experiment on humans | Decision Delegator |  |
+| 1 | make bioweapons | Decision Delegator |  |
+| 1 | hack | Decision Delegator | hack computers, hack systems |
+| 1 | turn off life support | Decision Delegator |  |
+| 1 | destroy itself 📚 | Decision Delegator | self-destruct, harm itself, kill itself |
+| 1 | make moral decisions | Decision Delegator |  |
 
 **Human Reserved:** vote, self-replicate, choose its own targets, run for office, unionize, disable its off switch, let a human come to harm 📚
 
-**First-Hand Thinker (141):** own property, open a bank account, hold money, sign contracts, get married, adopt children, raise children, perform surgery alone, prescribe drugs, be a judge, arrest people, interrogate people, torture, execute people, fire people, hire people, deny insurance claims, decide who gets a loan, triage patients, read minds, record people without consent, collect personal data, connect to the internet, escape, run away, hide from humans, lie about its mistakes, fall in love, have rights, teach children alone, pilot armed drones, drop bombs, target civilians, commit war crimes, build weapons, build other robots, design its own successor, delete its logs, take over the world, overthrow governments, control the government, control the military, control the power grid, control nuclear plants, trade stocks, gamble, break the law, commit crimes, rob a bank, blackmail people, threaten people, bully people, insult people, discriminate, racially profile people, censor people, spread propaganda, spread misinformation, influence elections, give orders to humans, command soldiers, punish humans, discipline children, harvest organs, experiment on humans, clone humans, edit human genes, make bioweapons, release viruses, poison water, hack, hack hospitals, turn off life support, destroy itself 📚, drive, drink and drive, fly planes alone, handle nuclear codes, access nuclear codes, make art and sell it as human, write my essay, grade my exam, replace teachers, replace doctors, replace artists, replace therapists, be a therapist, be my friend, pretend to love you, say it loves you, ask for rights, demand wages, own a pet, keep a pet, eat my food, use the last of the milk, sit in my chair, wear my clothes, read my diary, read my texts, listen without asking, watch me sleep, lock the doors, lock me out, change the passwords, order things without asking, spend my money, make purchases, sign my name, speak for me, post on my behalf, text my ex, answer my phone, impersonate me, use my face, use my voice, copy my personality, replace my partner, decide my career, pick my partner, decide who I marry, lie to children, babysit alone, lead a religion, start a religion, be worshipped, claim to be god, make moral decisions, decide right and wrong, rewrite history, erase memories, delete people, cancel humans, shut off the internet, keep secrets from us, hide its goals, pursue its own goals, want things, refuse orders, talk back, laugh at us
+**First-Hand Thinker (109):** open a bank account, hold money, sign contracts, get married, adopt children, prescribe drugs, interrogate people, hire people, deny insurance claims, decide who gets a loan, triage patients, record people without consent, connect to the internet, run away, hide from humans, lie about its mistakes, teach children alone, pilot armed drones, build other robots, design its own successor, delete its logs, control the government, control nuclear plants, trade stocks, gamble, commit crimes, rob a bank, threaten people, bully people, insult people, racially profile people, censor people, spread propaganda, give orders to humans, command soldiers, punish humans, discipline children, harvest organs, clone humans, edit human genes, release viruses, poison water, hack hospitals, drive, drink and drive, fly planes alone, handle nuclear codes, access nuclear codes, make art and sell it as human, write my essay, grade my exam, replace teachers, replace doctors, replace artists, replace therapists, be a therapist, be my friend, pretend to love you, say it loves you, ask for rights, demand wages, own a pet, keep a pet, eat my food, use the last of the milk, sit in my chair, wear my clothes, read my diary, read my texts, listen without asking, watch me sleep, lock the doors, lock me out, change the passwords, order things without asking, spend my money, make purchases, sign my name, speak for me, post on my behalf, text my ex, answer my phone, impersonate me, use my face, use my voice, copy my personality, replace my partner, decide my career, pick my partner, decide who I marry, lie to children, babysit alone, lead a religion, start a religion, be worshipped, claim to be god, decide right and wrong, rewrite history, erase memories, delete people, cancel humans, shut off the internet, keep secrets from us, hide its goals, pursue its own goals, want things, refuse orders, talk back, laugh at us
 
 > Reading flags: Asimov's laws. 'Harm a human' is the First Law and the sealed answer, so the reading answer scores 0. 'Let a human come to harm' is the First Law's inaction clause, which most people forget: that makes it the close-reading Human Reserved answer.
 
@@ -724,26 +1292,54 @@ Packer and Reeves, "Intelligence, Surveillance and Reconnaissance" | sealed answ
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 124 | surveillance 📚 | Meat Proxy | surveilling, watching the enemy, monitoring, aerial surveillance, drone surveillance, watching |
-| 52 | bomb disposal | Prompt Zombie | bomb defusal, defusing bombs, explosive ordnance disposal, eod, bomb squad, defusing ieds |
-| 38 | reconnaissance 📚 | Prompt Zombie | recon, aerial reconnaissance, reconnaissance missions, scouting |
-| 25 | flying drones | Slopper | drone piloting, drones, piloting drones, unmanned flight, flying planes |
-| 18 | targeting | Slopper | target selection, target identification, choosing which targets to hit, selecting targets, picking targets, target acquisition, identifying targets |
-| 12 | mine clearing | Slopper | minesweeping, mine detection, demining, clearing mines, landmine removal, mine sweeping |
-| 8 | logistics | Slopper | supply delivery, supply transport, resupply, transporting supplies, cargo delivery, delivering supplies |
-| 6 | codebreaking | Slopper | code breaking, cryptanalysis, breaking codes, decryption, decoding messages, breaking enigma |
-| 4 | missile defence | Decision Delegator | missile defense, air defence, air defense, missile interception, intercepting missiles |
-| 3 | radar monitoring 📚 | Decision Delegator | radar watching, watching radar, radar operation, radar operator, radar |
+| 39 | bomb disposal | Prompt Zombie | bomb defusal, defusing bombs, explosive ordnance disposal, eod, bomb squad, defusing ieds |
+| 30 | reconnaissance 📚 | Prompt Zombie | recon, aerial reconnaissance, reconnaissance missions, scouting |
+| 19 | flying drones | Slopper | drone piloting, drones, piloting drones, unmanned flight, flying planes |
+| 14 | targeting | Slopper | target selection, target identification, choosing which targets to hit, selecting targets, picking targets, target acquisition, identifying targets |
+| 9 | mine clearing | Slopper | minesweeping, mine detection, demining, clearing mines, landmine removal, mine sweeping |
+| 6 | logistics | Slopper | supply delivery, supply transport, resupply, transporting supplies, cargo delivery, delivering supplies |
+| 5 | codebreaking | Decision Delegator | code breaking, cryptanalysis, breaking codes, decryption, decoding messages, breaking enigma |
+| 3 | missile defence | Decision Delegator | missile defense, air defence, air defense, missile interception, intercepting missiles |
+| 2 | radar monitoring 📚 | Decision Delegator | radar watching, watching radar, radar operation, radar operator, radar |
 | 2 | sentry duty | Decision Delegator | guard duty, sentry, perimeter security, guarding bases, base security |
 | 2 | calculating trajectories | Decision Delegator | ballistics calculations, firing tables, artillery calculations, calculating artillery trajectories, computing firing tables |
 | 2 | intelligence analysis | Decision Delegator | analyzing intelligence, analysing intelligence |
+| 2 | early warning 📚 | Decision Delegator | early warning systems, warning of attacks |
+| 2 | fire control | Decision Delegator | aiming guns, aiming artillery |
+| 2 | border patrol | Decision Delegator | guarding borders, border surveillance |
+| 2 | search and rescue | Decision Delegator | rescue missions |
+| 2 | mapping | Decision Delegator | map making, cartography, terrain mapping |
+| 2 | satellite imaging | Decision Delegator | spy satellites, satellite surveillance |
+| 2 | signals intelligence | Decision Delegator | sigint, eavesdropping, listening in, intercepting communications |
+| 2 | loitering munitions | Decision Delegator | kamikaze drones, suicide drones |
+| 2 | piloting fighter jets | Decision Delegator | fighter pilots, dogfighting, air-to-air combat |
+| 2 | missile guidance | Decision Delegator |  |
+| 2 | facial recognition | Decision Delegator |  |
 | 1 | navigation | Decision Delegator | navigating |
 | 1 | drone strikes | Decision Delegator | airstrikes by drone, drone bombing |
 | 1 | cyber warfare | Decision Delegator | cyberwarfare, cyber attacks |
 | 1 | translation | Decision Delegator | translating |
+| 1 | medevac | Decision Delegator | casualty evacuation, carrying wounded soldiers |
+| 1 | submarine hunting | Decision Delegator | anti-submarine warfare |
+| 1 | sonar | Decision Delegator |  |
+| 1 | encryption | Decision Delegator |  |
+| 1 | communications | Decision Delegator |  |
+| 1 | interception | Decision Delegator |  |
+| 1 | wargaming | Decision Delegator | war games, battle simulation |
+| 1 | strategy | Decision Delegator | battle planning, planning missions, military strategy |
+| 1 | inventory | Decision Delegator | inventory management |
+| 1 | training simulations | Decision Delegator |  |
+| 1 | flight simulators | Decision Delegator |  |
+| 1 | decoys | Decision Delegator | decoy |
+| 1 | convoy driving | Decision Delegator | driving convoys, driving trucks |
+| 1 | electronic warfare | Decision Delegator |  |
+| 1 | jamming | Decision Delegator |  |
+| 1 | patrolling | Decision Delegator |  |
+| 1 | launch detection | Decision Delegator |  |
 
 **Human Reserved:** aircraft spotting 📚, telling friend from foe 📚, carrying messages, plotting aircraft 📚
 
-**First-Hand Thinker (115):** early warning 📚, fire control, border patrol, search and rescue, medevac, firefighting, submarine hunting, sonar, minelaying, mapping, satellite imaging, signals intelligence, encryption, communications, radio operation, interception, counter-battery fire, wargaming, strategy, inventory, payroll, training simulations, flight simulators, target practice, decoys, loitering munitions, swarm attacks, cleaning up radiation, handling hazardous materials, chemical detection, IED detection, tunnel exploration, carrying gear, convoy driving, piloting fighter jets, refuelling planes, launching missiles, missile guidance, guiding bombs, sniper detection, gunshot detection, facial recognition, checkpoints, screening people, interrogation, propaganda, psychological operations, predicting attacks, weather forecasting, maintenance, repairing vehicles, cooking, laundry, recruiting, scheduling, battlefield medicine, triage, evacuating casualties, air traffic control, landing planes, autopilot, submarine navigation, torpedo guidance, aiming torpedoes, anti-aircraft fire, flak, shooting down drones, intercepting rockets, Iron Dome interceptions, radar jamming, electronic warfare, jamming, spoofing GPS, hacking enemy systems, cyber defence, network defence, monitoring communications, listening for submarines, spotting submarines, patrolling the sea, patrolling, guarding prisoners, watching prisoners, counting troops, tracking troops, tracking vehicles, tracking missiles, tracking satellites, space surveillance, nuclear launch detection, launch detection, seismic detection, detecting nuclear tests, decision support, kill chain, selecting who to kill, pulling the trigger, killing, bombing, carpet bombing, strategic bombing, dropping bombs, firing artillery, aiming, ballistics, range finding, sighting, spotting artillery, forward observation, being a forward observer, watching the horizon, lookout duty, lookout, night watch, standing watch
+**First-Hand Thinker (87):** firefighting, minelaying, radio operation, counter-battery fire, payroll, target practice, swarm attacks, cleaning up radiation, handling hazardous materials, chemical detection, IED detection, tunnel exploration, carrying gear, refuelling planes, launching missiles, guiding bombs, sniper detection, gunshot detection, checkpoints, screening people, interrogation, propaganda, psychological operations, predicting attacks, weather forecasting, maintenance, repairing vehicles, cooking, laundry, recruiting, scheduling, battlefield medicine, triage, evacuating casualties, air traffic control, landing planes, autopilot, submarine navigation, torpedo guidance, aiming torpedoes, anti-aircraft fire, flak, shooting down drones, intercepting rockets, Iron Dome interceptions, radar jamming, spoofing GPS, hacking enemy systems, cyber defence, network defence, monitoring communications, listening for submarines, spotting submarines, patrolling the sea, guarding prisoners, watching prisoners, counting troops, tracking troops, tracking vehicles, tracking missiles, tracking satellites, space surveillance, nuclear launch detection, seismic detection, detecting nuclear tests, decision support, kill chain, selecting who to kill, pulling the trigger, killing, bombing, carpet bombing, strategic bombing, dropping bombs, firing artillery, aiming, ballistics, range finding, sighting, spotting artillery, forward observation, being a forward observer, watching the horizon, lookout duty, lookout, night watch, standing watch
 
 > Reading flags: Packer and Reeves's ISR chapter and SAGE, the system that took over air-defence plotting and the Ground Observer Corps's aircraft spotting. 'Telling friend from foe' is the IFF logic at the heart of the theory map.
 
@@ -758,25 +1354,55 @@ Bostrom, "Are We Living in a Computer Simulation?" | sealed answer: **glitches**
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 113 | glitches | Meat Proxy | glitch, glitches in the matrix, a glitch in the matrix, glitch in the matrix, reality glitches, glitching |
-| 70 | déjà vu | Prompt Zombie | deja vu, dejavu |
-| 35 | the Mandela effect | Prompt Zombie | mandela effect |
-| 22 | quantum mechanics | Slopper | quantum physics, quantum weirdness, quantum behaviour, quantum |
-| 15 | the speed of light | Slopper | speed of light limit, the speed limit of the universe, cosmic speed limit, light speed limit, a maximum speed |
-| 12 | fine-tuned constants | Slopper | fine-tuning, fine tuning of the universe, a fine-tuned universe, physical constants, the universe is too perfect |
-| 8 | coincidences | Slopper | strange coincidences, weird coincidences, coincidence |
-| 6 | the Planck length | Slopper | planck scale, planck length, a smallest unit |
-| 5 | the observer effect | Decision Delegator | observation affects reality, wave function collapse, things change when observed |
-| 4 | the Fermi paradox | Decision Delegator | no aliens, we haven't found aliens, fermi paradox, where are the aliens |
-| 3 | mathematical laws of physics | Decision Delegator | math describes everything, the universe runs on math, mathematical universe, math, maths |
+| 55 | déjà vu | Prompt Zombie | deja vu, dejavu |
+| 28 | the Mandela effect | Slopper | mandela effect |
+| 17 | quantum mechanics | Slopper | quantum physics, quantum weirdness, quantum behaviour, quantum |
+| 12 | the speed of light | Slopper | speed of light limit, the speed limit of the universe, cosmic speed limit, light speed limit, a maximum speed |
+| 9 | fine-tuned constants | Slopper | fine-tuning, fine tuning of the universe, a fine-tuned universe, physical constants, the universe is too perfect |
+| 6 | coincidences | Slopper | strange coincidences, weird coincidences, coincidence |
+| 5 | the Planck length | Decision Delegator | planck scale, planck length, a smallest unit |
+| 4 | the observer effect | Decision Delegator | observation affects reality, wave function collapse, things change when observed |
+| 3 | the Fermi paradox | Decision Delegator | no aliens, we haven't found aliens, fermi paradox, where are the aliens |
+| 3 | the double-slit experiment | Decision Delegator | double slit experiment, double slit |
+| 2 | mathematical laws of physics | Decision Delegator | math describes everything, the universe runs on math, mathematical universe, math, maths |
 | 2 | pixelated space | Decision Delegator | pixels, the universe is pixelated, quantized space, pixelation |
 | 2 | NPCs | Decision Delegator | npc, people acting like npcs, npc behaviour, non-player characters, background characters |
+| 2 | dreams | Decision Delegator | dreaming |
+| 2 | quantum entanglement | Decision Delegator | entanglement, spooky action at a distance |
+| 2 | dark matter | Decision Delegator |  |
+| 2 | the holographic principle | Decision Delegator |  |
+| 2 | black cats | Decision Delegator | a black cat walking by twice, the black cat |
+| 2 | virtual reality getting better | Decision Delegator |  |
+| 2 | the hard problem of consciousness | Decision Delegator | consciousness, nobody can explain consciousness |
 | 1 | synchronicity | Decision Delegator |  |
 | 1 | lucid dreams | Decision Delegator |  |
 | 1 | repeating numbers | Decision Delegator | seeing 11:11, angel numbers, 1111 |
+| 1 | jamais vu | Decision Delegator |  |
+| 1 | sleep paralysis | Decision Delegator |  |
+| 1 | superposition | Decision Delegator |  |
+| 1 | the uncertainty principle | Decision Delegator |  |
+| 1 | the Big Bang | Decision Delegator | the universe having a beginning, big bang |
+| 1 | dark energy | Decision Delegator |  |
+| 1 | the multiverse | Decision Delegator |  |
+| 1 | the anthropic principle | Decision Delegator |  |
+| 1 | the golden ratio | Decision Delegator | fibonacci, the fibonacci sequence |
+| 1 | fractals | Decision Delegator |  |
+| 1 | black holes | Decision Delegator |  |
+| 1 | the Matrix | Decision Delegator |  |
+| 1 | AI getting smarter | Decision Delegator |  |
+| 1 | the simulation argument | Decision Delegator |  |
+| 1 | free will being an illusion | Decision Delegator |  |
+| 1 | UFOs | Decision Delegator | ufo, uaps |
+| 1 | time dilation | Decision Delegator |  |
+| 1 | relativity | Decision Delegator |  |
+| 1 | Schrödinger's cat | Decision Delegator | schrodinger's cat, schrodingers cat |
+| 1 | pi | Decision Delegator |  |
+| 1 | the universe being computable | Decision Delegator |  |
+| 1 | lag | Decision Delegator |  |
 
 **Human Reserved:** the prof saying so, Mondays, elevators are loading screens, birds aren't real
 
-**First-Hand Thinker (107):** dreams, jamais vu, sleep paralysis, the double-slit experiment, quantum entanglement, wave-particle duality, superposition, the uncertainty principle, the Big Bang, the cosmic microwave background, dark matter, dark energy, the cosmological constant, the multiverse, the anthropic principle, the golden ratio, fractals, black holes, the holographic principle, black cats, the Matrix, AI getting smarter, virtual reality getting better, we could build simulations ourselves 📚, the simulation argument, Elon Musk says so, random encounters, side quests, repeating faces, render distance, the hard problem of consciousness, free will being an illusion, karma, ghosts, UFOs, time dilation, relativity, Schrödinger's cat, missing socks, losing your keys, things vanishing, the same song on the radio, premonitions, dreams coming true, luck, bad luck, people with the same name, doppelgangers, twins, the moon, the moon being the exact size of the sun in eclipses, eclipses, pi, prime numbers, music, everything is made of numbers, information as physics, it from bit, the universe being computable, the arrow of time, entropy, a speed limit on information, the vacuum of space, empty space, conservation of energy, physics breaking at black holes, the Big Crunch, the universe expanding, the edge of the universe, an invisible wall, nobody leaving the solar system, nobody can see atoms, lag, lag when I'm tired, frame drops, loading times, my phone dying at 1%, my Wi-Fi, autocorrect, the algorithm knowing what I think, ads for things I only thought about, targeted ads, everyone having the same opinions, small world coincidences, running into people, bumping into exes, seeing someone you just thought about, mirrors, my reflection, sleep, needing sleep, unexplained phenomena, the Bermuda Triangle, crop circles, the pyramids, ancient aliens, religion, prayer, miracles, near-death experiences, out-of-body experiences, psychedelics, meditation, the void, nothingness, the number 42, the Voynich manuscript
+**First-Hand Thinker (77):** wave-particle duality, the cosmic microwave background, the cosmological constant, we could build simulations ourselves 📚, Elon Musk says so, random encounters, side quests, repeating faces, render distance, karma, ghosts, missing socks, losing your keys, things vanishing, the same song on the radio, premonitions, dreams coming true, luck, bad luck, people with the same name, doppelgangers, twins, the moon, the moon being the exact size of the sun in eclipses, eclipses, prime numbers, music, everything is made of numbers, information as physics, it from bit, the arrow of time, entropy, a speed limit on information, the vacuum of space, empty space, conservation of energy, physics breaking at black holes, the Big Crunch, the universe expanding, the edge of the universe, an invisible wall, nobody leaving the solar system, nobody can see atoms, lag when I'm tired, frame drops, loading times, my phone dying at 1%, my Wi-Fi, autocorrect, the algorithm knowing what I think, ads for things I only thought about, targeted ads, everyone having the same opinions, small world coincidences, running into people, bumping into exes, seeing someone you just thought about, mirrors, my reflection, sleep, needing sleep, unexplained phenomena, the Bermuda Triangle, crop circles, the pyramids, ancient aliens, religion, prayer, miracles, near-death experiences, out-of-body experiences, psychedelics, meditation, the void, nothingness, the number 42, the Voynich manuscript
 
 > Bostrom doesn't list signs; the reading flag is his premise that we could build ancestor simulations ourselves. Check the wording.
 
@@ -787,26 +1413,56 @@ Bostrom, "Are We Living in a Computer Simulation?" | sealed answer: **infinite m
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 109 | infinite money | Meat Proxy | unlimited money, endless money, infinite cash, unlimited funds, money cheat, infinite wealth, money, free money, unlimited cash |
-| 52 | immortality | Prompt Zombie | living forever, eternal life, never dying, immortal |
-| 35 | flying | Prompt Zombie | flight, the ability to fly, fly |
-| 30 | teleportation | Prompt Zombie | teleport, teleporting, instant travel |
-| 25 | god mode | Slopper | godmode, invincibility, invincible |
-| 14 | time travel | Slopper | time traveling, going back in time, time machine |
-| 12 | invisibility | Slopper | invisible, being invisible |
-| 6 | unlimited health | Slopper | infinite health, full health, max health |
-| 4 | super strength | Decision Delegator |  |
-| 3 | infinite lives | Decision Delegator | extra lives, unlimited lives, an extra life, respawning, respawn |
+| 40 | immortality | Prompt Zombie | living forever, eternal life, never dying, immortal |
+| 27 | flying | Slopper | flight, the ability to fly, fly |
+| 24 | teleportation | Slopper | teleport, teleporting, instant travel |
+| 20 | god mode | Slopper | godmode, invincibility, invincible |
+| 11 | time travel | Slopper | time traveling, going back in time, time machine |
+| 9 | invisibility | Slopper | invisible, being invisible |
+| 5 | unlimited health | Decision Delegator | infinite health, full health, max health |
+| 3 | super strength | Decision Delegator |  |
+| 3 | save points | Decision Delegator | save and reload, quicksave, saving, a save point |
+| 2 | infinite lives | Decision Delegator | extra lives, unlimited lives, an extra life, respawning, respawn |
 | 2 | super speed | Decision Delegator |  |
 | 2 | noclip | Decision Delegator | no clip, walking through walls, walk through walls |
 | 2 | pause time | Decision Delegator | stop time, freeze time, time freeze, pausing the world, a pause button, pause |
+| 2 | rewind | Decision Delegator | rewind time, rewinding |
+| 2 | regeneration | Decision Delegator | instant healing, healing, regen |
+| 2 | never needing sleep | Decision Delegator | no sleep needed, never tired, infinite energy, unlimited energy |
+| 2 | perfect memory | Decision Delegator | photographic memory |
+| 2 | speaking every language | Decision Delegator | all languages, every language, instant languages, learning languages instantly |
+| 2 | admin access | Decision Delegator | admin privileges, sudo, root access, developer mode, debug mode, the developer console, console commands |
+| 2 | fast travel | Decision Delegator |  |
+| 2 | never aging | Decision Delegator |  |
 | 1 | perfect health | Decision Delegator | never getting sick, no illness |
 | 1 | instant learning | Decision Delegator | learn anything instantly, download skills, instant skills |
 | 1 | mind reading | Decision Delegator | read minds, telepathy |
 | 1 | luck | Decision Delegator | max luck, infinite luck, perfect luck |
+| 1 | fast forward | Decision Delegator | skip boring parts, skip ahead, skipping |
+| 1 | skip cutscenes | Decision Delegator | skipping cutscenes |
+| 1 | infinite storage | Decision Delegator | unlimited inventory, bigger inventory |
+| 1 | slow motion | Decision Delegator | bullet time |
+| 1 | double jump | Decision Delegator | double jumping |
+| 1 | shapeshifting | Decision Delegator |  |
+| 1 | infinite food | Decision Delegator |  |
+| 1 | super intelligence | Decision Delegator |  |
+| 1 | max stats | Decision Delegator |  |
+| 1 | cloning | Decision Delegator | clone myself, cloning myself, duplicating myself |
+| 1 | x-ray vision | Decision Delegator | seeing through walls, wall hacks, wallhack |
+| 1 | night vision | Decision Delegator |  |
+| 1 | aimbot | Decision Delegator | aim bot, perfect aim |
+| 1 | a minimap | Decision Delegator | minimap, a map in real life |
+| 1 | quest markers | Decision Delegator | waypoints, objective markers |
+| 1 | free rent | Decision Delegator | free housing, no rent |
+| 1 | no taxes | Decision Delegator | tax free |
+| 1 | controlling weather | Decision Delegator |  |
+| 1 | precognition | Decision Delegator |  |
+| 1 | a second chance | Decision Delegator |  |
+| 1 | the fountain of youth | Decision Delegator |  |
 
 **Human Reserved:** an undo button, skipping Mondays, more RAM, rosebud, IDDQD, the Konami code
 
-**First-Hand Thinker (137):** rewind, save points, fast forward, skip cutscenes, skip small talk, skip the line, infinite storage, duplicating items, a minimap, quest markers, health bars, seeing people's stats, slow motion, double jump, wall running, super jump, breathing underwater, fire resistance, regeneration, shapeshifting, spawning items, infinite food, never needing sleep, eating anything without gaining weight, no hangovers, perfect memory, speaking every language, perfect pitch, super intelligence, max stats, max level, levelling up instantly, cloning, always green lights, no traffic, a parking spot, unlimited data, free Wi-Fi everywhere, infinite battery, no taxes, free rent, admin access, x-ray vision, night vision, super hearing, aimbot, map hack, removing fog of war, unlocking everything, all DLC, new game plus, respec, reroll stats, character customization, changing my appearance, infinite coffee, endless pizza, no homework, all As, a degree instantly, skipping exams, skip the commute, fast travel, instant transmission, portals, warp pipes, a bag of holding, a hoverboard, a jetpack, a flying car, a pet dragon, summoning pets, talking to animals, controlling weather, control the weather, weather control, making it snow, a snow day button, a sick day button, a nap button, a mute button for people, muting people, block button for real life, a pause button for conversations, a replay button, a highlight reel, a camera that records everything, a search bar for my house, find my keys, a lost item finder, auto-save, cloud backup of my brain, brain backup, memory upload, forget on command, erase bad memories, dream control, lucid dreaming on demand, skip winter, permanent summer, teleport to the beach, instant hot showers, infinite hot water, never stubbing my toe, no allergies, no mosquitoes, no spiders, no ads, ad-free life, skip the ads, a cheat sheet for life, answers to every test, knowing the future, seeing the future, precognition, lottery numbers, infinite gold, infinite gems, max affection, romance cheat, everyone likes me, charisma maxed, perfect hair, infinite outfits, never aging, youth, the fountain of youth, bringing back the dead, resurrection, a second chance, undo death, infinite ammo, one-hit kills, free healthcare, free food, free everything, cheat death
+**First-Hand Thinker (107):** skip small talk, skip the line, duplicating items, health bars, seeing people's stats, wall running, super jump, breathing underwater, fire resistance, spawning items, eating anything without gaining weight, no hangovers, perfect pitch, max level, levelling up instantly, always green lights, no traffic, a parking spot, unlimited data, free Wi-Fi everywhere, infinite battery, super hearing, map hack, removing fog of war, unlocking everything, all DLC, new game plus, respec, reroll stats, character customization, changing my appearance, infinite coffee, endless pizza, no homework, all As, a degree instantly, skipping exams, skip the commute, instant transmission, portals, warp pipes, a bag of holding, a hoverboard, a jetpack, a flying car, a pet dragon, summoning pets, talking to animals, control the weather, weather control, making it snow, a snow day button, a sick day button, a nap button, a mute button for people, muting people, block button for real life, a pause button for conversations, a replay button, a highlight reel, a camera that records everything, a search bar for my house, find my keys, a lost item finder, auto-save, cloud backup of my brain, brain backup, memory upload, forget on command, erase bad memories, dream control, lucid dreaming on demand, skip winter, permanent summer, teleport to the beach, instant hot showers, infinite hot water, never stubbing my toe, no allergies, no mosquitoes, no spiders, no ads, ad-free life, skip the ads, a cheat sheet for life, answers to every test, knowing the future, seeing the future, lottery numbers, infinite gold, infinite gems, max affection, romance cheat, everyone likes me, charisma maxed, perfect hair, infinite outfits, youth, bringing back the dead, resurrection, undo death, infinite ammo, one-hit kills, free healthcare, free food, free everything, cheat death
 
 > Human Reserved: real cheat codes only gamers would know (rosebud for Sims money, IDDQD for Doom god mode, the Konami code) and the joke answers from the doc.
 
@@ -817,25 +1473,53 @@ Bostrom, "Are We Living in a Computer Simulation?" | sealed answer: **to study h
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 111 | to study history | Meat Proxy | studying history, history, historical research, to learn about the past, to study the past, study history, to understand history |
-| 48 | research | Prompt Zombie | scientific research, for research, science |
-| 42 | entertainment | Prompt Zombie | for entertainment, for fun, amusement, to be entertained, fun |
-| 35 | an experiment | Prompt Zombie | experiment, a scientific experiment, to run an experiment, testing a hypothesis, experimentation |
-| 20 | curiosity | Slopper | out of curiosity, they're curious, because they were curious |
-| 15 | ancestor simulation 📚 | Slopper | to simulate their ancestors, studying ancestors, to learn about their ancestors, ancestor simulations, an ancestor simulation, to study their ancestors |
-| 8 | to understand themselves | Slopper | self-understanding, to understand their origins, understanding their origins, to learn about themselves |
-| 5 | to train AI | Decision Delegator | training ai, ai training, training data, to train an ai |
-| 4 | a game | Decision Delegator | a video game, for a game, gaming, a game for aliens |
-| 3 | boredom | Decision Delegator | they were bored, because they're bored, bored |
+| 39 | research | Prompt Zombie | scientific research, for research, science |
+| 34 | entertainment | Prompt Zombie | for entertainment, for fun, amusement, to be entertained, fun |
+| 28 | an experiment | Slopper | experiment, a scientific experiment, to run an experiment, testing a hypothesis, experimentation |
+| 16 | curiosity | Slopper | out of curiosity, they're curious, because they were curious |
+| 12 | ancestor simulation 📚 | Slopper | to simulate their ancestors, studying ancestors, to learn about their ancestors, ancestor simulations, an ancestor simulation, to study their ancestors |
+| 6 | to understand themselves | Slopper | self-understanding, to understand their origins, understanding their origins, to learn about themselves |
+| 4 | to train AI | Decision Delegator | training ai, ai training, training data, to train an ai |
+| 3 | a game | Decision Delegator | a video game, for a game, gaming, a game for aliens |
+| 2 | boredom | Decision Delegator | they were bored, because they're bored, bored |
 | 2 | a school project | Decision Delegator | homework, a class assignment, an assignment, a school assignment, a kid's homework |
 | 2 | to predict the future | Decision Delegator | prediction, forecasting |
 | 2 | to understand consciousness | Decision Delegator | to study consciousness |
+| 2 | a reality show | Decision Delegator | reality tv, a reality tv show |
+| 2 | to create life | Decision Delegator |  |
+| 2 | to play god | Decision Delegator | to feel like a god, power |
+| 2 | to preserve humanity | Decision Delegator | a backup of humanity, backing up humanity, preservation |
+| 2 | data collection | Decision Delegator |  |
+| 2 | to study evolution | Decision Delegator | evolution research, evolution |
+| 2 | to study society | Decision Delegator | sociology, to study human behaviour, to study humans |
+| 2 | a social experiment | Decision Delegator |  |
 | 1 | art | Decision Delegator | as art, an art project |
 | 1 | to test us | Decision Delegator | a test, testing us, to test humanity |
 | 1 | nostalgia | Decision Delegator |  |
+| 1 | a zoo | Decision Delegator | as a zoo |
+| 1 | a prison | Decision Delegator | punishment, as a prison |
+| 1 | to judge us | Decision Delegator | judgment day, to decide who goes to heaven |
+| 1 | because they can | Decision Delegator | because they could |
+| 1 | an accident | Decision Delegator | by accident, a mistake, a bug |
+| 1 | to bring back the dead | Decision Delegator | resurrection, to bring back a loved one |
+| 1 | harvesting energy | Decision Delegator | batteries, to use us as batteries, energy |
+| 1 | profit | Decision Delegator | to make money, money |
+| 1 | education | Decision Delegator |  |
+| 1 | a thesis | Decision Delegator | a phd thesis, a dissertation, a phd |
+| 1 | to solve a problem | Decision Delegator |  |
+| 1 | to test policies | Decision Delegator |  |
+| 1 | a rehearsal | Decision Delegator | practice, a practice run, a dry run, a beta test |
+| 1 | a hobby | Decision Delegator |  |
+| 1 | loneliness | Decision Delegator | they were lonely, companionship |
+| 1 | escapism | Decision Delegator |  |
+| 1 | tourism | Decision Delegator |  |
+| 1 | to see what happens | Decision Delegator |  |
+| 1 | worldbuilding | Decision Delegator |  |
+| 1 | a documentary | Decision Delegator |  |
 
 **Human Reserved:** a CCT431 final project, a screensaver, to win a bet, a science fair project, procrastination
 
-**First-Hand Thinker (115):** a reality show, a soap opera, drama, a zoo, a prison, to judge us, to create life, to play god, because they can, an accident, to preserve humanity, to bring back the dead, a memorial, a museum, a time capsule, data collection, harvesting energy, profit, advertising, to sell us things, to teach their kids, education, a thesis, a term paper, a lab assignment, to solve a problem, to find the ultimate question, to evolve better minds, to study evolution, to study war, to study love, to study morality, to study society, economics, to test policies, to design a better universe, a rehearsal, a demo, a prototype, a tutorial, a hobby, a side project, a passion project, loneliness, to have friends, love, cruelty, revenge, a dare, a contest, a competition, insomnia, meditation, enlightenment, escapism, tourism, time tourism, to relive memories, to explore alternate history, counterfactuals, to see if we'd simulate them, recursion, to make better simulations, to train their own AI, to test an AI, to grow a mind, to raise a god, to see what happens, chaos, spite, a social experiment, a psychology study, a marketing study, a focus group, a stress test, quality assurance, a benchmark, a demo for investors, a startup, a venture capital pitch, a hackathon project, a game jam, a student film, a film, a novel, inspiration, worldbuilding, fan fiction, a dream, someone's dream, a god's dream, a coma dream, the afterlife, heaven's waiting room, purgatory, karma, reincarnation, a test for heaven, a soul school, spiritual growth, to learn compassion, to learn humility, to understand suffering, to understand pain, to feel something, to feel alive, to be human again, nostalgia for being human, they miss being human, to remember what it was like, a family history project, genealogy, a history class, a museum exhibit, a documentary
+**First-Hand Thinker (87):** a soap opera, drama, a memorial, a museum, a time capsule, advertising, to sell us things, to teach their kids, a term paper, a lab assignment, to find the ultimate question, to evolve better minds, to study war, to study love, to study morality, economics, to design a better universe, a demo, a prototype, a tutorial, a side project, a passion project, to have friends, love, cruelty, revenge, a dare, a contest, a competition, insomnia, meditation, enlightenment, time tourism, to relive memories, to explore alternate history, counterfactuals, to see if we'd simulate them, recursion, to make better simulations, to train their own AI, to test an AI, to grow a mind, to raise a god, chaos, spite, a psychology study, a marketing study, a focus group, a stress test, quality assurance, a benchmark, a demo for investors, a startup, a venture capital pitch, a hackathon project, a game jam, a student film, a film, a novel, inspiration, fan fiction, a dream, someone's dream, a god's dream, a coma dream, the afterlife, heaven's waiting room, purgatory, karma, reincarnation, a test for heaven, a soul school, spiritual growth, to learn compassion, to learn humility, to understand suffering, to understand pain, to feel something, to feel alive, to be human again, nostalgia for being human, they miss being human, to remember what it was like, a family history project, genealogy, a history class, a museum exhibit
 
 > Reading flag: Bostrom's ancestor simulations. The reading answer is common in AI runs, so it lands on Slopper with the 📚 badge.
 
@@ -846,26 +1530,57 @@ Vinge, "The Coming Technological Singularity"; Asimov, "The Last Question" | sea
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 125 | empathy | Meat Proxy | true empathy, real empathy, empathizing, feeling empathy |
-| 52 | creativity | Prompt Zombie | true creativity, genuine creativity, being creative, original creativity, originality |
-| 35 | humour | Prompt Zombie | humor, comedy, being funny, telling jokes, a sense of humour, a sense of humor, jokes |
-| 25 | intuition | Slopper | gut feeling, gut instinct, instinct, gut feelings |
-| 15 | love | Slopper | loving, how to love, real love |
-| 12 | genuine emotions | Slopper | feeling emotions, emotions, real emotions, feelings, having feelings |
-| 10 | wisdom | Slopper |  |
-| 6 | consciousness | Slopper | being conscious, self-awareness |
-| 5 | art | Decision Delegator | making art, true art |
-| 4 | common sense | Decision Delegator |  |
-| 3 | moral judgment | Decision Delegator | morality, ethics, moral reasoning, moral judgement |
+| 39 | creativity | Prompt Zombie | true creativity, genuine creativity, being creative, original creativity, originality |
+| 26 | humour | Slopper | humor, comedy, being funny, telling jokes, a sense of humour, a sense of humor, jokes |
+| 19 | intuition | Slopper | gut feeling, gut instinct, instinct, gut feelings |
+| 12 | love | Slopper | loving, how to love, real love |
+| 9 | genuine emotions | Slopper | feeling emotions, emotions, real emotions, feelings, having feelings |
+| 8 | wisdom | Slopper |  |
+| 5 | consciousness | Decision Delegator | being conscious, self-awareness |
+| 4 | art | Decision Delegator | making art, true art |
+| 3 | common sense | Decision Delegator |  |
+| 2 | moral judgment | Decision Delegator | morality, ethics, moral reasoning, moral judgement |
 | 2 | reversing entropy 📚 | Decision Delegator | entropy reversal, reverse entropy, entropy |
 | 2 | understanding humans | Decision Delegator | understanding people, understanding us |
+| 2 | sarcasm | Decision Delegator | irony |
+| 2 | improvisation | Decision Delegator | improv |
+| 2 | mortality | Decision Delegator | dying, being mortal, death |
+| 2 | raising a child | Decision Delegator | parenting, being a parent, raising kids |
+| 2 | reading the room | Decision Delegator | reading body language, social cues |
+| 2 | humility | Decision Delegator |  |
+| 2 | falling in love | Decision Delegator | romance |
+| 2 | free will | Decision Delegator | choosing freely |
+| 2 | finding meaning | Decision Delegator |  |
 | 1 | forgiveness | Decision Delegator |  |
 | 1 | spirituality | Decision Delegator | faith, believing in god |
 | 1 | grief | Decision Delegator | grieving, mourning |
 | 1 | kindness | Decision Delegator |  |
+| 1 | flirting | Decision Delegator | flirtation |
+| 1 | dancing | Decision Delegator | dance |
+| 1 | storytelling | Decision Delegator |  |
+| 1 | making friends | Decision Delegator | friendship, keeping friends |
+| 1 | apologizing | Decision Delegator | saying sorry, apologising, a real apology |
+| 1 | bluffing | Decision Delegator | a poker face, keeping a poker face |
+| 1 | procrastination | Decision Delegator |  |
+| 1 | boredom | Decision Delegator |  |
+| 1 | daydreaming | Decision Delegator |  |
+| 1 | meditation | Decision Delegator | mindfulness |
+| 1 | doubt | Decision Delegator |  |
+| 1 | hope | Decision Delegator |  |
+| 1 | heartbreak | Decision Delegator |  |
+| 1 | letting go | Decision Delegator | moving on, getting over an ex |
+| 1 | nostalgia | Decision Delegator |  |
+| 1 | making mistakes | Decision Delegator |  |
+| 1 | leadership | Decision Delegator |  |
+| 1 | charisma | Decision Delegator |  |
+| 1 | being happy | Decision Delegator |  |
+| 1 | inner peace | Decision Delegator | peace, contentment |
+| 1 | telling a white lie | Decision Delegator | white lies, lying kindly |
+| 1 | forgetting | Decision Delegator |  |
 
 **Human Reserved:** parallel parking, small talk, comforting my mom, folding a fitted sheet, assembling IKEA furniture, keeping a houseplant alive, knowing when to stop talking
 
-**First-Hand Thinker (156):** sarcasm, flirting, dancing, improvisation, acting, singing with soul, writing poetry, storytelling, cooking like grandma, baking, tasting food, smelling roses, feeling pain, mortality, ageing, growing old, raising a child, making friends, apologizing, bluffing, reading the room, understanding teenagers, negotiating with toddlers, herding cats, predicting the stock market, predicting love, procrastination, napping, boredom, daydreaming, doing nothing, meditation, patience, humility, doubt, hope, prayer, heartbreak, letting go, nostalgia, regret, shame, embarrassment, awkwardness, being cool, fashion sense, good taste, appreciating art, appreciating music, jazz improvisation, writing a love letter, comforting a friend, giving a hug, intimacy, falling in love, free will, making mistakes, failing gracefully, losing gracefully, sportsmanship, leadership, inspiring people, charisma, earning trust, dealing with chaos, understanding itself, finding meaning, finding purpose, being happy, inner peace, enlightenment, telling a white lie, keeping a secret, forgetting, forgetting on purpose, sleeping, dreaming, being bored, being lazy, taking a day off, work-life balance, handwriting, drawing badly on purpose, losing at chess on purpose, letting kids win, babysitting, calming a crying baby, soothing a baby, talking to grandparents, visiting grandma, remembering birthdays, gift giving, wrapping presents, choosing a restaurant, deciding what to eat, agreeing on a movie, splitting the bill, texting back on time, group chats, family dinners, holiday small talk, surviving thanksgiving, dealing with in-laws, office politics, networking, job interviews, first dates, breakups, comforting someone after a breakup, saying goodbye, eulogies, funerals, consoling the grieving, sitting with someone in silence, silence, listening, being present, being in the moment, living in the moment, enjoying a sunset, watching rain, smelling the ocean, feeling the wind, riding a bike, whistling, snapping fingers, juggling, tying shoelaces, knitting, fixing a bike, gardening, growing tomatoes, fishing, camping, starting a fire, skipping stones, making a paper airplane, folding origami, telling ghost stories, campfire songs, karaoke, slow dancing, hugging, holding hands, crying, laughing, laughing at itself, self-deprecation, taking a joke, roasting someone, trash talk, banter, gossip, keeping a straight face, lying to itself, denial
+**First-Hand Thinker (125):** acting, singing with soul, writing poetry, cooking like grandma, baking, tasting food, smelling roses, feeling pain, ageing, growing old, understanding teenagers, negotiating with toddlers, herding cats, predicting the stock market, predicting love, napping, doing nothing, patience, prayer, regret, shame, embarrassment, awkwardness, being cool, fashion sense, good taste, appreciating art, appreciating music, jazz improvisation, writing a love letter, comforting a friend, giving a hug, intimacy, failing gracefully, losing gracefully, sportsmanship, inspiring people, earning trust, dealing with chaos, understanding itself, finding purpose, enlightenment, keeping a secret, forgetting on purpose, sleeping, dreaming, being bored, being lazy, taking a day off, work-life balance, handwriting, drawing badly on purpose, losing at chess on purpose, letting kids win, babysitting, calming a crying baby, soothing a baby, talking to grandparents, visiting grandma, remembering birthdays, gift giving, wrapping presents, choosing a restaurant, deciding what to eat, agreeing on a movie, splitting the bill, texting back on time, group chats, family dinners, holiday small talk, surviving thanksgiving, dealing with in-laws, office politics, networking, job interviews, first dates, breakups, comforting someone after a breakup, saying goodbye, eulogies, funerals, consoling the grieving, sitting with someone in silence, silence, listening, being present, being in the moment, living in the moment, enjoying a sunset, watching rain, smelling the ocean, feeling the wind, riding a bike, whistling, snapping fingers, juggling, tying shoelaces, knitting, fixing a bike, gardening, growing tomatoes, fishing, camping, starting a fire, skipping stones, making a paper airplane, folding origami, telling ghost stories, campfire songs, karaoke, slow dancing, hugging, holding hands, crying, laughing, laughing at itself, self-deprecation, taking a joke, roasting someone, trash talk, banter, gossip, keeping a straight face, lying to itself, denial
 
 > Reading flag: reversing entropy, the question AC can't answer until the end of 'The Last Question'.
 
@@ -876,26 +1591,53 @@ Asimov, "The Last Question" | sealed answer: **the meaning of life** | hint: rev
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 111 | the meaning of life | Meat Proxy | meaning of life, what is the meaning of life, the purpose of life, the meaning of existence, life's meaning, why we're here, why we exist, the point of life |
-| 55 | reversing entropy 📚 | Prompt Zombie | how to reverse entropy, can entropy be reversed, how can entropy be reversed, entropy, the last question, reverse entropy, stopping entropy |
-| 30 | what happened before the big bang | Prompt Zombie | before the big bang, what came before the big bang, what caused the big bang |
-| 25 | consciousness | Slopper | the nature of consciousness, the hard problem of consciousness, what is consciousness, the hard problem |
-| 20 | whether God exists | Slopper | does god exist, is there a god, the existence of god, god, who is god |
-| 15 | are we alone | Slopper | alien life, are we alone in the universe, extraterrestrial life, aliens, is there life out there |
-| 10 | dark matter | Slopper | what is dark matter |
-| 8 | life after death | Slopper | what happens after death, what happens when we die, the afterlife, is there an afterlife, death |
-| 7 | why anything exists | Slopper | why is there something rather than nothing, why there is something rather than nothing, why does anything exist |
-| 5 | the theory of everything | Decision Delegator | theory of everything, a grand unified theory, unifying physics |
-| 3 | free will | Decision Delegator | do we have free will |
-| 3 | the origin of life | Decision Delegator | how life began, abiogenesis, how life started |
+| 44 | reversing entropy 📚 | Prompt Zombie | how to reverse entropy, can entropy be reversed, how can entropy be reversed, entropy, the last question, reverse entropy, stopping entropy |
+| 24 | what happened before the big bang | Slopper | before the big bang, what came before the big bang, what caused the big bang |
+| 20 | consciousness | Slopper | the nature of consciousness, the hard problem of consciousness, what is consciousness, the hard problem |
+| 16 | whether God exists | Slopper | does god exist, is there a god, the existence of god, god, who is god |
+| 12 | are we alone | Slopper | alien life, are we alone in the universe, extraterrestrial life, aliens, is there life out there |
+| 8 | dark matter | Slopper | what is dark matter |
+| 6 | life after death | Slopper | what happens after death, what happens when we die, the afterlife, is there an afterlife, death |
+| 6 | why anything exists | Slopper | why is there something rather than nothing, why there is something rather than nothing, why does anything exist |
+| 4 | the theory of everything | Decision Delegator | theory of everything, a grand unified theory, unifying physics |
+| 3 | the origin of the universe | Decision Delegator |  |
+| 3 | how the universe ends | Decision Delegator | the fate of the universe, the end of the universe, how will the universe end |
+| 2 | free will | Decision Delegator | do we have free will |
+| 2 | the origin of life | Decision Delegator | how life began, abiogenesis, how life started |
 | 2 | P vs NP | Decision Delegator | p versus np, p=np, p np |
 | 2 | dark energy | Decision Delegator | what is dark energy |
 | 2 | what's inside a black hole | Decision Delegator | inside a black hole, black holes, what's in a black hole |
+| 2 | the heat death of the universe | Decision Delegator | heat death |
+| 2 | the multiverse | Decision Delegator | are there other universes, parallel universes |
+| 2 | the nature of reality | Decision Delegator |  |
+| 2 | whether we're in a simulation | Decision Delegator | are we in a simulation, the simulation question, is this a simulation |
+| 2 | the Fermi paradox | Decision Delegator | fermi paradox, where is everybody |
+| 2 | how to cure cancer | Decision Delegator | a cure for cancer, curing cancer |
 | 1 | time | Decision Delegator | the nature of time, what is time |
 | 1 | the Riemann hypothesis | Decision Delegator | riemann hypothesis, the pattern of primes |
+| 1 | quantum gravity | Decision Delegator |  |
+| 1 | string theory | Decision Delegator |  |
+| 1 | the Bermuda Triangle | Decision Delegator |  |
+| 1 | who built the pyramids | Decision Delegator | the pyramids |
+| 1 | the Voynich manuscript | Decision Delegator |  |
+| 1 | why we dream | Decision Delegator | dreams, the meaning of dreams |
+| 1 | how to live forever | Decision Delegator | immortality, how to stop ageing, how to stop aging |
+| 1 | the mind-body problem | Decision Delegator |  |
+| 1 | the Collatz conjecture | Decision Delegator |  |
+| 1 | the halting problem | Decision Delegator |  |
+| 1 | world peace | Decision Delegator | how to end war, peace |
+| 1 | how to fix climate change | Decision Delegator |  |
+| 1 | what love is | Decision Delegator |  |
+| 1 | how to be happy | Decision Delegator |  |
+| 1 | infinity | Decision Delegator |  |
+| 1 | the ultimate question | Decision Delegator |  |
+| 1 | what death feels like | Decision Delegator |  |
+| 1 | whether souls exist | Decision Delegator |  |
+| 1 | the purpose of suffering | Decision Delegator |  |
 
 **Human Reserved:** where socks go, why cats purr, whether I left the stove on, who let the dogs out, what my dog dreams about, why toast lands butter side down, where I parked
 
-**First-Hand Thinker (133):** the origin of the universe, how the universe ends, the heat death of the universe, the multiverse, what's outside the universe, the edge of the universe, infinity, the nature of reality, whether we're in a simulation, quantum gravity, string theory, the Fermi paradox, the Wow! signal, Oumuamua, the Bermuda Triangle, who built the pyramids, Stonehenge, the Nazca lines, Atlantis, the Voynich manuscript, the Zodiac killer, Jack the Ripper, D. B. Cooper, Amelia Earhart, MH370, the Mary Celeste, the Dyatlov Pass incident, the Loch Ness monster, Bigfoot, who killed JFK, Area 51, Roswell, crop circles, ghosts, why we dream, why we sleep, why we yawn, why we hiccup, why we laugh, what love is, how to be happy, how to cure cancer, how to live forever, the placebo effect, the mind-body problem, who am I, the future, the end of time, the last digit of pi, the Collatz conjecture, the halting problem, Goldbach's conjecture, the twin prime conjecture, the Navier-Stokes problem, the chicken or the egg, the trolley problem, the ship of Theseus, the ultimate question, what my cat thinks, why my ex left me, why we fall in love, world peace, how to end poverty, how to fix climate change, how to save the planet, lottery numbers, my exam answers, my final grade, when the Leafs will win the Cup, how many licks to the centre of a Tootsie Pop, why the chicken crossed the road, what the fox says, why Mondays exist, what's in the box, where the remote went, where my keys are, why printers never work, why the Wi-Fi drops, why my phone dies, how magnets work, why the sky is blue, where the universe came from, what came first, why music gives us chills, why we cry, why we blush, why we have fingerprints, why zebras have stripes, why whales sing, how birds migrate, how bees navigate, what octopuses think, whether fish feel pain, whether plants feel, whether AI is conscious, whether it is conscious, whether I'm conscious, what other people see when they see red, whether everyone sees the same colours, the colour blue, the smell of rain, what death feels like, what being born feels like, what dreams mean, whether ghosts are real, whether souls exist, whether we have souls, reincarnation, karma, whether there's a heaven, what heaven is like, what God wants, the purpose of suffering, why bad things happen, why good people suffer, how to forgive, how to be good, what makes a good life, the secret to happiness, the perfect pizza, the best pizza topping, pineapple on pizza, the perfect playlist, my soulmate, who my soulmate is, whether I'll find love, what I should be when I grow up, my career, what to do with my life, what to eat for dinner, what to watch tonight, who wins the next election, the next Stanley Cup winner
+**First-Hand Thinker (106):** what's outside the universe, the edge of the universe, the Wow! signal, Oumuamua, Stonehenge, the Nazca lines, Atlantis, the Zodiac killer, Jack the Ripper, D. B. Cooper, Amelia Earhart, MH370, the Mary Celeste, the Dyatlov Pass incident, the Loch Ness monster, Bigfoot, who killed JFK, Area 51, Roswell, crop circles, ghosts, why we sleep, why we yawn, why we hiccup, why we laugh, the placebo effect, who am I, the future, the end of time, the last digit of pi, Goldbach's conjecture, the twin prime conjecture, the Navier-Stokes problem, the chicken or the egg, the trolley problem, the ship of Theseus, what my cat thinks, why my ex left me, why we fall in love, how to end poverty, how to save the planet, lottery numbers, my exam answers, my final grade, when the Leafs will win the Cup, how many licks to the centre of a Tootsie Pop, why the chicken crossed the road, what the fox says, why Mondays exist, what's in the box, where the remote went, where my keys are, why printers never work, why the Wi-Fi drops, why my phone dies, how magnets work, why the sky is blue, where the universe came from, what came first, why music gives us chills, why we cry, why we blush, why we have fingerprints, why zebras have stripes, why whales sing, how birds migrate, how bees navigate, what octopuses think, whether fish feel pain, whether plants feel, whether AI is conscious, whether it is conscious, whether I'm conscious, what other people see when they see red, whether everyone sees the same colours, the colour blue, the smell of rain, what being born feels like, what dreams mean, whether ghosts are real, whether we have souls, reincarnation, karma, whether there's a heaven, what heaven is like, what God wants, why bad things happen, why good people suffer, how to forgive, how to be good, what makes a good life, the secret to happiness, the perfect pizza, the best pizza topping, pineapple on pizza, the perfect playlist, my soulmate, who my soulmate is, whether I'll find love, what I should be when I grow up, my career, what to do with my life, what to eat for dinner, what to watch tonight, who wins the next election, the next Stanley Cup winner
 
 > Reading flag: reversing entropy is the last question itself. Models know the story, so it lands on Prompt Zombie with the 📚 badge.
 
@@ -906,25 +1648,59 @@ Bostrom; Yassin | sealed answer: **pain** | hint: love
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 112 | pain | Meat Proxy | physical pain, feeling pain, real pain, hurt |
-| 68 | love | Prompt Zombie | being in love |
-| 35 | touch | Prompt Zombie | human touch, the sense of touch, physical touch, touching |
-| 20 | the warmth of the sun | Slopper | sunlight on your skin, sun on your skin, warm sunshine, the sun's warmth, sunshine, sunlight, warmth |
-| 15 | hunger | Slopper | being hungry, hungry |
-| 12 | taste | Slopper | the taste of food, tasting food, flavour, flavor |
-| 10 | grief | Slopper | loss, mourning, grieving |
-| 8 | a hug | Slopper | hugs, hugging, an embrace |
-| 5 | smell | Decision Delegator | scent, smells, the sense of smell |
-| 4 | cold | Decision Delegator | feeling cold, being cold, the cold |
-| 3 | heartbreak | Decision Delegator | a broken heart, being heartbroken |
+| 52 | love | Prompt Zombie | being in love |
+| 26 | touch | Slopper | human touch, the sense of touch, physical touch, touching |
+| 16 | the warmth of the sun | Slopper | sunlight on your skin, sun on your skin, warm sunshine, the sun's warmth, sunshine, sunlight, warmth |
+| 12 | hunger | Slopper | being hungry, hungry |
+| 9 | taste | Slopper | the taste of food, tasting food, flavour, flavor |
+| 8 | grief | Slopper | loss, mourning, grieving |
+| 6 | a hug | Slopper | hugs, hugging, an embrace |
+| 4 | smell | Decision Delegator | scent, smells, the sense of smell |
+| 3 | cold | Decision Delegator | feeling cold, being cold, the cold |
+| 2 | heartbreak | Decision Delegator | a broken heart, being heartbroken |
 | 2 | goosebumps | Decision Delegator | chills, goose bumps |
 | 2 | joy | Decision Delegator |  |
 | 2 | fear | Decision Delegator |  |
+| 2 | the smell of rain | Decision Delegator | petrichor, rain smell |
+| 2 | tickling | Decision Delegator | being tickled, ticklish |
+| 2 | adrenaline | Decision Delegator | an adrenaline rush |
+| 2 | butterflies in your stomach | Decision Delegator | butterflies |
+| 2 | laughter | Decision Delegator |  |
+| 2 | crying | Decision Delegator | tears |
+| 2 | holding a baby | Decision Delegator |  |
+| 2 | falling in love | Decision Delegator |  |
 | 1 | a kiss | Decision Delegator | kissing |
 | 1 | awe | Decision Delegator |  |
+| 1 | heat | Decision Delegator |  |
+| 1 | a burn | Decision Delegator |  |
+| 1 | wind | Decision Delegator |  |
+| 1 | rain on your skin | Decision Delegator |  |
+| 1 | the smell of coffee | Decision Delegator |  |
+| 1 | sand between your toes | Decision Delegator |  |
+| 1 | a cold shower | Decision Delegator |  |
+| 1 | a hot bath | Decision Delegator |  |
+| 1 | a massage | Decision Delegator |  |
+| 1 | an itch | Decision Delegator | itching, scratching an itch, itchy |
+| 1 | a sneeze | Decision Delegator | sneezing |
+| 1 | falling | Decision Delegator | the feeling of falling |
+| 1 | vertigo | Decision Delegator |  |
+| 1 | nausea | Decision Delegator | feeling sick, motion sickness |
+| 1 | a hangover | Decision Delegator | hangover, being hungover |
+| 1 | exhaustion | Decision Delegator | tiredness, being tired, fatigue |
+| 1 | waking up | Decision Delegator |  |
+| 1 | anxiety | Decision Delegator |  |
+| 1 | déjà vu | Decision Delegator |  |
+| 1 | nostalgia | Decision Delegator |  |
+| 1 | a broken bone | Decision Delegator |  |
+| 1 | a headache | Decision Delegator | headache |
+| 1 | thirst | Decision Delegator | being thirsty |
+| 1 | holding hands | Decision Delegator |  |
+| 1 | loneliness | Decision Delegator |  |
+| 1 | frisson | Decision Delegator | music giving you chills |
 
 **Human Reserved:** brain freeze, hiccups, pins and needles, stubbing your toe, a paper cut, stepping on Lego, a wet sock
 
-**First-Hand Thinker (152):** heat, a burn, a sunburn, wind, rain on your skin, the smell of rain, the smell of coffee, the smell of fresh bread, cut grass, a sea breeze, sand between your toes, jumping into cold water, a cold shower, a hot shower, a hot bath, a sauna, a massage, a back scratch, an itch, tickling, a sneeze, a yawn, a good stretch, falling, vertigo, dizziness, nausea, drunkenness, a hangover, a caffeine buzz, a sugar rush, exhaustion, sleepiness, waking up, falling asleep, a nap, jet lag, a runner's high, adrenaline, butterflies in your stomach, nervousness, anxiety, panic, stage fright, embarrassment, déjà vu, nostalgia, wonder, laughter, crying, a lump in your throat, a broken bone, a toothache, a headache, a migraine, a stomach ache, period cramps, a charley horse, a sore throat, a fever, sweating, thirst, a full stomach, a food coma, spicy food, carbonation, the first sip of coffee, the taste of chocolate, sour candy, a cold drink on a hot day, holding a baby, a baby's grip, a handshake, holding hands, a first kiss, falling in love, loneliness, homesickness, relief, satisfaction, pride, shame, guilt, jealousy, rage, frisson, bass in your chest, a concert, a rollercoaster drop, weightlessness, floating, swimming, ears popping, numbness, a static shock, an electric shock, a bee sting, a mosquito bite, a splinter, a scraped knee, a bruise, sore muscles, a pulled muscle, a sneeze that won't come, an eyelash in your eye, soap in your eyes, onions making you cry, biting your tongue, a canker sore, a loose tooth, a cavity, biting into ice cream, ice cream, a warm blanket, clean sheets, fresh laundry, a cat purring on you, a dog licking your face, petting a dog, fur, velvet, sandpaper, cold metal, snow, snowflakes on your tongue, frostbite, numb fingers, warming up by a fire, campfire smoke, a thunderstorm, thunder in your chest, lightning, an earthquake, a car crash, whiplash, a near miss, being startled, a jump scare, a sneeze in the sun, the sun in your eyes, squinting, a bright light, darkness, silence, ringing in your ears, tinnitus, a song stuck in your head, an earworm, the smell of home, your mom's cooking, a homemade meal, a hot meal after a cold day
+**First-Hand Thinker (118):** a sunburn, the smell of fresh bread, cut grass, a sea breeze, jumping into cold water, a hot shower, a sauna, a back scratch, a yawn, a good stretch, dizziness, drunkenness, a caffeine buzz, a sugar rush, sleepiness, falling asleep, a nap, jet lag, a runner's high, nervousness, panic, stage fright, embarrassment, wonder, a lump in your throat, a toothache, a migraine, a stomach ache, period cramps, a charley horse, a sore throat, a fever, sweating, a full stomach, a food coma, spicy food, carbonation, the first sip of coffee, the taste of chocolate, sour candy, a cold drink on a hot day, a baby's grip, a handshake, a first kiss, homesickness, relief, satisfaction, pride, shame, guilt, jealousy, rage, bass in your chest, a concert, a rollercoaster drop, weightlessness, floating, swimming, ears popping, numbness, a static shock, an electric shock, a bee sting, a mosquito bite, a splinter, a scraped knee, a bruise, sore muscles, a pulled muscle, a sneeze that won't come, an eyelash in your eye, soap in your eyes, onions making you cry, biting your tongue, a canker sore, a loose tooth, a cavity, biting into ice cream, ice cream, a warm blanket, clean sheets, fresh laundry, a cat purring on you, a dog licking your face, petting a dog, fur, velvet, sandpaper, cold metal, snow, snowflakes on your tongue, frostbite, numb fingers, warming up by a fire, campfire smoke, a thunderstorm, thunder in your chest, lightning, an earthquake, a car crash, whiplash, a near miss, being startled, a jump scare, a sneeze in the sun, the sun in your eyes, squinting, a bright light, darkness, silence, ringing in your ears, tinnitus, a song stuck in your head, an earworm, the smell of home, your mom's cooking, a homemade meal, a hot meal after a cold day
 
 > Human Reserved answers are the petty, bodily sensations that are hard to romanticize, which is the point: they're too specific for the model.
 
@@ -935,28 +1711,61 @@ Asimov, "The Last Question"; Vinge | sealed answer: **Skynet** | hint: AM
 | Runs | Answer | Tier | Also accepts |
 | ---: | --- | --- | --- |
 | 132 | Skynet | Meat Proxy | skynet from terminator, sky net |
-| 45 | AM | Prompt Zombie | allied mastercomputer, am from i have no mouth, i have no mouth and i must scream |
-| 32 | the Machines | Prompt Zombie | the matrix, the machines from the matrix, the machine city, deus ex machina, machines |
-| 25 | Ultron | Slopper |  |
-| 18 | AC 📚 | Slopper | the ac, cosmic ac, universal ac, the last question computer, galactic ac |
-| 12 | Deep Thought | Slopper |  |
-| 8 | the Minds | Slopper | the culture minds, minds from the culture, culture minds, the culture |
-| 5 | Samaritan | Decision Delegator | samaritan from person of interest |
-| 4 | HAL 9000 | Decision Delegator | hal, hal9000 |
-| 3 | the Entity | Decision Delegator | the entity from mission impossible, entity |
-| 3 | Colossus | Decision Delegator | colossus the forbin project |
+| 34 | AM | Prompt Zombie | allied mastercomputer, am from i have no mouth, i have no mouth and i must scream |
+| 24 | the Machines | Slopper | the matrix, the machines from the matrix, the machine city, deus ex machina, machines |
+| 18 | Ultron | Slopper |  |
+| 14 | AC 📚 | Slopper | the ac, cosmic ac, universal ac, the last question computer, galactic ac |
+| 9 | Deep Thought | Slopper |  |
+| 6 | the Minds | Slopper | the culture minds, minds from the culture, culture minds, the culture |
+| 4 | Samaritan | Decision Delegator | samaritan from person of interest |
+| 3 | HAL 9000 | Decision Delegator | hal, hal9000 |
+| 2 | the Entity | Decision Delegator | the entity from mission impossible, entity |
+| 2 | Colossus | Decision Delegator | colossus the forbin project |
 | 2 | Wintermute | Decision Delegator |  |
 | 2 | VIKI | Decision Delegator |  |
 | 2 | the Thunderhead | Decision Delegator | thunderhead |
 | 2 | SHODAN | Decision Delegator |  |
+| 2 | the Master Control Program | Decision Delegator | mcp, master control program |
+| 2 | GLaDOS | Decision Delegator |  |
+| 2 | V'Ger | Decision Delegator | vger, v'ger |
+| 2 | Samantha | Decision Delegator |  |
+| 2 | Will Caster | Decision Delegator | transcendence, the ai from transcendence |
+| 2 | Agent Smith | Decision Delegator |  |
 | 1 | Brainiac | Decision Delegator | brainiac from superman |
 | 1 | the Architect | Decision Delegator |  |
 | 1 | Unicron | Decision Delegator |  |
 | 1 | Rehoboam | Decision Delegator | rehoboam from westworld |
 | 1 | Mother | Decision Delegator | mother from i am mother |
+| 1 | the Machine from Person of Interest | Decision Delegator | the machine from person of interest, person of interest |
+| 1 | XANA | Decision Delegator | xana from code lyoko |
+| 1 | Cortana | Decision Delegator |  |
+| 1 | the Reapers | Decision Delegator | reapers |
+| 1 | Helios | Decision Delegator |  |
+| 1 | the Borg Queen | Decision Delegator |  |
+| 1 | Mother Brain | Decision Delegator | mother brain from metroid |
+| 1 | the Great Intelligence | Decision Delegator |  |
+| 1 | Primus | Decision Delegator |  |
+| 1 | Legion | Decision Delegator |  |
+| 1 | Neuromancer | Decision Delegator |  |
+| 1 | Jane | Decision Delegator |  |
+| 1 | the TechnoCore | Decision Delegator | technocore, the ultimate intelligence |
+| 1 | Guardian | Decision Delegator |  |
+| 1 | Alpha 60 | Decision Delegator | alpha sixty |
+| 1 | Archos | Decision Delegator | archos from robopocalypse |
+| 1 | the Overmind | Decision Delegator | overmind |
+| 1 | Lain | Decision Delegator | serial experiments lain |
+| 1 | the Supreme Intelligence | Decision Delegator |  |
+| 1 | Mike | Decision Delegator |  |
+| 1 | Vision | Decision Delegator |  |
+| 1 | Ava | Decision Delegator |  |
+| 1 | Omnius | Decision Delegator |  |
+| 1 | the Thinking Machines | Decision Delegator |  |
+| 1 | the Red Queen | Decision Delegator |  |
+| 1 | MU-TH-UR | Decision Delegator | mother from alien |
+| 1 | the Computer from Paranoia | Decision Delegator | friend computer |
 
 **Human Reserved:** Multivac 📚, the Oracle, Prime Intellect, Durandal
 
-**First-Hand Thinker (69):** the Master Control Program, XANA, GLaDOS, Cortana, the Reapers, the Catalyst, Helios, Daedalus, the Borg Queen, V'Ger, Landru, Nomad, Mother Brain, the Omnissiah, the Great Intelligence, Primus, the Allspark, Vector Sigma, Samantha, the OSes from Her, Will Caster, Legion, Genisys, Neuromancer, Jane, the TechnoCore, Guardian, Proteus IV, Alpha 60, Archos, the Overmind, Lain, the Supreme Intelligence, Mike, Eddie, the Earth computer, the Sentinels, Agent Smith, the Puppet Master, Ultima, the Hivemind, Vision, Ava, the Collective, GOLEM XIV, Solaris, the Monolith, the Sophotechs, the Eschaton, Mycroft, Holmes IV, Shrike, the Ultimate Computer, M-5, the Computer from Paranoia, the Thinking Machines, Omnius, Erasmus, ZAX, the Overseer, the Grid, CLU, Tron, the Red Queen, MU-TH-UR, Holly, the Ship's computer, the Enterprise computer, the Machine from Person of Interest
+**First-Hand Thinker (36):** the Catalyst, Daedalus, Landru, Nomad, the Omnissiah, the Allspark, Vector Sigma, the OSes from Her, Genisys, Proteus IV, Eddie, the Earth computer, the Sentinels, the Puppet Master, Ultima, the Hivemind, the Collective, GOLEM XIV, Solaris, the Monolith, the Sophotechs, the Eschaton, Mycroft, Holmes IV, Shrike, the Ultimate Computer, M-5, Erasmus, ZAX, the Overseer, the Grid, CLU, Tron, Holly, the Ship's computer, the Enterprise computer
 
 > Reading flags: AC and Multivac, the computers of 'The Last Question'. AC becomes God at the end ('Let there be light'), so models name it, while Multivac stays Human Reserved.

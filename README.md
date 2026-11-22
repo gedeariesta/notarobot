@@ -21,7 +21,7 @@ Every prompt has a list of correct answers. Anything not on the list bounces, an
 - `bank/day1-work.json` to `bank/day4-simulation.json` are the source. Each prompt lists the sealed AI answer (`ai`), the other answers the AI gave with their run counts (`runs`), the team's Human Reserved picks (`reserved`), every other correct answer (`list`), spellings (`aliases`), answers from the reading (`reading`) and review notes.
 - **The run counts are simulated.** They are a judgement of what current chat models answer, not real runs. Before launch, run each prompt 100 times on three models, paste the real counts into `runs`, and rebuild.
 - `node scripts/build-bank.mjs` checks the bank (runs sum to 300, the sealed answer is the most common, no two answers read the same after normalization) and writes `prompts.json` and [bank/QUESTION_BANK.md](bank/QUESTION_BANK.md), a review sheet for the team.
-- `node scripts/build-bank.mjs --words` also rebuilds `words.txt`, the Keyboard Smash dictionary (about 200,000 words from the macOS word list, plus `bank/extra-words.txt` for modern words). Any word used by an answer list always counts as a word.
+- Answers that aren't on the list bounce. A near miss gets "Did you mean": either a spelling fix, or a related answer ("nuclear" suggests "nuclear war"), preferring what the AI said most. Keyboard Smash is only for runs along a keyboard row, answers with no vowel, and one letter repeated four times.
 
 ## URL options
 
@@ -35,14 +35,14 @@ Every prompt has a list of correct answers. Anything not on the list bounces, an
 
 ## Files
 
-- `src/scoring.js`: normalization, list lookups (plurals and "my"/"the" variants included), "Did you mean", the Keyboard Smash filter, tiers, verdicts, badges and the share text. Pure code; the tests and the build script run it too.
+- `src/scoring.js`: normalization, list lookups (plurals and "my"/"the" variants included), "Did you mean" (spelling and related answers), the Keyboard Smash rule, tiers, verdicts, badges and the share text. Pure code; the tests and the build script run it too.
 - `src/specimen.js`: the particle scans. Hundreds to thousands of particles splat a density field in WebGL, which a second pass thresholds into one porous silhouette. A `Figure` moves the same particles between shapes, driven by GSAP.
 - `src/figures.js`: the drawings the scans are sampled from (the subject's bust, the hand, brain, claw and globe for Days 1 to 4).
 - `src/plate.js`: a figure plus its annotations (callouts on leader lines, crosshairs, FIG caption).
-- `src/reveal.js`: the Screening, one GSAP timeline so it can be skipped.
+- `src/reveal.js`: the Screening, one GSAP timeline so it can be skipped. The water darkens with every gate; past 1/300 the screen glitches on what it can't classify.
 - `src/main.js`: the screens and the flow. `src/days.js` handles day rotation and streaks, `src/state.js` localStorage, `src/sound.js` Web Audio.
-- `src/shapes.js`: the tier shapes from the design pack. `src/blocklist.js`: a short hand-written blocklist for the team to review.
+- `src/shapes.js`: the tier shapes from the design pack.
 - `dev/specimens.html`: the specimen sheet, every figure as drawn and as scanned. Not linked from the game.
 - `vendor/`: GSAP 3.13 and its MorphSVG plugin, free under GSAP's standard no-charge license.
 
-Fonts are Inter Tight and JetBrains Mono from Google Fonts. Two colours, #1F3CFF and white; red #FF3B30 only for the last five seconds of the timer.
+Fonts are Inter Tight and JetBrains Mono from Google Fonts. Two colours, #1F3CFF and white, with two exceptions: red #FF3B30 for the last five seconds of the timer, and the Screening's water, which darkens from #1F3CFF toward #030A3B as answers sink.

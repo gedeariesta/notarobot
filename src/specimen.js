@@ -414,7 +414,8 @@ export class Figure {
     this.dir = new Float32Array(count * 2).map(() => r() * 2 - 1);
     this.phase = new Float32Array(count).map(() => r() * Math.PI * 2);
     this.sizeJ = new Float32Array(count).map(() => 0.75 + r() * 0.5);
-    this.state = { from: 0, to: 0, t: 0, x: 0, y: 0, size: 100, scatter: 0.18, lattice: 0, explode: 0, alpha: 1, drift: 1, grid: 0.06 };
+    this.state = { from: 0, to: 0, t: 0, x: 0, y: 0, size: 100, scatter: 0.18, lattice: 0, explode: 0, alpha: 1, drift: 1, grid: 0.06, blur: 0 };
+    this.trail = new Float32Array(count * 3 * (1 + Figure.GHOSTS));
     this.running = false;
     this.raf = 0;
     this.t0 = performance.now();
@@ -471,6 +472,23 @@ export class Figure {
       d[i * 3 + 1] = s.y + y * s.size;
       d[i * 3 + 2] = rad * this.sizeJ[i] * (1 - s.explode * 0.7);
     }
+    // Motion blur: while falling, each particle leaves fading copies above it, so the scan smears.
+    if (s.blur > 0.5) {
+      const G = Figure.GHOSTS;
+      const t = this.trail;
+      t.set(d);
+      for (let g = 1; g <= G; g++) {
+        const off = n * 3 * g;
+        const k = 1 - g / (G + 1.5);
+        for (let i = 0; i < n; i++) {
+          t[off + i * 3] = d[i * 3];
+          t[off + i * 3 + 1] = d[i * 3 + 1] - (s.blur * g) / G;
+          t[off + i * 3 + 2] = d[i * 3 + 2] * k;
+        }
+      }
+      this.renderer.draw(t, n * (1 + G), s.alpha);
+      return;
+    }
     this.renderer.draw(d, n, s.alpha);
   }
 
@@ -507,5 +525,8 @@ export class Figure {
     this.renderer = null;
   }
 }
+
+/** Copies drawn behind each particle for motion blur. */
+Figure.GHOSTS = 3;
 
 export const rendererCount = () => liveRenderers;

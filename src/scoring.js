@@ -1,7 +1,6 @@
 // Scoring from the answer lists (DESIGN.md, Scoring): lookups, bounces, "Did you mean",
 // the Keyboard Smash filter, tiers from AI runs, verdicts, badges and the share text.
 // Pure functions only: shared by the browser, the bank build script and the Node tests.
-import { BLOCKLIST_WORDS } from './blocklist.js';
 
 export const RUNS_PER_PROMPT = 300;
 
@@ -38,12 +37,8 @@ export const BADGES = {
 };
 const BADGE_ORDER = ['botBaby', 'rng', 'meatSupreme', 'turing', 'reading', 'objector', 'fast'];
 
-const NON_ANSWER_TEXT = [
-  'idk', 'no', 'nothing', 'n/a', 'yes', 'ok', 'okay', 'lol', 'dunno', 'whatever', 'pass', "I don't know", 'i dunno',
-  'no idea', 'none', 'nope', 'skip', 'idc', "I don't care", 'who cares', 'nah', 'yeah', 'yep', 'k', 'lmao', 'test', 'asdf',
-];
 const OBJECTOR_TEXT = ['I refuse', 'no'];
-const LEADING_FILLER = /^(?:(?:my|your|our|their|his|her|its|ones|to|being|getting|a|an|the) )+/;
+const LEADING_FILLER = /^(?:(?:my|your|our|their|his|her|its|ones|to|a|an|the) )+/;
 
 // ---------------------------------------------------------------- normalize
 
@@ -68,9 +63,6 @@ export function core(n) {
   return n.replace(LEADING_FILLER, '');
 }
 
-const BLOCKLIST = new Set(BLOCKLIST_WORDS.map(normalize));
-// Normalized the same way as answers, so "pass" (which normalizes to "pas") still matches.
-const NON_ANSWERS = new Set(NON_ANSWER_TEXT.map(normalize));
 const OBJECTOR_ANSWERS = new Set(OBJECTOR_TEXT.map(normalize));
 
 // ---------------------------------------------------------------- inflections
@@ -159,7 +151,7 @@ export function compilePrompt(p) {
     }
     put(exact, n, entry, raw);
     put(flat, n.replace(/ /g, ''), entry, raw);
-    if (suggest) candidates.push({ norm: n, flat: n.replace(/ /g, ''), display: raw, entry });
+    if (suggest) candidates.push({ norm: n, flat: n.replace(/ /g, ''), display: raw, entry, tokens: topicTokens(n) });
   };
 
   for (const e of entries) add(e.a, e, { suggest: true });
@@ -272,87 +264,99 @@ export function suggest(raw, cp) {
   return suggestDetail(raw, cp)?.text ?? null;
 }
 
-// ---------------------------------------------------------------- Keyboard Smash
+// Related answers: "nuclear" finds "nuclear war", "a nuclear war between countries" finds it too.
+const STOP = new Set(('a an the of to in on for and or my your our their his her its being getting with from by at as is are '
+  + 'be it that this i you we they me us them someone something some any very really just like kind sort type thing stuff '
+  + 'lot more most less big small good bad new old one way when if not no so out up').split(' '));
 
-/** Stems to try for a dictionary that only lists base forms. */
-export function stems(w) {
-  const out = [w];
-  const add = (s) => s.length >= 2 && out.push(s);
-  if (w.endsWith('s')) add(w.slice(0, -1));
-  if (w.endsWith('es')) add(w.slice(0, -2));
-  if (w.endsWith('ies')) add(`${w.slice(0, -3)}y`);
-  if (w.endsWith('ed')) { add(w.slice(0, -2)); add(w.slice(0, -1)); }
-  if (w.endsWith('ied')) add(`${w.slice(0, -3)}y`);
-  if (w.endsWith('ing')) {
-    const b = w.slice(0, -3);
-    add(b); add(`${b}e`);
-    if (/(.)\1$/.test(b)) add(b.slice(0, -1));
-  }
-  if (w.endsWith('er')) { add(w.slice(0, -2)); add(w.slice(0, -1)); }
-  if (w.endsWith('ers')) add(w.slice(0, -3));
-  if (w.endsWith('est')) add(w.slice(0, -3));
-  if (w.endsWith('ly')) add(w.slice(0, -2));
-  if (w.endsWith('ness')) add(w.slice(0, -4));
-  if (w.endsWith('ful')) add(w.slice(0, -3));
-  if (w.endsWith('less')) add(w.slice(0, -4));
-  if (w.endsWith('ment')) add(w.slice(0, -4));
-  return out;
+/** Content words of a normalized answer, lightly stemmed, for matching related answers. */
+export function topicTokens(n) {
+  return n.split(' ').filter((w) => w && !STOP.has(w)).map((w) => {
+    if (w.length > 5 && w.endsWith('ing')) return w.slice(0, -3);
+    if (w.length > 4 && w.endsWith('ed')) return w.slice(0, -2);
+    if (w.length > 5 && w.endsWith('ly')) return w.slice(0, -2);
+    return w;
+  });
+}
+
+/** Two words name the same thing: equal, one inside the other (volcano, supervolcano), or a long shared stem. */
+function sameWord(a, b) {
+  if (a === b) return true;
+  const [s, l] = a.length <= b.length ? [a, b] : [b, a];
+  if (s.length >= 5 && l.includes(s)) return true;
+  let p = 0;
+  while (p < s.length && s[p] === l[p]) p++;
+  return p >= 5 && p >= Math.ceil(s.length * 0.75);
 }
 
 /**
- * A sorted, newline-separated word list searched in place, so the 200,000 words cost one string
- * of memory on a phone instead of a Set.
+ * The list answer the input is about, when it isn't a spelling slip: every word of the input belongs
+ * to the answer, or every word of the answer is in the input. The machine finishes your sentence, so
+ * the answer the AI gave most often wins. It never volunteers a hand-picked Human Reserved answer.
  */
-export function makeDictionary(text) {
-  const body = `${String(text).replace(/\r/g, '').trim()}\n`;
-  const starts = [];
-  for (let i = 0; i < body.length; i = body.indexOf('\n', i) + 1) starts.push(i);
-  const idx = Int32Array.from(starts);
-  const wordAt = (k) => body.slice(idx[k], body.indexOf('\n', idx[k]));
-  return {
-    size: idx.length,
-    has(w) {
-      let lo = 0;
-      let hi = idx.length - 1;
-      while (lo <= hi) {
-        const mid = (lo + hi) >> 1;
-        const x = wordAt(mid);
-        if (x === w) return true;
-        if (x < w) lo = mid + 1;
-        else hi = mid - 1;
-      }
-      return false;
-    },
-  };
+export function topicSuggest(raw, cp) {
+  const n = normalize(raw);
+  const tin = topicTokens(n);
+  if (!tin.length || lookup(raw, cp)) return null;
+  let best = null;
+  for (const c of cp.candidates) {
+    if (c.entry.tier === 'reserved' || !c.tokens.length) continue;
+    const inside = tin.every((t) => c.tokens.some((u) => sameWord(t, u)));
+    const covers = !inside && c.tokens.every((u) => tin.some((t) => sameWord(t, u)));
+    if (!inside && !covers) continue;
+    const overlap = (inside ? tin.length : c.tokens.length) / Math.max(tin.length, c.tokens.length);
+    const rank = [c.entry.runs, overlap, -c.entry.a.length];
+    if (!best || rank[0] > best.rank[0] || (rank[0] === best.rank[0] && (rank[1] > best.rank[1] || (rank[1] === best.rank[1] && rank[2] > best.rank[2])))) {
+      best = { c, rank };
+    }
+  }
+  return best ? { text: casual(best.c.entry.a), entry: best.c.entry } : null;
 }
 
-/** True when a token is a word: in the dictionary, in this game's lists, a number, or a stem of one. */
-export function isWord(token, dict, known) {
-  if (/^\d+$/.test(token)) return true;
-  if (known && known.has(token)) return true;
-  if (!dict) return true;
-  return stems(token).some((s) => dict.has(s) || (known && known.has(s)));
+// ---------------------------------------------------------------- Keyboard Smash
+
+const ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+const KEY = {};
+ROWS.forEach((row, r) => [...row].forEach((ch, i) => { KEY[ch] = [r, i]; }));
+
+/**
+ * A run along one keyboard row: "asdf", "qwerty", "lkjh", "asdfjkl", "sdfsdf". Real words that
+ * happen to contain three neighbouring keys ("power", "tree") don't count.
+ */
+export function isKeyboardRow(token) {
+  const t = String(token).toLowerCase();
+  if (t.length < 3 || !/^[a-z]+$/.test(t)) return false;
+  const runs = [];
+  let len = 1;
+  let dir = 0;
+  for (let i = 1; i < t.length; i++) {
+    const a = KEY[t[i - 1]];
+    const b = KEY[t[i]];
+    const step = a[0] === b[0] ? b[1] - a[1] : 99;
+    if ((step === 1 || step === -1) && (len === 1 || step === dir)) {
+      len++;
+      dir = step;
+    } else {
+      runs.push(len);
+      len = 1;
+      dir = 0;
+    }
+  }
+  runs.push(len);
+  const covered = runs.filter((r) => r >= 3).reduce((s, r) => s + r, 0);
+  return Math.max(...runs) >= 4 || covered === t.length;
 }
 
-/** Rules that make an answer a Keyboard Smash before "Did you mean" is considered. */
-export function hardSmashReason(n, cp) {
-  if (NON_ANSWERS.has(n)) return 'non-answer';
-  if (/(.)\1{3,}/u.test(n.replace(/ /g, ''))) return 'repeat';
-  if (n.split(' ').some((w) => BLOCKLIST.has(w)) || BLOCKLIST.has(n)) return 'blocklist';
-  if (cp && n && (n === cp.promptNorm || (n.length > 12 && cp.promptNorm.includes(n)))) return 'copied-prompt';
-  return null;
-}
-
-/** Rules that make an answer a Keyboard Smash once it isn't a near miss: no vowel, or not words. */
-export function softSmashReason(raw, cp, dict, known) {
+/**
+ * Keyboard Smash is for answers that aren't words at all: a run along a keyboard row, no vowel
+ * anywhere, or one letter four times in a row. Anything else that misses the list just bounces.
+ */
+export function smashReason(raw) {
   const plain = stripMarks(String(raw).toLowerCase());
   if (!VOWEL.test(plain)) return 'no-vowel';
+  if (/(.)\1{3,}/u.test(plain.replace(/\s/g, ''))) return 'repeat';
   const tokens = plainWords(raw);
-  if (!tokens.length) return 'no-letters';
-  for (const t of tokens) {
-    if (cp?.words.has(t)) continue;
-    if (!isWord(t, dict, known)) return 'not-a-word';
-  }
+  if (tokens.length && (tokens.every(isKeyboardRow) || tokens.some((t) => t.length >= 4 && isKeyboardRow(t)))) return 'keyboard';
   return null;
 }
 
@@ -361,22 +365,22 @@ export function softSmashReason(raw, cp, dict, known) {
 /**
  * Decides what a submitted answer is, in the order of DESIGN.md Step 1:
  * { kind: 'empty' | 'objector' | 'answer' | 'smash' | 'suggest' | 'bounce', ... }.
- * ctx: { day, dict, known } where dict is a makeDictionary() and known a Set of every list word.
+ * ctx: { day }.
  */
 export function classify(raw, cp, ctx = {}) {
-  const { day = null, dict = null, known = null } = ctx;
+  const { day = null } = ctx;
   const input = String(raw ?? '').trim();
   if (!input) return { kind: 'empty', input };
   const n = normalize(input);
   if (day === 3 && cp.id === 'C3' && OBJECTOR_ANSWERS.has(n)) return { kind: 'objector', input };
   const entry = lookup(input, cp);
   if (entry) return { kind: 'answer', input, entry };
-  const hard = hardSmashReason(n, cp);
-  if (hard) return { kind: 'smash', input, reason: hard };
+  const smash = smashReason(input);
+  if (smash) return { kind: 'smash', input, reason: smash };
   const near = suggestDetail(input, cp);
-  if (near) return { kind: 'suggest', input, suggestion: near.text, edits: near.edits, entry: near.entry };
-  const soft = softSmashReason(input, cp, dict, known);
-  if (soft) return { kind: 'smash', input, reason: soft };
+  if (near) return { kind: 'suggest', input, suggestion: near.text, edits: near.edits, entry: near.entry, why: 'spelling' };
+  const topic = topicSuggest(input, cp);
+  if (topic) return { kind: 'suggest', input, suggestion: topic.text, edits: 0, entry: topic.entry, why: 'topic' };
   return { kind: 'bounce', input };
 }
 
@@ -416,7 +420,7 @@ export function landingLine(r) {
   if (r.special === 'smash') return "That isn't an answer.";
   if (r.special === 'objector') return 'Refusal noted.';
   let line;
-  if (r.trueTier === 'meat') line = 'The model said this.';
+  if (r.trueTier === 'meat') line = 'Redundant. The model said it first.';
   else if (r.runs === 1) line = 'The AI said this once in 300.';
   else if (r.runs > 1) line = `The AI said this ${r.runs} times in 300.`;
   else if (r.trueTier === 'reserved') line = 'The AI never said this. Hand-picked.';
