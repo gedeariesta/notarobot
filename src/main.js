@@ -8,7 +8,7 @@ import { dateKey, dayForDate, liveStreak, completeStreak, msUntilMidnight, forma
 import { createStore, resetAll } from './state.js';
 import { sound } from './sound.js';
 import { playScreening } from './reveal.js';
-import { specimenSVG, pendingSVG, shapeMarkup, TIER_SHAPE } from './shapes.js';
+import { specimenSVG, pendingSVG, shapeMarkup, TIER_SHAPE, DEPTH, depthColour } from './shapes.js';
 import { ICONS, esc, el, smartQuotes, pad2, wordLines, fitText } from './ui.js';
 import { Plate, plateHTML, dust } from './plate.js';
 import { DAY_FIGURE, DAY_FIGURE_NAME } from './figures.js';
@@ -796,7 +796,10 @@ const BADGE_DETAIL = {
   fast: (a) => `${a.filter((x) => x.special !== 'none' && x.ms < 2000).length} under 2 s`,
 };
 
-/** FIG. 07: today's specimens on a line, machine-perfect square to human splatter. */
+/**
+ * FIG. 07: today's specimens on a line, machine-perfect square to human splatter. Each one takes the
+ * colour of the water at the depth it reached, and the key underneath reads surface to floor.
+ */
 function specimensFigure(answers) {
   const n = answers.length;
   const x0 = 26;
@@ -818,15 +821,18 @@ function specimensFigure(answers) {
       ? `<path class="f-line" d="M${x - 10} 54 L${x - 24} 30 L${x - 42} 30"/><circle class="f-dot" cx="${x - 10}" cy="54" r="3.5"/><text class="f-text" x="${x - 46}" y="33" font-size="9" text-anchor="end">( MOST HUMAN )</text>`
       : `<path class="f-line" d="M${x + 10} 54 L${x + 24} 30 L${x + 42} 30"/><circle class="f-dot" cx="${x + 10}" cy="54" r="3.5"/><text class="f-text" x="${x + 46}" y="33" font-size="9">( MOST HUMAN )</text>`;
   }
-  return `<svg viewBox="0 0 354 172" role="img" aria-label="Today's specimens: ${esc(names)}">
-    <g class="f-text" font-size="16"><text x="0" y="14">+</text><text x="342" y="14">+</text><text x="0" y="170">+</text><text x="342" y="170">+</text></g>
+  const key = DEPTH.map((c, k) => `<rect x="${136 + k * 14}" y="177" width="12" height="6" fill="${c}"/>`).join('');
+  return `<svg viewBox="0 0 354 196" role="img" aria-label="Today's specimens: ${esc(names)}">
+    <g class="f-text" font-size="16"><text x="0" y="14">+</text><text x="342" y="14">+</text><text x="0" y="194">+</text><text x="342" y="194">+</text></g>
     <rect class="f-ink" x="94" y="4" width="6" height="6"/>
     <text class="f-text" x="106" y="11" font-size="9.5" letter-spacing="0.5">FIG. 07 | TODAY'S SPECIMENS</text>
     <line class="f-line" x1="${x0}" y1="110" x2="${x1}" y2="110"/>
-    ${answers.map((a, i) => `<g class="spec-drop"><g transform="translate(${xs[i] - sz / 2} ${76 - sz / 2}) scale(${sz / 100})">${shapeMarkup(TIER_SHAPE[a.tier])}</g></g>`).join('')}
+    ${answers.map((a, i) => `<g class="spec-drop"><g transform="translate(${xs[i] - sz / 2} ${76 - sz / 2}) scale(${sz / 100})" style="--tone:${depthColour(a.tier)}">${shapeMarkup(TIER_SHAPE[a.tier])}</g></g>`).join('')}
     ${answers.map((a, i) => `<circle class="f-ink spec-dot" cx="${xs[i]}" cy="110" r="3"/>`).join('')}
     <g class="f-text" font-size="9" text-anchor="middle">${answers.map((a, i) => `<text x="${xs[i]}" y="128">${pad2(i + 1)}</text>`).join('')}</g>
     <g font-size="14" text-anchor="middle">${answers.map((a, i) => `<text class="spec-emoji" x="${xs[i]}" y="152">${TIERS[a.tier].emoji}</text>`).join('')}</g>
+    <g class="f-text" font-size="8.5" letter-spacing="0.5"><text x="130" y="183" text-anchor="end">SURFACE</text><text x="224" y="183">FLOOR</text></g>
+    <g aria-hidden="true">${key}</g>
     ${callout}
   </svg>`;
 }

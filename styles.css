@@ -127,9 +127,10 @@ svg .f-line { fill: none; stroke: var(--ink); stroke-width: 1; }
 svg .f-text { font-family: var(--mono); fill: var(--ink); }
 svg .f-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 .specimen { display: block; overflow: visible; flex: none; }
-.sp-body { fill: var(--ink); }
+/* --tone: the colour of the depth a specimen reached (shapes.js); plain ink where none is set. */
+.sp-body { fill: var(--tone, var(--ink)); }
 .sp-hole { fill: var(--paper); }
-.sp-line { fill: none; stroke: var(--ink); }
+.sp-line { fill: none; stroke: var(--tone, var(--ink)); }
 .sp-faint { stroke-opacity: 0.3; }
 
 /* A plate: a particle scan with its labels. */

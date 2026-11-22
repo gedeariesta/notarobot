@@ -20,6 +20,19 @@ export const SHAPES = {
   },
 };
 
+/** The water's colour at each layer of the Screening, surface to floor (DESIGN.md, Colour). */
+export const DEPTH = ['#1F3CFF', '#1A33E2', '#1428BC', '#0E1D92', '#081469', '#030A3B'];
+
+/**
+ * How deep each tier sank: 0 is the surface (caught at the model check, unreadable or empty), 5 the
+ * floor. The Conscientious Objector never sinks, but it's worth as much as the floor and counts as the
+ * most human answer, so it takes the floor's colour.
+ */
+export const TIER_DEPTH = { meat: 0, smash: 0, none: 0, zombie: 1, slopper: 2, delegator: 3, firsthand: 4, reserved: 5, objector: 5 };
+
+/** Specimens on white take the colour of the water at the depth they reached. */
+export const depthColour = (tier) => DEPTH[TIER_DEPTH[tier] ?? 0];
+
 /** The shape each tier ends on. */
 export const TIER_SHAPE = {
   meat: 'square',
@@ -64,7 +77,7 @@ export function shapeMarkup(name) {
 /** A tier's specimen as a standalone SVG. */
 export function specimenSVG(tier, size = 22, label = '') {
   const a11y = label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"';
-  return `<svg class="specimen" width="${size}" height="${size}" viewBox="0 0 100 100" ${a11y}>${shapeMarkup(TIER_SHAPE[tier])}</svg>`;
+  return `<svg class="specimen" width="${size}" height="${size}" viewBox="0 0 100 100" style="--tone:${depthColour(tier)}" ${a11y}>${shapeMarkup(TIER_SHAPE[tier])}</svg>`;
 }
 
 /** Specimen progress: the current prompt is a dashed circle, the rest are faint outlines. */

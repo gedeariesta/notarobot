@@ -2,7 +2,7 @@
 // blue, and the answer falls through the gates as a white particle scan that loses its geometry
 // with every gate it passes. One GSAP timeline drives everything, so it can be skipped.
 import { GATES, LADDER, stampTitle, resultLine } from './scoring.js';
-import { SHAPES, LAYER_SHAPE, shapePath } from './shapes.js';
+import { SHAPES, LAYER_SHAPE, DEPTH, shapePath } from './shapes.js';
 import { Figure, samplePath, sampleGrid, samplePoint, radiusFor } from './specimen.js';
 import { dust } from './plate.js';
 import { FLOOD_BLOB } from './figures.js';
@@ -12,8 +12,7 @@ import { ICONS, esc, pad2, wordLines, fitText } from './ui.js';
 const gsap = window.gsap;
 
 const LAYER_NAMES = ['Prompt Zombie', 'Slopper', 'Decision Delegator', 'First-Hand Thinker'];
-// The deeper the answer falls, the darker the water: surface blue down to the abyss.
-const DEPTH = ['#1F3CFF', '#1A33E2', '#1428BC', '#0E1D92', '#081469', '#030A3B'];
+// The deeper the answer falls, the darker the water (DEPTH, in shapes.js) and the heavier the vignette.
 const ABYSS = [0, 0.18, 0.36, 0.56, 0.78, 1];
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=<>/';
 const HUMAN_TIERS = new Set(['firsthand', 'reserved']);
