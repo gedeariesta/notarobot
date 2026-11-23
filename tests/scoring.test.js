@@ -5,6 +5,7 @@ import {
   normalize, core, inflections, compilePrompt, lookup, classify, scoreEntry, specialResult, editDistance, maxEdits,
   suggestDetail, topicSuggest, isKeyboardRow, smashReason, landingLine, resultLine, stamped, verdictFor, passed,
   badgesFor, guiltLine, shareText, totalScore, TIERS, RESERVED_LINES, pickReservedLine,
+  answerKey, keyCounts, searchKey, KEY_ORDER,
 } from '../src/scoring.js';
 
 const bank = JSON.parse(readFileSync(new URL('../prompts.json', import.meta.url)));
@@ -164,6 +165,29 @@ test('Human Reserved lines: all five before any repeat, and never the same one t
     for (let k = 1; k < 7; k++) assert.notEqual(used[k], used[k - 1]);
   }
   assert.ok(RESERVED_LINES.every((l) => l.endsWith('.')));
+});
+
+test('the answer key lists every answer deepest first, counts tiers and searches spellings', () => {
+  for (const id of ['W1', 'C2', 'M1']) {
+    const rows = answerKey(cps[id]);
+    assert.equal(rows.length, cps[id].entries.length);
+    for (let k = 1; k < rows.length; k++) {
+      const [x, y] = [rows[k - 1], rows[k]];
+      const dx = KEY_ORDER.indexOf(x.tier);
+      const dy = KEY_ORDER.indexOf(y.tier);
+      assert.ok(dx < dy || (dx === dy && x.runs <= y.runs), `${id}: ${x.a} before ${y.a}`);
+    }
+    assert.equal(rows[rows.length - 1].a, cps[id].aiAnswer, `${id}: the AI's answer comes last`);
+    const counts = keyCounts(rows);
+    assert.equal(Object.values(counts).reduce((s, n) => s + n, 0), rows.length);
+    assert.equal(counts.meat, 1);
+  }
+  const w1 = answerKey(cps.W1);
+  assert.ok(searchKey(w1, 'carer').some((r) => r.a === 'caregiver'), 'an alias finds its answer');
+  assert.ok(searchKey(w1, 'Nurses').some((r) => r.a === 'nurse'));
+  assert.ok(searchKey(w1, 'hospicechap').some((r) => r.a === 'hospice chaplain'), 'spaces are optional');
+  assert.equal(searchKey(w1, '  ').length, w1.length);
+  assert.equal(searchKey(w1, 'zzqx').length, 0);
 });
 
 test('only Meat Proxy, Keyboard Smash and No response get a stamp', () => {

@@ -2,7 +2,7 @@
 // people are porous particle scans, machines are grids, and labels hang off both.
 import {
   compilePrompt, classify, scoreEntry, specialResult, TIERS, LADDER, BADGES, verdictFor, passed, badgesFor,
-  totalScore, guiltLine, shareText, stampTitle, resultLine, pickReservedLine,
+  totalScore, guiltLine, shareText, stampTitle, resultLine, pickReservedLine, answerKey, keyCounts, searchKey, KEY_ORDER,
 } from './scoring.js';
 import { dateKey, dayForDate, liveStreak, completeStreak, msUntilMidnight, formatHMS, addDays } from './days.js';
 import { createStore, resetAll } from './state.js';
@@ -796,6 +796,63 @@ const BADGE_DETAIL = {
   fast: (a) => `${a.filter((x) => x.special !== 'none' && x.ms < 2000).length} under 2 s`,
 };
 
+/** The line under each answer in the log: how many of the AI's runs gave it, then its tier. */
+function runsMeta(a, perPrompt) {
+  const tier = `${TIERS[a.tier].name}${a.capped ? ' | AI-assisted' : ''}${a.reading ? ' | 📚' : ''}`;
+  if (a.special === 'smash') return `Not an answer | ${tier}`;
+  if (a.special === 'none') return `No answer | ${tier}`;
+  if (a.special === 'objector') return `Refusal noted | ${tier}`;
+  return `<b>${a.runs ?? 0}</b> of ${perPrompt} AI runs said this | ${tier}`;
+}
+
+const KEY_PAGE = 60;
+
+/**
+ * One prompt's whole answer list, the way Krillion opens its answer sheet after a dive: the AI's own
+ * answer, filters by tier with their counts, a search, and every answer with its AI run count and
+ * points, 60 at a time. Your answer is marked. Built the first time it opens.
+ */
+function buildKey(panel, cp, mine, perPrompt) {
+  const rows = answerKey(cp);
+  const counts = keyCounts(rows);
+  let tier = 'all';
+  let query = '';
+  let shown = KEY_PAGE;
+  panel.dataset.built = '1';
+  panel.innerHTML = `
+    <p class="key-ai mono">( AI | ${esc(cp.aiAnswer)} | ${cp.aiEntry ? cp.aiEntry.runs : 0} of ${perPrompt} runs )</p>
+    <div class="chips" role="group" aria-label="Filter by tier">
+      <button class="chip" type="button" data-t="all" aria-pressed="true">All <b>${rows.length}</b></button>
+      ${KEY_ORDER.filter((t) => counts[t]).map((t) => `<button class="chip" type="button" data-t="${t}" aria-pressed="false">${specimenSVG(t, 11)}${TIERS[t].name} <b>${counts[t]}</b></button>`).join('')}
+    </div>
+    <label class="key-search"><span class="mono">( Search all ${rows.length} answers )</span><input type="search" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" /></label>
+    <ol class="key-list"></ol>
+    <div class="key-foot mono"><span class="key-count"></span><button class="bracket key-more" type="button">[ show more ]</button></div>
+    ${bank.runs?.simulated ? '<p class="key-note mono">Run counts in this build are simulated.</p>' : ''}`;
+  const list = panel.querySelector('.key-list');
+  const count = panel.querySelector('.key-count');
+  const more = panel.querySelector('.key-more');
+  const render = () => {
+    const pool = searchKey(tier === 'all' ? rows : rows.filter((r) => r.tier === tier), query);
+    list.innerHTML = pool.slice(0, shown).map((r) => {
+      const you = !!mine && r.a === mine.canonical;
+      return `<li class="kr${you ? ' you' : ''}">${specimenSVG(r.tier, 12)}<span class="kr-a">${esc(r.a)}${r.reading ? ' 📚' : ''}${you ? ' <span class="kr-you mono">( you )</span>' : ''}</span><span class="kr-n mono">${r.runs}/${perPrompt}</span><span class="kr-p mono">+${r.points}</span></li>`;
+    }).join('') || '<li class="kr-none mono">No answer on the list matches.</li>';
+    count.textContent = `${Math.min(shown, pool.length)} of ${pool.length} answers`;
+    more.hidden = pool.length <= shown;
+  };
+  panel.querySelectorAll('.chip').forEach((chip) => chip.addEventListener('click', () => {
+    tier = chip.dataset.t;
+    shown = KEY_PAGE;
+    panel.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+    sound.tick();
+    render();
+  }));
+  panel.querySelector('input').addEventListener('input', (e) => { query = e.target.value; shown = KEY_PAGE; render(); });
+  more.addEventListener('click', () => { shown += KEY_PAGE; render(); });
+  render();
+}
+
 /**
  * FIG. 07: today's specimens on a line, machine-perfect square to human splatter. Each one takes the
  * colour of the water at the depth it reached, and the key underneath reads surface to floor.
@@ -851,6 +908,7 @@ function renderResults({ delay = 0 } = {}) {
   // Practice other days afterwards. Day 4 is a bonus after a 3-day streak (demo mode has the day picker).
   const practiceDays = mode === 'demo' ? [] : bank.days.filter((d) => d.id !== day.id && (d.id !== BONUS_DAY || streak >= BONUS_STREAK));
   const human = Math.round((total / (ROUND_LEN * 100)) * 100);
+  const perPrompt = bank.runs?.perPrompt || 300;
   app.classList.add('wide');
 
   app.innerHTML = `
@@ -879,12 +937,21 @@ function renderResults({ delay = 0 } = {}) {
         <button class="pill" type="button" data-share>Share result ${ICONS.arrow}</button>
         <div class="countdown mono" data-countdown></div>
       </div>
-      <details class="review">
-        <summary class="bracket">[ review answers ]</summary>
-        <ol>${answers.map((a, i) => `
-          <li>${specimenSVG(a.tier, 20)}<span class="a">${a.input ? esc(a.input) : 'No answer'}</span><span class="mono">+${a.points}</span>
-          <span class="q mono">${pad2(i + 1)} | ${esc(TIERS[a.tier].name)}${a.reading ? ' | 📚' : ''} | AI: ${esc(prompts[i].aiAnswer)}</span></li>`).join('')}</ol>
-      </details>
+      <section class="vlog" aria-label="Verification log">
+        <div class="vlog-head mono"><span class="sq" aria-hidden="true"></span><span>Verification log | Tap for every answer</span></div>
+        ${answers.map((a, i) => `
+        <div class="vlog-item">
+          <button class="vlog-row" type="button" aria-expanded="false" aria-controls="key-${i}" data-key="${i}">
+            <span class="vlog-q mono">${pad2(i + 1)} | ${esc(smartQuotes(prompts[i].text))}</span>
+            ${specimenSVG(a.tier, 22)}
+            <span class="vlog-a">${a.input ? esc(a.input) : 'No answer'}</span>
+            <span class="vlog-pts mono">+${a.points}</span>
+            <span class="vlog-plus" aria-hidden="true">+</span>
+            <span class="vlog-runs mono">${runsMeta(a, perPrompt)}</span>
+          </button>
+          <div class="key" id="key-${i}" hidden></div>
+        </div>`).join('')}
+      </section>
       <div class="res-more">
         ${mode === 'demo' ? `<button class="bracket" type="button" data-again>[ play day ${pad2(day.id)} again ]</button>` : ''}
         ${practiceDays.map((d) => `<a class="bracket" href="?day=${d.id}">[ practice day ${pad2(d.id)}${d.id === BONUS_DAY ? ' | bonus' : ''} ]</a>`).join('')}
@@ -940,6 +1007,22 @@ function renderResults({ delay = 0 } = {}) {
       shareBtn.classList.remove('fail');
     }, 1500);
   });
+  // The verification log: tap a prompt to open every answer on its list, one list at a time.
+  app.querySelectorAll('.vlog-row').forEach((btn) => btn.addEventListener('click', () => {
+    const panel = app.querySelector(`#${btn.getAttribute('aria-controls')}`);
+    const open = btn.getAttribute('aria-expanded') !== 'true';
+    app.querySelectorAll('.vlog-row[aria-expanded="true"]').forEach((b) => {
+      b.setAttribute('aria-expanded', 'false');
+      app.querySelector(`#${b.getAttribute('aria-controls')}`).hidden = true;
+    });
+    sound.click();
+    if (!open) return;
+    const i = Number(btn.dataset.key);
+    if (!panel.dataset.built) buildKey(panel, prompts[i], answers[i], perPrompt);
+    btn.setAttribute('aria-expanded', 'true');
+    panel.hidden = false;
+    if (!reduced()) gsap.from(panel, { opacity: 0, y: -6, duration: 0.25, ease: 'power2.out' });
+  }));
   $('[data-again]')?.addEventListener('click', () => {
     session.round = freshRound(day, mode);
     saveRound();

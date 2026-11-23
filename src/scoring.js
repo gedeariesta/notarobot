@@ -500,6 +500,41 @@ export function totalScore(answers) {
   return answers.reduce((s, a) => s + (a.points || 0), 0);
 }
 
+// ---------------------------------------------------------------- the answer key
+
+/** Deepest first: the order of each prompt's full answer list on the results screen, and its filters. */
+export const KEY_ORDER = ['reserved', 'firsthand', 'delegator', 'slopper', 'zombie', 'meat'];
+
+/**
+ * Every answer on a prompt's list, for the results screen: deepest tier first, then the fewest AI
+ * runs, then A to Z by the answer without its "a", "an" or "the". `keys` holds the answer and its
+ * spellings, normalized, for search.
+ */
+export function answerKey(cp) {
+  const rank = (t) => KEY_ORDER.indexOf(t);
+  return cp.entries
+    .map((e) => ({
+      a: e.a, tier: e.tier, runs: e.runs, points: TIERS[e.tier].points, reading: e.reading, sort: normalize(e.a),
+      keys: [...new Set([e.a, ...e.aliases].map(normalize).filter(Boolean))],
+    }))
+    .sort((x, y) => rank(x.tier) - rank(y.tier) || x.runs - y.runs || x.sort.localeCompare(y.sort, 'en', { numeric: true }));
+}
+
+/** How many answers each tier holds. */
+export function keyCounts(rows) {
+  const out = {};
+  for (const r of rows) out[r.tier] = (out[r.tier] || 0) + 1;
+  return out;
+}
+
+/** The rows whose answer, or a spelling of it, contains the search (both normalized, spaces optional). */
+export function searchKey(rows, query) {
+  const n = normalize(query);
+  if (!n) return rows;
+  const flat = n.replace(/ /g, '');
+  return rows.filter((r) => r.keys.some((k) => k.includes(n) || k.replace(/ /g, '').includes(flat)));
+}
+
 const STREAK_LINES = [
   [7, 'I saved your spot. I always do.'],
   [4, 'The AI never misses a day. Do you?'],

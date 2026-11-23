@@ -279,6 +279,15 @@ Each emoji is a pun on its tier, so the grid reads as a joke even to someone who
 
 Badges get one emoji each, shown after the grid in the share text: 🍼 Bot Baby, 🎲 Random Number Generator, 🍖 Meat Proxy Supreme, 🏅 Turing Complete, 🕊️ Conscientious Objector, ⚡ Suspiciously Fast, 📚 Did the Reading.
 
+### The verification log
+
+The results screen ends with the whole answer sheet, the way Krillion opens its answers after each dive. Being open about how the machine scored you is part of the critique: the player sees exactly which answers the AI gives, and how often.
+
+- **Your answers:** under a "VERIFICATION LOG | TAP FOR EVERY ANSWER" caption, one row per prompt: the prompt, your answer with its specimen and points, and "{n} OF 300 AI RUNS SAID THIS" with the tier. Keyboard Smash, No response and the Conscientious Objector say "Not an answer", "No answer" and "Refusal noted" instead.
+- **Every answer:** tapping a row opens that prompt's whole list, one prompt at a time. On top sits the AI's own answer with its run count, such as "( AI | REPLIKA | 118 OF 300 RUNS )". Then come filters by tier with their counts (All, then Human Reserved down to Meat Proxy), a search over every answer and its spellings, and the list: deepest tier first, then the fewest runs, then A to Z ignoring a leading "a", "an" or "the". Each answer shows its specimen, its run count ("3/300") and its points, with 📚 on answers from the reading and "( YOU )" on yours. Sixty show at a time, with "[ show more ]" for the rest.
+- While the run counts are simulated, the list says so underneath.
+- Days repeat every three days, so the log also shows a returning player the Human Reserved answers for next time. The scored round is still once a day.
+
 ## Days and question bank
 
 There are three main days that follow the course's units (work, minds and love, war and control) and one bonus day that previews Bostrom. Every prompt is a category whose answers can be listed ("Name a…"), because each one needs a full answer list. Prompts that used to take sentence answers have been rewritten as categories tied to the same reading.
@@ -350,7 +359,7 @@ The hint is a side trip from any prompt; using it caps that answer at 25 points.
 1. **Gate.** Logo top left, today's day and theme top right. "(00) Verification" with "You are about to be verified. Seven challenges, 25 seconds each. Are you worthy of being human?", the subject's particle scan (FIG. 00), "not a robot" in large type, and a large checkbox labelled "I'm not a robot". Below it: the round's terms, the streak count and an About link. After the tick: spinner, then "Additional verification required." with "( 7 CHALLENGES | 25 S EACH )" and a Begin verification button. If today is already done, it shows the locked message and a link to today's results.
 2. **Prompt.** Seven specimen shapes for progress. The header holds "\<verification 0{n}/07>", the prompt and its source. Under the header: the tick-ruler timer (red and blinking for the last 5 seconds), then the answer input (autofocused) with its bounce and "Did you mean" line, the sealed answer card (closed), and at the bottom the Verify button and the hint button. Keyboard: Enter submits.
 3. **Reveal.** Plays the Screening (see The reveal) and holds on its last frame: the stamp or verdict with its line, and a Next verification button (See results on prompt 7). Pressing it drains the blue back to white for the next prompt.
-4. **Results.** "[ Verification failed ]" in red with an X, or "[ Verification passed ]" with a check. The verdict in large type, the subject re-scanned at your score (FIG. 08), the score out of 700 and the verdict's line. FIG. 07, today's specimens: each prompt's tier shape in the colour of the depth it reached, with its number and emoji, a SURFACE to FLOOR colour key, and "( MOST HUMAN )" on the best one. Badges earned this round, each with a line saying how it was earned. The blue speech blob with the streak message. A Share result button that copies the share text and confirms "Copied". Countdown to the next round and the next day's theme, a review of the answers, and the footer line.
+4. **Results.** "[ Verification failed ]" in red with an X, or "[ Verification passed ]" with a check. The verdict in large type, the subject re-scanned at your score (FIG. 08), the score out of 700 and the verdict's line. FIG. 07, today's specimens: each prompt's tier shape in the colour of the depth it reached, with its number and emoji, a SURFACE to FLOOR colour key, and "( MOST HUMAN )" on the best one. Badges earned this round, each with a line saying how it was earned. The blue speech blob with the streak message. A Share result button that copies the share text and confirms "Copied". Countdown to the next round and the next day's theme, the verification log (see The verification log), and the footer line.
 5. **Practice and demo.** In demo mode, a small bar at the top of every screen with a day picker (1 to 4), Reset, and Open class board.
 6. **About.** The copy from the Copy section, plus a list of the readings used.
 7. **Class board (optional).** Projector layout. One column per prompt of the chosen day: the AI's answer at the top in JetBrains Mono, then the class's top five answers as horizontal bars with counts, then a "rarest answers" strip of answers given once. Refreshes every 5 seconds.
@@ -493,6 +502,8 @@ The machine never jokes. It reports, calmly and politely, and the comedy comes f
 | Results header (score 350 or more) | Verification passed |
 | Countdown | Next verification in {hh:mm:ss} \| Day {nn}: {theme} |
 | Footer on results | No humans were involved in this verification. |
+| Verification log caption | Verification log \| Tap for every answer |
+| Under each of your answers | {n} of 300 AI runs said this \| {tier} |
 | Locked state | You've been verified for today. Come back tomorrow. |
 
 Two more lines for the prompt screen: a bounce reads "( NOT ON THE LIST | TRY AGAIN )", and a near-miss reads "Did you mean {answer}?". The lines under each verdict are in the Scoring table.
@@ -595,6 +606,7 @@ A script does this once for every prompt. It runs on a laptop with an API key an
 - [ ] A name that isn't on the list bounces instead of smashing: "Rudi" on C2
 - [ ] A related answer gets suggested: "nuclear" on C1 offers nuclear war
 - [ ] A Human Reserved answer breaks the Humans only gate, leaves the faint trace and is written on the floor
+- [ ] The verification log opens every prompt's full list, filters by tier, searches spellings and marks your answer
 - [ ] A hinted prompt never scores above 25
 - [ ] In the last 5 seconds the timer turns red and blinks, faster from 3 seconds
 - [ ] The speaker icon mutes and unmutes, and the choice survives a reload
